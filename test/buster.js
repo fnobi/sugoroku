@@ -3,7 +3,9 @@ var config = module.exports;
 config['sugoroku test'] = {
 	rootPath: '../',
 	environment: 'browser', // 'browser' or 'node'
-	sources: [], // browserテストの場合は必要
+	sources: [
+		'public/javascripts/StateMachine.js'
+	],
 	tests: [
 		'test/*-test.js'
 	]
