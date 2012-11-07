@@ -5,8 +5,8 @@ buster.testCase('state machine', {
 
 	'initial state': function () {
 		assert.equals(
-			(new StateMachine()).state.name,
-			'initial'
+			(new StateMachine()).state.path(),
+			'/initial'
 		);
 	},
 
@@ -15,20 +15,20 @@ buster.testCase('state machine', {
 		var stateMachine = new StateMachine();
 
 		var s1 = stateMachine.initialState;
-		var c  = new stateMachine.Condition();
-		var s2 = new stateMachine.State(stateName);
+		var c  = new Condition();
+		var s2 = stateMachine.createState(stateName);
 
 		new stateMachine.Transition(s1, c, s2);
 
 		stateMachine.transit(c);
 
-		assert.equals(stateMachine.state.name, stateName);
+		assert.equals(stateMachine.state.path(), '/' + stateName);
 	},
 
 	'sub state': function () {
 		var stateMachine = new StateMachine();
 
-		var s  = new stateMachine.State();
+		var s  = stateMachine.createState();
 		var ss = s.createSubState();
 
 		assert.equals(ss.parentState, s);
@@ -38,7 +38,7 @@ buster.testCase('state machine', {
 	'has state': function () {
 		var stateMachine = new StateMachine();
 
-		var s   = new stateMachine.State();
+		var s   = stateMachine.createState();
 		var ss  = s.createSubState();
 		var sss = ss.createSubState();
 
@@ -59,20 +59,48 @@ buster.testCase('state machine', {
 		var stateMachine = new StateMachine();
 
 		var s1 = stateMachine.initialState;
-		var s2 = s1.createSubState('substate of initial');
-		var s3 = new stateMachine.State('2nd state');
+		var s2 = s1.createSubState('a');
+		var s3 = stateMachine.createState('b');
 
-		var c1  = new stateMachine.Condition();
-		var c2  = new stateMachine.Condition();
+		var c1  = new Condition();
+		var c2  = new Condition();
 
 		new stateMachine.Transition(s1, c1, s2);
 		new stateMachine.Transition(s1, c2, s3);
 
 		stateMachine.transit(c1);
-		assert.equals(stateMachine.state.name, 'substate of initial');
+		assert.equals(stateMachine.state.path(), '/initial/a');
 
 		stateMachine.transit(c2);
-		assert.equals(stateMachine.state.name, '2nd state');
+		assert.equals(stateMachine.state.path(), '/b');
+	},
+
+	'parse empty definition': function () {
+		var stateMachine = StateMachine.parse({});
+		assert.equals(stateMachine.state.path(), '/initial');
+	},
+
+	'parse state transition': function () {
+		var stateMachine = StateMachine.parse({
+			states: {
+				a: { }
+			},
+			conditions: {
+				c: { }
+			},
+			transitions: {
+				t: {
+					from: '/initial',
+					to: '/a',
+					condition: 'c'
+				}
+			}
+		});
+
+		assert.equals(stateMachine.topLevelStates.length, 2);
+
+		stateMachine.transit('immediate');
+		assert.equals(stateMachine.state.path(), '/a');
 	}
 
 });

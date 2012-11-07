@@ -5,10 +5,12 @@
 var StateMachine = (function () {
 	// ひとつの状態を持つ状態遷移機械
 	var StateMachine = function () {
-		this.state = this.initialState = new this.State('initial');
+		this.topLevelStates = [
+			new this.State('initial')
+		];
+		this.state = this.initialState = this.topLevelStates[0];
 
 		this.Transition.prototype.stateMachine =
-		this.Condition .prototype.stateMachine =
 		this.State     .prototype.stateMachine = this;
 
 		this.transitions = [];
@@ -43,6 +45,13 @@ var StateMachine = (function () {
 		return stateTo;
 	};
 
+	StateMachine.prototype.createState = function (name) {
+		var subState = new State(name);
+		subState.parentState = null;
+		this.topLevelStates.push(subState);
+		return subState;
+	};
+
 	// 状態を表すクラス
 	var State = function (name) {
 		this.name = name;
@@ -70,20 +79,50 @@ var StateMachine = (function () {
 		return result;
 	};
 
-	// 環境を表すクラス
-	var Condition = function () {
+	State.prototype.path = function () {
+		return [
+			this.parentState ? this.parentState.path() : '',
+			this.name
+		].join('/');
 	};
-	StateMachine.prototype.Condition = Condition;
+
 
 	// 状態遷移のセット (遷移前の状態・環境・遷移後の状態のセット) を表すクラス
 	var Transition = function (from, condition, to) {
-		this.stateFrom = from;
+		this.from = this.stateMachine.findState(from);
+
 		this.condition = condition;
 		this.stateTo   = to;
 
 		this.stateMachine.transitions.push(this);
 	};
 	StateMachine.prototype.Transition = Transition;
+
+
+	// jsonの定義書式からオブジェクト生成
+	StateMachine.parse = function (definition) {
+		var stateMachine = new StateMachine();
+		var name;
+		for (name in definition.states || {}) {
+			stateMachine.createState(name);
+		}
+		for (name in definition.conditions || {}) {
+			new Condition(name);
+		}
+		for (name in definition.transitions || {}) {
+			new stateMachine.Transition(
+				definition.transitions[name].from,
+				definition.transitions[name].condition,
+				definition.transitions[name].to
+			);
+		}
+		return stateMachine;
+	};
+
+	// パスの形の表現から、stateを検索する
+	StateMachine.findState = function (pathToState) {
+
+	};
 
 	return StateMachine;
 })();

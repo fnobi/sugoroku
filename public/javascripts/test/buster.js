@@ -4,6 +4,7 @@ config['sugoroku test'] = {
 	rootPath: '../',
 	environment: 'browser', // 'browser' or 'node'
 	sources: [
+		'Condition.js',
 		'StateMachine.js'
 	],
 	tests: [
