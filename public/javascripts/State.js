@@ -7,6 +7,7 @@ var State = function (name) {
 State.prototype.createSubState = function (name) {
 	var subState = new State(name);
 	subState.parentState = this;
+	subState.stateMachine = this.stateMachine;
 	this.subStates.push(subState);
 	return subState;
 };

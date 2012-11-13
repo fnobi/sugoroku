@@ -9,7 +9,7 @@ var StateMachine = function () {
 	this.state = this.initialState = this.topLevelStates[0];
 
 	this.transitions = [];
-	this.conditions = [];
+	this.conditions = {};
 };
 
 // 状態遷移機械にconditionを与えて、状態を遷移させる
@@ -63,12 +63,17 @@ StateMachine.prototype.findState = function (pathToState) {
 	return state;
 };
 
+StateMachine.prototype.findCondition = function (name) {
+	return this.conditions[name] || null;
+};
+
 // 状態を新規作成
 StateMachine.prototype.createState = function (name) {
-	var subState = new State(name);
-	subState.parentState = null;
-	this.topLevelStates.push(subState);
-	return subState;
+	var state = new State(name);
+	state.parentState = null;
+	state.stateMachine = this;
+	this.topLevelStates.push(state);
+	return state;
 };
 
 // 環境を新規作成(定義)
@@ -77,7 +82,7 @@ StateMachine.prototype.createCondition = function (name) {
 
 	// 親と子お互いに、相手へのリファレンスを持つ
 	condition.stateMachine = this;
-	this.conditions.push(condition);
+	this.conditions[name] = condition;
 
 	return condition;
 };
