@@ -15,12 +15,12 @@ buster.testCase('state machine', {
 		var stateMachine = new StateMachine();
 
 		var s1 = stateMachine.initialState;
-		var c  = new Condition();
+		var c  = stateMachine.createCondition('c');
 		var s2 = stateMachine.createState(stateName);
 
-		new stateMachine.Transition(s1, c, s2);
+		stateMachine.createTransition(s1, c, s2);
 
-		stateMachine.transit(c);
+		stateMachine.transit('c');
 
 		assert.equals(stateMachine.state.path(), '/' + stateName);
 	},
@@ -62,11 +62,11 @@ buster.testCase('state machine', {
 		var s2 = s1.createSubState('a');
 		var s3 = stateMachine.createState('b');
 
-		var c1  = new Condition();
-		var c2  = new Condition();
+		var c1  = stateMachine.createCondition('c1');
+		var c2  = stateMachine.createCondition('c2');
 
-		new stateMachine.Transition(s1, c1, s2);
-		new stateMachine.Transition(s1, c2, s3);
+		stateMachine.createTransition(s1, c1, s2);
+		stateMachine.createTransition(s1, c2, s3);
 
 		stateMachine.transit(c1);
 		assert.equals(stateMachine.state.path(), '/initial/a');
@@ -99,8 +99,11 @@ buster.testCase('state machine', {
 
 		assert.equals(stateMachine.topLevelStates.length, 2);
 
-		stateMachine.transit('immediate');
+		stateMachine.transit('c');
 		assert.equals(stateMachine.state.path(), '/a');
+
+		// conditionのparseができてないと思う。
+		// newはStatemachine以外、外からは叩かない
 	}
 
 });
