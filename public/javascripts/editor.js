@@ -1,4 +1,4 @@
 $(function () {
 	var stateMachine = StateMachine.parse(stateRoot);
-	stateMachine.render('#sugoroku-editor');
+	$('#sugoroku-editor').append(stateMachine.render());
 });

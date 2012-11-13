@@ -110,12 +110,11 @@ StateMachine.prototype.createTransition = function (from, cond, to) {
 // jsonの定義書式からオブジェクト生成
 StateMachine.parse = function (definition) {
 	var stateMachine = new StateMachine();
-	var name;
-	var state;
+	var name; var state;
+
 	for (name in definition.states || {}) {
 		var state = stateMachine.createState(name);
-		state.x = definition.states[name].x;
-		state.y = definition.states[name].y;
+		state = $.extend(true, state, definition.states[name]);
 	}
 	for (name in definition.conditions || {}) {
 		stateMachine.createCondition(name);
