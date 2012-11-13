@@ -1,4 +1,4 @@
-var resources = require('resources');
+var codeCollection = require('codeCollection');
 
 /*
  * GET home page.
@@ -9,32 +9,33 @@ exports.index = function(req, res){
 };
 
 exports.editor = function(req, res){
-	var resourceName = req.params[0];
+	var codeName = req.params[0];
+
+	if (!codeCollection.exists(codeName)) {
+		res.statusCode = 404;
+		res.end();
+		return;
+	}
 
 	res.render('editor', {
-		title: resourceName,
-		resourcePath: '/codes/' + resourceName + '.js'
-	});
-};
-
-exports.viewer = function(req, res){
-	var resourceName = req.params[0];
-
-	res.render('viewer', {
-		title: resourceName,
-		resourcePath: '/codes/' + resourceName + '.js'
+		title: 'edit: ' + codeName,
+		jsurl: codeCollection.url(codeName, 'editor')
 	});
 };
 
 exports.codes = function (req, res) {
-	var resourceName = req.params[0];
+	var codeName = req.params[0];
+	var codeAction = req.params[2];
 
-	resources.read(resourceName, function (err, result) {
+	codeCollection.codeText(codeName, codeAction, function (err, codeText) {
 		if (err) {
 			console.error(err);
-			process.exit(1);
+			res.statusCode = 404;
+			res.end();
+			return;
 		}
 
-		res.end('var stateRoot = ' + result + ";");
+		res.setHeader('Content-Type', 'text/javascript');
+		res.end(codeText);
 	});
 };

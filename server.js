@@ -27,8 +27,7 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.get(/^\/editor\/([\w]+)/, routes.editor);
-app.get(/^\/viewer\/([\w]+)/, routes.viewer);
-app.get(/^\/codes\/([\w]+)/, routes.codes);
+app.get(/^\/codes\/([\w]+)(\.([\w]+))?\.js/, routes.codes);
 
 http.createServer(app).listen(app.get('port'), function(){
 	console.log("Express server listening on port " + app.get('port'));

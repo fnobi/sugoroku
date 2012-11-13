@@ -1,20 +1,7 @@
 extends layout
 
 block content
-  script(src='/javascripts/jquery.ui.core.js')
-  script(src='/javascripts/jquery.ui.widget.js')
-  script(src='/javascripts/jquery.ui.mouse.js')
-  script(src='/javascripts/jquery.ui.draggable.js')
-  script(src='/javascripts/jquery.ui.droppable.js')
-
-  script(src='/javascripts/State.js')
-  script(src='/javascripts/Condition.js')
-  script(src='/javascripts/Transition.js')
-  script(src='/javascripts/StateMachine.js')
-  script(src='/javascripts/StateMachine-ui.js')
-
-  script(src = resourcePath)
-  script(src='/javascripts/editor.js')
+  script(src = jsurl)
 
   h1= title
   section#sugoroku-editor
