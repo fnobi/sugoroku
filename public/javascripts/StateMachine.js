@@ -69,7 +69,13 @@ StateMachine.prototype.findCondition = function (name) {
 
 // 状態を新規作成
 StateMachine.prototype.createState = function (name) {
-	var state = new State(name);
+	var state;
+
+	if (state = this.findState('/' + name)) {
+		return state;
+	}
+
+	state = new State(name);
 	state.parentState = null;
 	state.stateMachine = this;
 	this.topLevelStates.push(state);
@@ -105,8 +111,11 @@ StateMachine.prototype.createTransition = function (from, cond, to) {
 StateMachine.parse = function (definition) {
 	var stateMachine = new StateMachine();
 	var name;
+	var state;
 	for (name in definition.states || {}) {
-		stateMachine.createState(name);
+		var state = stateMachine.createState(name);
+		state.x = definition.states[name].x;
+		state.y = definition.states[name].y;
 	}
 	for (name in definition.conditions || {}) {
 		stateMachine.createCondition(name);
