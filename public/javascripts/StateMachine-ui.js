@@ -68,7 +68,7 @@ Transition.prototype.render = function () {
 		transform: 'rotate(' + lm.angle + 'deg)',
 		'transform-origin': '0% 0%'
 	});
-	$element.html(this.condition);
+	$element.html(this.condition.name);
 
 	this.$element = $element;
 	return $element[0];
