@@ -33,3 +33,13 @@ a {
     text-align:center;
     z-index:2;
 }
+.sugoroku.transition:after {
+    content: "▶";
+    display:block;
+    text-align:left;
+    position: relative;
+    top: -2.3em;
+    left: 100%;
+    padding:0em;margin:0em;
+    color: rgba(0,0,0,0.5)
+}

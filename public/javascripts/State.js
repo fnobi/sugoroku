@@ -25,6 +25,19 @@ State.prototype.hasState = function (another) {
 	return result;
 };
 
+State.prototype.transitions = function () {
+	var self = this;
+	var transitions = [];
+
+	this.stateMachine.transitions.forEach(function (transition) {
+		if (transition.from.hasState(self)) {
+			transitions.push(transition);
+		}
+	});
+
+	return transitions;
+};
+
 State.prototype.path = function () {
 	return [
 		this.parentState ? this.parentState.path() : '',

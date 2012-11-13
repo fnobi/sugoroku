@@ -1,5 +1,16 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to viewer
+  script(src='/javascripts/jquery-1.8.2.js')
+
+  script(src='/javascripts/State.js')
+  script(src='/javascripts/Condition.js')
+  script(src='/javascripts/Transition.js')
+  script(src='/javascripts/StateMachine.js')
+  script(src='/javascripts/StateMachine-run.js')
+
+  script(src = resourcePath)
+  script(src='/javascripts/viewer.js')
+
+  section#section1 I am first section
+  section#section2 I am second section

@@ -3,13 +3,13 @@
 ============================================================================= */
 
 var StateMachine = function () {
-	this.topLevelStates = [
-		new State('initial')
-	];
-	this.state = this.initialState = this.topLevelStates[0];
+	this.topLevelStates = [];
 
 	this.transitions = [];
 	this.conditions = {};
+
+	this.createState('initial');
+	this.state = this.initialState = this.topLevelStates[0];
 };
 
 // 状態遷移機械にconditionを与えて、状態を遷移させる
@@ -21,19 +21,19 @@ StateMachine.prototype.transit = function (condition) {
 	}
 
 	this.state = state;
+	if (state.run) {
+		state.run();
+	}
+
+	return state;
 };
 
 // この状態遷移機械が、conditionを与えたらどのstateに進むかを計算
 StateMachine.prototype.stateToTransit = function (condition) {
-	var self = this;
 	var state = null;
 	var condName = condition.name || condition;
 
-	this.transitions.forEach(function (transition) {
-		if (!transition.from.hasState(self.state)) {
-			return;
-		}
-
+	this.state.transitions().forEach(function (transition) {
 		var tCond = transition.condition;
 		var tCondName = tCond.name || tCond;
 
@@ -64,6 +64,14 @@ StateMachine.prototype.findState = function (pathToState) {
 };
 
 StateMachine.prototype.findCondition = function (name) {
+	// console.log('[find condition: ' + name + ']');
+	// console.log(this.conditions);
+
+	// conditionが渡されることもあるので、その時はそのまま返す
+	if (name.name) {
+		return name;
+	}
+
 	return this.conditions[name] || null;
 };
 
@@ -96,6 +104,7 @@ StateMachine.prototype.createCondition = function (name) {
 // 遷移を新規作成(定義)
 StateMachine.prototype.createTransition = function (from, cond, to) {
 	from = this.findState(from);
+	cond = this.findCondition(cond);
 	to   = this.findState(to);
 
 	var transition = new Transition(from, cond, to);
@@ -110,22 +119,19 @@ StateMachine.prototype.createTransition = function (from, cond, to) {
 // jsonの定義書式からオブジェクト生成
 StateMachine.parse = function (definition) {
 	var stateMachine = new StateMachine();
-	var name; var state;
+	var name;
 
 	for (name in definition.states || {}) {
 		var state = stateMachine.createState(name);
 		state = $.extend(true, state, definition.states[name]);
 	}
 	for (name in definition.conditions || {}) {
-		stateMachine.createCondition(name);
+		var cond = stateMachine.createCondition(name);
+		cond = $.extend(true, cond, definition.conditions[name]);
 	}
-	for (name in definition.transitions || {}) {
-		stateMachine.createTransition(
-			definition.transitions[name].from,
-			definition.transitions[name].condition,
-			definition.transitions[name].to
-		);
-	}
+	(definition.transitions || []).forEach(function (t) {
+		stateMachine.createTransition(t.from, t.condition, t.to);
+	});
 	return stateMachine;
 };
 

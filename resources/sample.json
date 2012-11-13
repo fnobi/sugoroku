@@ -1,20 +1,49 @@
 {
 	states: {
 		initial: {
-			x: 50, y: 100
+			x: 50, y: 100,
+			elementSwitch: {
+				'#section1': false,
+				'#section2': false
+			}
 		},
 		a: {
-			x: 100, y: 300
+			x: 100, y: 300,
+			elementSwitch: {
+				'#section1': true,
+				'#section2': false
+			}
+		},
+		b: {
+			x: 300, y: 300,
+			elementSwitch: {
+				'#section1': false,
+				'#section2': true
+			}
 		}
+
 	},
 	conditions: {
-		c: { }
-	},
-	transitions: {
-		t: {
-			from: '/initial',
-			to: '/a',
-			condition: 'c'
+		c1: {
+			type: 'timeout',
+			ms: 0
+		},
+		c2: {
+			type: 'timeout',
+			ms: 2000
 		}
-	}
+	},
+	transitions: [{
+		from: '/initial',
+		to: '/a',
+		condition: 'c1'
+	}, {
+		from: '/a',
+		to: '/b',
+		condition: 'c2'
+	}, {
+		from: '/b',
+		to: '/a',
+		condition: 'c2'
+	}]
 }

@@ -88,13 +88,11 @@ buster.testCase('state machine', {
 			conditions: {
 				c: { }
 			},
-			transitions: {
-				t: {
-					from: '/initial',
-					to: '/a',
-					condition: 'c'
-				}
-			}
+			transitions: [{
+				from: '/initial',
+				to: '/a',
+				condition: 'c'
+			}]
 		});
 
 		assert.equals(stateMachine.topLevelStates.length, 2);
