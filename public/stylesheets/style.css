@@ -32,12 +32,6 @@ a {
     border: solid 0.1em #ba0;
     box-shadow: 0em 0em 1em rgba(0,0,0,0.3);
 }
-.sugoroku.state.list {
-
-}
-.sugoroku.state.leaf {
-
-}
 
 .sugoroku.state > .name {
     background-color: #ffcc88;

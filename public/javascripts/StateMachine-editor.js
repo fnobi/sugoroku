@@ -69,14 +69,6 @@ State.prototype.renderNode = function () {
 			top      : this.y + 'px'
 		});
 
-	// TODO: .listと.leafは同時に存在してはいけない
-	// ふたつのclassのtoggleってどう書くんだっけ…?
-	if (this.subStates.length) {
-		$node.addClass('list');
-	} else {
-		$node.addClass('leaf');
-	}
-
 	this.$node = $node;
 	return $node[0];
 };
