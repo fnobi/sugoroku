@@ -2,26 +2,32 @@
 	states: {
 		initial: {
 			x: 50, y: 100,
-			elementSwitch: {
-				'#section1': false,
-				'#section2': false
-			}
+			elementSwitch: {}
 		},
 		state_a: {
 			x: 100, y: 300,
 			elementSwitch: {
-				'#section1': true,
-				'#section2': false
+				'#guu': true,
+				'#cyoki': false,
+				'#paa': false
 			}
 		},
 		state_b: {
-			x: 300, y: 300,
+			x: 300, y: 320,
 			elementSwitch: {
-				'#section1': false,
-				'#section2': true
+				'#guu': false,
+				'#cyoki': true,
+				'#paa': false
+			}
+		},
+		state_c: {
+			x: 200, y: 200,
+			elementSwitch: {
+				'#guu': false,
+				'#cyoki': false,
+				'#paa': true
 			}
 		}
-
 	},
 	conditions: {
 		direct: {
@@ -43,7 +49,14 @@
 		condition: 'wait_2s'
 	}, {
 		from: '/state_b',
+		to: '/state_c',
+		condition: 'wait_2s'
+	}, {
+		from: '/state_c',
 		to: '/state_a',
 		condition: 'wait_2s'
-	}]
+	}],
+	elements: [
+		'#guu', '#cyoki', '#paa'
+	]
 }

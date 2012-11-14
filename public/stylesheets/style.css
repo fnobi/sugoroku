@@ -34,7 +34,7 @@ a {
 }
 
 .sugoroku.state.initialstate {
-    border: solid 0.2em #f70;
+    border: solid 0.1em #b30;
 }
 
 .sugoroku.state > .name {
@@ -42,6 +42,11 @@ a {
     padding: 0.2em 0.5em;
     display: block;
     color: #552200;
+}
+
+.sugoroku.state.initialstate > .name{
+    background-color: #f70;
+    color: white;
 }
 
 .sugoroku.transition {
@@ -68,7 +73,7 @@ a {
     position:fixed;
     right: 0em;
     z-index: 100;
-    border-left: solid 0.2em rgba(210,255,100,0.8);
+    border-left: solid 0.2em rgba(190,255,100,0.8);
     padding-top: 2em;
     color: #006600;
 }

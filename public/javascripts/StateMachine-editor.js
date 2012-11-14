@@ -76,6 +76,9 @@ State.prototype.render = function () {
 State.prototype.renderNode = function () {
 	var self = this;
 	var $node = this.$node || $('<div />');
+
+	var memory_x, memory_y;
+
 	$node.empty();
 	$node.off('click', '**');
 
@@ -90,11 +93,26 @@ State.prototype.renderNode = function () {
 		.css({
 			position : 'absolute',
 			left     : this.x + 'px',
-			top      : this.y + 'px',
-			cursor   : 'pointer'
+			top      : this.y + 'px'
 		})
 		.on('click', function () {
 			self.stateMachine.selectInfoSource(self);
+		})
+		.draggable({
+			cursor  : 'all-scroll',
+			opacity : 0.5,
+			start   : function () {
+				memory_x = $node[0].offsetLeft;
+				memory_y = $node[0].offsetTop;
+			},
+			stop    : function () {
+				var xv = $node[0].offsetLeft - memory_x;
+				var yv = $node[0].offsetTop - memory_y;
+
+				self.x += xv;
+				self.y += yv;
+				self.stateMachine.render();
+			}
 		});
 
 
@@ -117,18 +135,26 @@ State.prototype.renderInfo = function () {
 	$info.empty();
 
 	// element switchの生成
-	var elementSwitch = this.elementSwitch;
+	var elementSwitch = {};
+	this.stateMachine.elements.forEach(function (selector) {
+		elementSwitch[selector] = '−';
+	});
+	$.each(this.elementSwitch, function (selector, flag) {
+		elementSwitch[selector] = flag ? 'on' : 'off';
+	});
+
 	var $elementSwitchList = $('<table />');
-	for (var selector in elementSwitch) {
+
+	$.each(elementSwitch, function (selector, value) {
 		$elementSwitchList.append($([
 			'<tr>',
 			'<th>', selector, '</th>',
 			'<td>',
-			(elementSwitch[selector] ? 'on' : 'off'),
+			value,
 			'</td>',
 			'</tr>'
 		].join('')));
-	}
+	});
 
 	// ぜんぶ$infoに詰めていく
 	$info.append($('<h1 />').html(this.path()));

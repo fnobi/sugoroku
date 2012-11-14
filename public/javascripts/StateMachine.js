@@ -121,17 +121,26 @@ StateMachine.decode = function (definition) {
 	var stateMachine = new StateMachine();
 	var name;
 
+	// state読み込み
 	for (name in definition.states || {}) {
 		var state = stateMachine.createState(name);
 		state = $.extend(true, state, definition.states[name]);
 	}
+
+	// condition読み込み
 	for (name in definition.conditions || {}) {
 		var cond = stateMachine.createCondition(name);
 		cond = $.extend(true, cond, definition.conditions[name]);
 	}
+
+	// transition読み込み
 	(definition.transitions || []).forEach(function (t) {
 		stateMachine.createTransition(t.from, t.condition, t.to);
 	});
+
+	// その他読み込み
+	stateMachine.elements = definition.elements || [];
+
 	return stateMachine;
 };
 
