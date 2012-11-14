@@ -15,6 +15,7 @@ StateMachine.prototype.render = function () {
 };
 
 StateMachine.prototype.renderRoot = function () {
+	var self = this;
 	var $root = this.$root || $('<section />');
 	$root.empty();
 
@@ -26,9 +27,12 @@ StateMachine.prototype.renderRoot = function () {
 		$root.append(state.render());
 	});
 
-	this.transitions.forEach(function (transition) {
-		$root.append(transition.render());
-	});
+	// statesが画面上にレンダリングされてから計算等行いたいので、timeout
+	setTimeout(function () {
+		self.transitions.forEach(function (transition) {
+			$root.append(transition.render());
+		});
+	}, 100);
 
 	this.$root = $root;
 	return $root[0];
@@ -101,16 +105,14 @@ State.prototype.renderNode = function () {
 		.draggable({
 			cursor  : 'all-scroll',
 			opacity : 0.5,
+			scroll  : true,
 			start   : function () {
 				memory_x = $node[0].offsetLeft;
 				memory_y = $node[0].offsetTop;
 			},
 			stop    : function () {
-				var xv = $node[0].offsetLeft - memory_x;
-				var yv = $node[0].offsetTop - memory_y;
-
-				self.x += xv;
-				self.y += yv;
+				self.x += $node[0].offsetLeft - memory_x;
+				self.y += $node[0].offsetTop - memory_y;
 				self.stateMachine.render();
 			}
 		});
@@ -197,9 +199,9 @@ Transition.prototype.renderArrow = function () {
 	$arrow.addClass('transition');
 	$arrow.css({
 		position: 'absolute',
-		left: (lm.from_x + lm.offset) + 'px', top: (lm.from_y + lm.offset) + 'px',
-		width: lm.length - lm.trim,
-		transform: 'rotate(' + lm.angle + 'deg)',
+		left: lm.left + 'px', top: lm.top + 'px',
+		width: lm.length,
+		transform: 'rotate(' + (180 * lm.angle / Math.PI) + 'deg)',
 		'transform-origin': '0% 0%'
 	});
 	$arrow.html(this.condition.name);
@@ -210,26 +212,35 @@ Transition.prototype.renderArrow = function () {
 
 
 var LineMeter = function (from, to) {
-	this.from_x = from.x || 0;
-	this.from_y = from.y || 0;
+	var from_x = from.x || 0; var from_y = from.y || 0;
+	var from_w = from.$node[0].offsetWidth;
+	var from_h = from.$node[0].offsetHeight;
+	var to_x = to.x || 0; var to_y = to.y || 0;
+	var to_w = to.$node[0].offsetWidth;
+	var to_h = to.$node[0].offsetHeight;
 
-	this.to_x = to.x || 0;
-	this.to_y = to.y || 0;
+	this.left  = from_x + from_w / 2; this.right = to_x + to_w / 2;
+	this.top = from_y + from_h / 2; this.bottom = to_y + to_h / 2;
 
-	// 右下方向へのシフト
-	this.offset = 20;
-
-	// 長さの短縮 (すこし短くしないと、矢印の先端が見えない)
-	this.trim = 40;
-
-	this.length = Math.sqrt(Math.pow(
-		this.to_x - this.from_x, 2
+	var allLength = Math.sqrt(Math.pow(
+		this.right - this.left, 2
 	) + Math.pow(
-		this.to_y - this.from_y, 2
+		this.bottom - this.top, 2
 	));
 
-	this.angle = 180 * Math.atan2(
-		this.to_y - this.from_y,
-		this.to_x - this.from_x
-	) / Math.PI;
+	// 長さの短縮 (すこし短くしないと、矢印の先端が見えない)
+	var trim = allLength * 0.2;
+	trim = Math.sqrt(Math.pow(
+		to_w / 2, 2
+	) + Math.pow(
+		to_h / 2, 2
+	));
+
+	this.length = allLength - trim;
+
+	this.angle = Math.atan2(
+		this.bottom - this.top,
+		this.right - this.left
+	);
+
 };
