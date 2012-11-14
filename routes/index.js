@@ -18,7 +18,7 @@ exports.editor = function(req, res){
 	}
 
 	res.render('editor', {
-		title: 'edit: ' + codeName,
+		title: codeName,
 		jsurl: codeCollection.url(codeName, 'editor')
 	});
 };
