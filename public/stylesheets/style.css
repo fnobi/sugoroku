@@ -33,6 +33,10 @@ a {
     box-shadow: 0em 0em 1em rgba(0,0,0,0.3);
 }
 
+.sugoroku.state.initialstate {
+    border: solid 0.2em #f70;
+}
+
 .sugoroku.state > .name {
     background-color: #ffcc88;
     padding: 0.2em 0.5em;
@@ -60,9 +64,50 @@ a {
 #infobar.sugoroku {
     width: 18em;
     height: 100%;
-    background-color: rgba(255,255,200,0.8);
+    background-color: rgba(200,255,200,0.8);
     position:fixed;
     right: 0em;
     z-index: 100;
-    border-left: solid 0.2em rgba(255,210,100,0.8);
+    border-left: solid 0.2em rgba(210,255,100,0.8);
+    padding-top: 2em;
+    color: #006600;
+}
+
+#infobar.sugoroku > * {
+    margin: 0em; padding: 0.5em;
+}
+
+#infobar.sugoroku h1 {
+    margin: 0em; padding: 0em;
+    font-size:150%;
+    margin-bottom: 0.5em;
+}
+
+#infobar.sugoroku section {
+    border: solid 1px #393;
+    margin: 0.5em 0em;; padding: 0em;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+#infobar.sugoroku section h1{
+    font-size: 100%;
+    margin: 0em;padding: 0.1em 0.2em;
+    background-color: #393;
+    color: white;
+}
+
+#infobar.sugoroku section ul{
+    display: block;
+    margin: 0em; padding: 0em;
+}
+#infobar.sugoroku section li{
+    display: block;
+    margin: 0em; padding: 0em 0.5em;
+    border-top: solid 1px #040;
+    border-bottom: solid 1px #8c8;
+}
+
+
+.sugoroku.selected {
+    box-shadow: 0px 0px 1em green;
 }

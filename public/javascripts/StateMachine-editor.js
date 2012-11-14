@@ -42,8 +42,63 @@ StateMachine.prototype.renderInfoBar = function () {
 		.attr({id: 'infobar'})
 		.addClass('sugoroku');
 
+	if (this.infoSource) {
+		$infoBar.append(this.renderInfo());
+	} else {
+		$infoBar.append('<p>nothing selected.</p>');
+	}
+
 	this.$infoBar = $infoBar;
 	return $infoBar[0];
+};
+
+StateMachine.prototype.renderInfo = function () {
+	var $info = this.$info || $('<div />');
+	$info.empty();
+
+	var infoSource = this.infoSource;
+	var elementSwitch = infoSource.elementSwitch;
+
+	// element switchの生成
+	var $elementSwitchList = $('<ul />');
+	for (var selector in elementSwitch) {
+		$elementSwitchList.append($([
+			'<li>',
+			'<input type="checkbox" ',
+			(elementSwitch[selector] ? 'checked' : ''),
+			'/>',
+			selector,
+			'</li>'
+		].join('')));
+	}
+
+	// ぜんぶ$infoに詰めていく
+	$info.append($('<h1 />').html(infoSource.path()));
+	$info.append(
+		$('<section />')
+			.append($('<h1 />').html('type: State'))
+	);
+	$info.append(
+		$('<section />')
+			.append($('<h1 />').html('element switch'))
+			.append($elementSwitchList)
+	);
+
+	return $info[0];
+};
+
+StateMachine.prototype.selectInfoSource = function (infoSource) {
+	// 現在選択されているinfo sourceの表示をリセット
+	if (this.infoSource) {
+		this.infoSource.cancelSelect();
+	}
+
+	// infoSource切り換え
+	this.infoSource = infoSource;
+	this.infoSource.select();
+
+	// info bar を再描画
+	this.renderInfoBar();
 };
 
 State.prototype.render = function () {
@@ -52,8 +107,10 @@ State.prototype.render = function () {
 };
 
 State.prototype.renderNode = function () {
+	var self = this;
 	var $node = this.$node || $('<div />');
 	$node.empty();
+	$node.off('click', '**');
 
 	$node
 		.addClass('sugoroku')
@@ -66,12 +123,38 @@ State.prototype.renderNode = function () {
 		.css({
 			position : 'absolute',
 			left     : this.x + 'px',
-			top      : this.y + 'px'
+			top      : this.y + 'px',
+			cursor   : 'pointer'
+		})
+		.on('click', function () {
+			self.stateMachine.selectInfoSource(self);
 		});
+
+
+	if (this.name == 'initial') {
+		$node.addClass('initialstate');
+	}
+
+	if (this.selected) {
+		$node.addClass('selected');
+	} else {
+		$node.removeClass('selected');
+	}
 
 	this.$node = $node;
 	return $node[0];
 };
+
+State.prototype.cancelSelect = function () {
+	this.selected = false;
+	this.renderNode();
+};
+
+State.prototype.select = function () {
+	this.selected = true;
+	this.renderNode();
+};
+
 
 Transition.prototype.render = function () {
 	var arrow = this.renderArrow();
