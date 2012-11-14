@@ -1,38 +1,66 @@
-/* =============================================================================
-  StateMachineおよびState, Condition, Transitionのuiをまとめて書く
-============================================================================= */
+/*
+ StateMachine-editor.js
+--------------------------------------------------------------------------------
+ - StateMachineおよびState, Condition, Transitionのuiをまとめて書く
+ - code collectionで結合された状態で使用される
+--------------------------------------------------------------------------------
+*/
 
-StateMachine.prototype.render = function (parentNode) {
-	var $element = this.$element || $('<section />');
-	$element.empty();
+StateMachine.prototype.render = function () {
+	var root = this.renderRoot();
+	var infoBar = this.renderInfoBar();
+	$(root).append(infoBar);
 
-	$element
+	return root;
+};
+
+StateMachine.prototype.renderRoot = function () {
+	var $root = this.$root || $('<section />');
+	$root.empty();
+
+	$root
 		.addClass('sugoroku')
 		.addClass('stateMachine');
 
-
 	this.topLevelStates.forEach(function (state) {
-		$element.append(state.render());
+		$root.append(state.render());
 	});
 
 	this.transitions.forEach(function (transition) {
-		$element.append(transition.render());
+		$root.append(transition.render());
 	});
 
-	this.$element = $element;
-	return $element[0];
+	this.$root = $root;
+	return $root[0];
 };
 
-State.prototype.render = function (parentNode) {
-	var $element = this.$element || $('<div />');
-	$element.empty();
+StateMachine.prototype.renderInfoBar = function () {
+	var $infoBar = this.$infoBar || $('<aside />');
+	$infoBar.empty();
 
-	$element
+	$infoBar
+		.attr({id: 'infobar'})
+		.addClass('sugoroku');
+
+	this.$infoBar = $infoBar;
+	return $infoBar[0];
+};
+
+State.prototype.render = function () {
+	var node = this.renderNode();
+	return node;
+};
+
+State.prototype.renderNode = function () {
+	var $node = this.$node || $('<div />');
+	$node.empty();
+
+	$node
 		.addClass('sugoroku')
 		.addClass('state')
 		.append(
 			$('<span />')
-				.html('▶' + this.name)
+				.html(this.name)
 				.addClass('name')
 		)
 		.css({
@@ -44,34 +72,39 @@ State.prototype.render = function (parentNode) {
 	// TODO: .listと.leafは同時に存在してはいけない
 	// ふたつのclassのtoggleってどう書くんだっけ…?
 	if (this.subStates.length) {
-		$element.addClass('list');
+		$node.addClass('list');
 	} else {
-		$element.addClass('leaf');
+		$node.addClass('leaf');
 	}
 
-	this.$element = $element;
-	return $element[0];
+	this.$node = $node;
+	return $node[0];
 };
 
 Transition.prototype.render = function () {
-	var $element = this.$element || $('<div />');
-	$element.empty();
+	var arrow = this.renderArrow();
+	return arrow;
+};
+
+Transition.prototype.renderArrow = function () {
+	var $arrow = this.$arrow || $('<div />');
+	$arrow.empty();
 
 	var lm = new LineMeter(this.from, this.to);
 
-	$element.addClass('sugoroku');
-	$element.addClass('transition');
-	$element.css({
+	$arrow.addClass('sugoroku');
+	$arrow.addClass('transition');
+	$arrow.css({
 		position: 'absolute',
 		left: (lm.from_x + lm.offset) + 'px', top: (lm.from_y + lm.offset) + 'px',
 		width: lm.length - lm.trim,
 		transform: 'rotate(' + lm.angle + 'deg)',
 		'transform-origin': '0% 0%'
 	});
-	$element.html(this.condition.name);
+	$arrow.html(this.condition.name);
 
-	this.$element = $element;
-	return $element[0];
+	this.$arrow = $arrow;
+	return $arrow[0];
 };
 
 
