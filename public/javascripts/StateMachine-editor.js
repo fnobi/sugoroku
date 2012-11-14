@@ -84,7 +84,7 @@ State.prototype.renderNode = function () {
 	var memory_x, memory_y;
 
 	$node.empty();
-	$node.off('click', '**');
+	$node.off('click');
 
 	$node
 		.addClass('sugoroku')

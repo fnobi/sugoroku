@@ -1,0 +1,213 @@
+{
+	states: {
+		initial: {
+			x: 50, y: 100,
+			elementSwitch: {}
+		},
+		g_g: {
+			x: 100, y: 100,
+			elementSwitch: {
+				'#user_g': true,   '#com_g': true,
+				'#user_c': false,  '#com_c': false,
+				'#user_p': false,  '#com_p': false
+			}
+		},
+		g_c: {
+			x: 150, y: 100,
+			elementSwitch: {
+				'#user_g': true,   '#com_g': false,
+				'#user_c': false,  '#com_c': true,
+				'#user_p': false,  '#com_p': false
+			}
+		},
+		g_p: {
+			x: 200, y: 100,
+			elementSwitch: {
+				'#user_g': true,   '#com_g': false,
+				'#user_c': false,  '#com_c': false,
+				'#user_p': false,  '#com_p': true
+			}
+		},
+		c_g: {
+			x: 100, y: 200,
+			elementSwitch: {
+				'#user_g': false,  '#com_g': true,
+				'#user_c': true,   '#com_c': false,
+				'#user_p': false,  '#com_p': false
+			}
+		},
+		c_c: {
+			x: 150, y: 200,
+			elementSwitch: {
+				'#user_g': false,  '#com_g': false,
+				'#user_c': true,   '#com_c': true,
+				'#user_p': false,  '#com_p': false
+			}
+		},
+		c_p: {
+			x: 200, y: 200,
+			elementSwitch: {
+				'#user_g': false,  '#com_g': false,
+				'#user_c': true,   '#com_c': false,
+				'#user_p': false,  '#com_p': true
+			}
+		},
+		p_g: {
+			x: 100, y: 300,
+			elementSwitch: {
+				'#user_g': false,  '#com_g': true,
+				'#user_c': false,  '#com_c': false,
+				'#user_p': true,   '#com_p': false
+			}
+		},
+		p_c: {
+			x: 150, y: 300,
+			elementSwitch: {
+				'#user_g': false,  '#com_g': false,
+				'#user_c': false,  '#com_c': true,
+				'#user_p': true,   '#com_p': false
+			}
+		},
+		p_p: {
+			x: 200, y: 300,
+			elementSwitch: {
+				'#user_g': false,  '#com_g': false,
+				'#user_c': false,  '#com_c': false,
+				'#user_p': true,   '#com_p': true
+			}
+		}
+	},
+	conditions: {
+		direct: {
+			type: 'timeout',
+			ms: 0
+		},
+		wait_2s: {
+			type: 'timeout',
+			ms: 2000
+		},
+		push_g: {
+			type: 'click',
+			element: '#g_button'
+		},
+		push_c: {
+			type: 'click',
+			element: '#c_button'
+		},
+		push_p: {
+			type: 'click',
+			element: '#p_button'
+		}
+	},
+	transitions: [{
+		from: '/initial',
+		to: '/g_g',
+		condition: 'direct'
+	}, {
+		from: '/g_g',
+		to:   '/g_p',
+		condition: 'wait_2s'
+	}, {
+		from: '/c_c',
+		to:   '/c_g',
+		condition: 'wait_2s'
+	}, {
+		from: '/p_p',
+		to:   '/p_c',
+		condition: 'wait_2s'
+	}, {
+		from: '/g_c',
+		to:   '/g_p',
+		condition: 'wait_2s'
+	}, {
+		from: '/c_p',
+		to:   '/c_g',
+		condition: 'wait_2s'
+	}, {
+		from: '/p_g',
+		to:   '/p_c',
+		condition: 'wait_2s'
+
+
+	}, {
+		from: '/g_g',
+		to:   '/p_g',
+		condition: 'push_p'
+	}, {
+		from: '/c_g',
+		to:   '/p_g',
+		condition: 'push_p'
+	}, {
+		from: '/g_c',
+		to:   '/p_c',
+		condition: 'push_p'
+	}, {
+		from: '/c_c',
+		to:   '/p_c',
+		condition: 'push_p'
+	}, {
+		from: '/g_p',
+		to:   '/p_p',
+		condition: 'push_p'
+	}, {
+		from: '/c_p',
+		to:   '/p_p',
+		condition: 'push_p'
+
+
+	}, {
+		from: '/g_g',
+		to:   '/c_g',
+		condition: 'push_c'
+	}, {
+		from: '/p_g',
+		to:   '/c_g',
+		condition: 'push_c'
+	}, {
+		from: '/g_c',
+		to:   '/c_c',
+		condition: 'push_c'
+	}, {
+		from: '/p_c',
+		to:   '/c_c',
+		condition: 'push_c'
+	}, {
+		from: '/g_p',
+		to:   '/c_p',
+		condition: 'push_c'
+	}, {
+		from: '/p_p',
+		to:   '/c_p',
+		condition: 'push_c'
+
+
+	}, {
+		from: '/p_g',
+		to:   '/g_g',
+		condition: 'push_g'
+	}, {
+		from: '/c_g',
+		to:   '/g_g',
+		condition: 'push_g'
+	}, {
+		from: '/p_c',
+		to:   '/g_c',
+		condition: 'push_g'
+	}, {
+		from: '/c_c',
+		to:   '/g_c',
+		condition: 'push_g'
+	}, {
+		from: '/p_p',
+		to:   '/g_p',
+		condition: 'push_g'
+	}, {
+		from: '/c_p',
+		to:   '/g_p',
+		condition: 'push_g'
+	}],
+	elements: [
+		'#user_g', '#user_c', '#user_p',
+		'#com_g',  '#com_c',  '#com_p'
+	]
+}

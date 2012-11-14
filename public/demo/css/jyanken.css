@@ -1,0 +1,12 @@
+h1 {
+    font-size: 120%;
+    margin: 0px; padding: 0px;
+}
+
+table {
+    border: solid 5px gray;
+}
+
+th {
+    font-size: 80%;
+}

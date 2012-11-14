@@ -21,8 +21,8 @@ StateMachine.prototype.transit = function (condition) {
 	}
 
 	this.state = state;
-	if (state.run) {
-		state.run();
+	if (state.action) {
+		state.action();
 	}
 
 	return state;
