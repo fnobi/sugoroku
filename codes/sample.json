@@ -7,14 +7,14 @@
 				'#section2': false
 			}
 		},
-		a: {
+		state_a: {
 			x: 100, y: 300,
 			elementSwitch: {
 				'#section1': true,
 				'#section2': false
 			}
 		},
-		b: {
+		state_b: {
 			x: 300, y: 300,
 			elementSwitch: {
 				'#section1': false,
@@ -24,26 +24,26 @@
 
 	},
 	conditions: {
-		c1: {
+		direct: {
 			type: 'timeout',
 			ms: 0
 		},
-		c2: {
+		wait_2s: {
 			type: 'timeout',
 			ms: 2000
 		}
 	},
 	transitions: [{
 		from: '/initial',
-		to: '/a',
-		condition: 'c1'
+		to: '/state_a',
+		condition: 'direct'
 	}, {
-		from: '/a',
-		to: '/b',
-		condition: 'c2'
+		from: '/state_a',
+		to: '/state_b',
+		condition: 'wait_2s'
 	}, {
-		from: '/b',
-		to: '/a',
-		condition: 'c2'
+		from: '/state_b',
+		to: '/state_a',
+		condition: 'wait_2s'
 	}]
 }
