@@ -43,7 +43,7 @@ StateMachine.prototype.renderInfoBar = function () {
 		.addClass('sugoroku');
 
 	if (this.infoSource) {
-		$infoBar.append(this.renderInfo());
+		$infoBar.append(this.infoSource.renderInfo());
 	} else {
 		$infoBar.append('<p>nothing selected.</p>');
 	}
@@ -52,40 +52,6 @@ StateMachine.prototype.renderInfoBar = function () {
 	return $infoBar[0];
 };
 
-StateMachine.prototype.renderInfo = function () {
-	var $info = this.$info || $('<div />');
-	$info.empty();
-
-	var infoSource = this.infoSource;
-	var elementSwitch = infoSource.elementSwitch;
-
-	// element switchの生成
-	var $elementSwitchList = $('<ul />');
-	for (var selector in elementSwitch) {
-		$elementSwitchList.append($([
-			'<li>',
-			'<input type="checkbox" ',
-			(elementSwitch[selector] ? 'checked' : ''),
-			'/>',
-			selector,
-			'</li>'
-		].join('')));
-	}
-
-	// ぜんぶ$infoに詰めていく
-	$info.append($('<h1 />').html(infoSource.path()));
-	$info.append(
-		$('<section />')
-			.append($('<h1 />').html('type: State'))
-	);
-	$info.append(
-		$('<section />')
-			.append($('<h1 />').html('element switch'))
-			.append($elementSwitchList)
-	);
-
-	return $info[0];
-};
 
 StateMachine.prototype.selectInfoSource = function (infoSource) {
 	// 現在選択されているinfo sourceの表示をリセット
@@ -103,6 +69,7 @@ StateMachine.prototype.selectInfoSource = function (infoSource) {
 
 State.prototype.render = function () {
 	var node = this.renderNode();
+	var info = this.renderInfo();
 	return node;
 };
 
@@ -143,6 +110,39 @@ State.prototype.renderNode = function () {
 
 	this.$node = $node;
 	return $node[0];
+};
+
+State.prototype.renderInfo = function () {
+	var $info = this.$info || $('<div />');
+	$info.empty();
+
+	// element switchの生成
+	var elementSwitch = this.elementSwitch;
+	var $elementSwitchList = $('<table />');
+	for (var selector in elementSwitch) {
+		$elementSwitchList.append($([
+			'<tr>',
+			'<th>', selector, '</th>',
+			'<td>',
+			(elementSwitch[selector] ? 'on' : 'off'),
+			'</td>',
+			'</tr>'
+		].join('')));
+	}
+
+	// ぜんぶ$infoに詰めていく
+	$info.append($('<h1 />').html(this.path()));
+	$info.append(
+		$('<section />')
+			.append($('<h1 />').html('type: State'))
+	);
+	$info.append(
+		$('<section />')
+			.append($('<h1 />').html('element switch'))
+			.append($elementSwitchList)
+	);
+
+	return $info[0];
 };
 
 State.prototype.cancelSelect = function () {
