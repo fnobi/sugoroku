@@ -117,7 +117,7 @@ StateMachine.prototype.createTransition = function (from, cond, to) {
 };
 
 // jsonの定義書式からオブジェクト生成
-StateMachine.parse = function (definition) {
+StateMachine.decode = function (definition) {
 	var stateMachine = new StateMachine();
 	var name;
 
@@ -135,3 +135,7 @@ StateMachine.parse = function (definition) {
 	return stateMachine;
 };
 
+// stateMachineオブジェクトをjson定義書式に直す
+StateMachine.encode = function (stateMachine) {
+
+};

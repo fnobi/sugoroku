@@ -75,13 +75,13 @@ buster.testCase('state machine', {
 		assert.equals(stateMachine.state.path(), '/b');
 	},
 
-	'parse empty definition': function () {
-		var stateMachine = StateMachine.parse({});
+	'decode empty definition': function () {
+		var stateMachine = StateMachine.decode({});
 		assert.equals(stateMachine.state.path(), '/initial');
 	},
 
-	'parse state transition': function () {
-		var stateMachine = StateMachine.parse({
+	'decode state transition': function () {
+		var stateMachine = StateMachine.decode({
 			states: {
 				a: { }
 			},
@@ -99,9 +99,6 @@ buster.testCase('state machine', {
 
 		stateMachine.transit('c');
 		assert.equals(stateMachine.state.path(), '/a');
-
-		// conditionのparseができてないと思う。
-		// newはStatemachine以外、外からは叩かない
 	}
 
 });
