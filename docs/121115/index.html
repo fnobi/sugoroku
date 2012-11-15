@@ -71,15 +71,52 @@
 <section class="slide" id="statechart">
   <h2>state chart</h2>
   <h3>とは?</h3>
-  <img src="http://www.pms.ifi.lmu.de/publikationen/diplomarbeiten/Sacha.Berger/illustrations/UML/StatechartDiagram-DialPhoneNr.pdf.png" />
+  <img src="./images/statechart-sample.gif" />
+</section>
+
+<section class="slide" id="idea">
+  <h2>あいであ</h2>
+  <h3>クライアントサイドで頻出する一連の流れを最適な形で書く</h3>
+  <ul>
+    <li>表示 → ボタンイベント → なんかを読み込み → 読めたら整形 → 表示...</li>
+    <li>クライアントサイドってこれの繰り返しなんじゃないか?</li>
+    <li>図ですっきり描けたりするんじゃないかしら。</li>
+  </ul>
 </section>
 
 <section class="slide" id="problem">
   <h2>着目する問題</h2>
+
+  <h3>クライアントサイドの非同期処理の可読性</h3>
+  <ul>
+    <li>ajax</li>
+    <li>イベント待ち</li>
+  </ul>
+  <p>いつ何を待っていて、何が起きるとどうなるのか、<strong>分かりやすくする</strong>ことで、ミスが減る</p>
+  <p>分かりやすくする → 分かりにくさが障壁になっていた人も、開発ができる(かも)</p>
+
+</section>
+
+<section class="slide" id="goal">
+  <h2>こんなんで動いてほしい</h2>
+  <img src="./images/twittersample.jpg" height="500" />
 </section>
 
 <section class="slide" id="coding">
-  <h2>実装</h2>
+  <h1>実装</h1>
+</section>
+
+<section class="slide" id="demo">
+  <h2>実装詳細</h2>
+  <ul>
+    <li>拡張StateMachineをつくる (subState付き)</li>
+    <li>editorとrunner</li>
+    <li>jsonにencodeして保存しておく</li>
+    <li>stateはとりあえず、「どの要素を表示するか」を示す</li>
+    <li>conditionはclickとwaitくらいにしておいた</li>
+    <li>まだsubStateは図化してない</li>
+  </ul>
+  <p>まぁ書いてもわかりづらいので、</p>
 </section>
 
 <section class="slide" id="demo">
@@ -87,8 +124,33 @@
   <p>します。</p>
 </section>
 
+<section class="slide" id="nextcoding">
+  <h2>あと何が必要か</h2>
+  <ul>
+    <li>
+      複雑なデータ整形をどうやって書くか
+      <ul>
+	<li>actionの書き方はどうするのがよいんだろう</li>
+	<li>どうせ「何でもできる」ものにならないような</li>
+	<li>得意分野を見つけて売りにする</li>
+      </ul>
+    </li>
+    <li>
+      サブルーチン的な意味でのsubState
+      <ul>
+	<li>折りたたみ・拡大縮小とかあるとかきやすそう</li>
+      </ul>
+    </li>
+  </ul>
+</section>
+
 <section class="slide" id="plan">
   <h2>これから</h2>
+  <p>評価の方法をかちっと決めてから、この先の実装をした方がいい気がする。</p>
+</section>
+
+<section class="slide" id="end">
+  <h1>おしまい</h1>
 </section>
 
 <!-- End slides. -->
