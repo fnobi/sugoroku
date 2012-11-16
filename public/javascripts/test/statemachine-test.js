@@ -10,13 +10,27 @@ buster.testCase('state machine', {
 		);
 	},
 
+	'state name is required': function () {
+		var stateMachine = new StateMachine();
+
+		refute(stateMachine.addState());
+	},
+
+	'state name is uniq': function () {
+		var stateMachine = new StateMachine();
+
+		stateMachine.addState('hoge');
+
+		refute(stateMachine.addState('hoge'));
+	},
+
 	'normal transition': function () {
 		var stateName = 'hoge';
 		var stateMachine = new StateMachine();
 
-		var s1 = stateMachine.initialState;
+		var s1 = stateMachine.findState('/initial');
 		var c  = stateMachine.createCondition('c');
-		var s2 = stateMachine.createState(stateName);
+		var s2 = stateMachine.addState(stateName);
 
 		stateMachine.createTransition(s1, c, s2);
 
@@ -25,22 +39,23 @@ buster.testCase('state machine', {
 		assert.equals(stateMachine.state.path(), '/' + stateName);
 	},
 
+
 	'sub state': function () {
 		var stateMachine = new StateMachine();
 
-		var s  = stateMachine.createState();
-		var ss = s.createSubState();
+		var s  = stateMachine.addState('a');
+		var ss = s.addSubState('aa');
 
 		assert.equals(ss.parentState, s);
-		assert.equals(s.subStates[0], ss);
+		assert.equals(s.subStates['aa'], ss);
 	},
 
 	'has state': function () {
 		var stateMachine = new StateMachine();
 
-		var s   = stateMachine.createState();
-		var ss  = s.createSubState();
-		var sss = ss.createSubState();
+		var s   = stateMachine.addState('a');
+		var ss  = s.addSubState('aa');
+		var sss = ss.addSubState('aaa');
 
 		assert(s.hasState(s));
 		assert(s.hasState(ss));
@@ -58,9 +73,9 @@ buster.testCase('state machine', {
 	'transition to sub state': function () {
 		var stateMachine = new StateMachine();
 
-		var s1 = stateMachine.initialState;
-		var s2 = s1.createSubState('a');
-		var s3 = stateMachine.createState('b');
+		var s1 = stateMachine.findState('/initial');
+		var s2 = s1.addSubState('a');
+		var s3 = stateMachine.addState('b');
 
 		var c1  = stateMachine.createCondition('c1');
 		var c2  = stateMachine.createCondition('c2');
@@ -94,8 +109,6 @@ buster.testCase('state machine', {
 				condition: 'c'
 			}]
 		});
-
-		assert.equals(stateMachine.topLevelStates.length, 2);
 
 		stateMachine.transit('c');
 		assert.equals(stateMachine.state.path(), '/a');

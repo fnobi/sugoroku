@@ -23,7 +23,7 @@ StateMachine.prototype.renderRoot = function () {
 		.addClass('sugoroku')
 		.addClass('stateMachine');
 
-	this.topLevelStates.forEach(function (state) {
+	$.each(this.rootState.subStates, function (name, state) {
 		$root.append(state.render());
 	});
 

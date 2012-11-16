@@ -2,14 +2,19 @@
   StateMachine - 状態遷移機械の実装
 ============================================================================= */
 
-var StateMachine = function () {
-	this.topLevelStates = [];
-
+var StateMachine = function (name) {
+	this.name = name;
 	this.transitions = [];
-	this.conditions = {};
+	this.conditions  = {};
 
-	this.createState('initial');
-	this.state = this.initialState = this.topLevelStates[0];
+	this.initializeRootState();
+};
+
+StateMachine.prototype.initializeRootState = function () {
+	var rootState = this.rootState = new State(this.name);
+	rootState.stateMachine = this;
+	this.state = rootState.initializeSubState();
+	return rootState;
 };
 
 // 状態遷移機械にconditionを与えて、状態を遷移させる
@@ -17,10 +22,13 @@ StateMachine.prototype.transit = function (condition) {
 	var state = this.stateToTransit(condition);
 
 	if (!state) {
-		throw new Error('no state to transit to.');
+		// 行き先となるstateがなかった場合は何もせず、現在のstateを返す
+		return this.state;
 	}
 
+	// state書き換え
 	this.state = state;
+
 	if (state.action) {
 		state.action();
 	}
@@ -53,20 +61,10 @@ StateMachine.prototype.findState = function (pathToState) {
 		return pathToState;
 	}
 
-	var state = null;
-	this.topLevelStates.forEach(function (topLevelState) {
-		if (topLevelState.path() == pathToState) {
-			state = topLevelState;
-		}
-	});
-
-	return state;
+	return this.rootState.findSubState(pathToState);
 };
 
 StateMachine.prototype.findCondition = function (name) {
-	// console.log('[find condition: ' + name + ']');
-	// console.log(this.conditions);
-
 	// conditionが渡されることもあるので、その時はそのまま返す
 	if (name.name) {
 		return name;
@@ -76,18 +74,8 @@ StateMachine.prototype.findCondition = function (name) {
 };
 
 // 状態を新規作成
-StateMachine.prototype.createState = function (name) {
-	var state;
-
-	if (state = this.findState('/' + name)) {
-		return state;
-	}
-
-	state = new State(name);
-	state.parentState = null;
-	state.stateMachine = this;
-	this.topLevelStates.push(state);
-	return state;
+StateMachine.prototype.addState = function (name) {
+	return this.rootState.addSubState(name);
 };
 
 // 環境を新規作成(定義)
@@ -123,7 +111,7 @@ StateMachine.decode = function (definition) {
 
 	// state読み込み
 	for (name in definition.states || {}) {
-		var state = stateMachine.createState(name);
+		var state = stateMachine.addState(name);
 		state = $.extend(true, state, definition.states[name]);
 	}
 
