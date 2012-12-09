@@ -1,15 +1,11 @@
 var codeCollection = require('codeCollection');
 
-/*
- * GET home page.
- */
-
 exports.index = function(req, res){
 	res.render('index', { title: 'sugoroku' });
 };
 
 exports.editor = function(req, res){
-	var codeName = req.params[0];
+	var codeName = req.params.code_name;
 
 	if (!codeCollection.exists(codeName)) {
 		res.statusCode = 404;
@@ -24,8 +20,8 @@ exports.editor = function(req, res){
 };
 
 exports.codes = function (req, res) {
-	var codeName = req.params[0];
-	var codeAction = req.params[2];
+	var codeName = req.params.code_name;
+	var codeAction = req.params.code_action;
 
 	codeCollection.codeText(codeName, codeAction, function (err, codeText) {
 		if (err) {
