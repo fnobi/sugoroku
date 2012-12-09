@@ -79,7 +79,7 @@ StateMachine.prototype.addState = function (name) {
 };
 
 // 環境を新規作成(定義)
-StateMachine.prototype.createCondition = function (name) {
+StateMachine.prototype.addCondition = function (name) {
 	var condition = new Condition(name);
 
 	// 親と子お互いに、相手へのリファレンスを持つ
@@ -90,7 +90,7 @@ StateMachine.prototype.createCondition = function (name) {
 };
 
 // 遷移を新規作成(定義)
-StateMachine.prototype.createTransition = function (from, cond, to) {
+StateMachine.prototype.addTransition = function (from, cond, to) {
 	from = this.findState(from);
 	cond = this.findCondition(cond);
 	to   = this.findState(to);
@@ -117,13 +117,13 @@ StateMachine.decode = function (definition) {
 
 	// condition読み込み
 	for (name in definition.conditions || {}) {
-		var cond = stateMachine.createCondition(name);
+		var cond = stateMachine.addCondition(name);
 		cond = $.extend(true, cond, definition.conditions[name]);
 	}
 
 	// transition読み込み
 	(definition.transitions || []).forEach(function (t) {
-		stateMachine.createTransition(t.from, t.condition, t.to);
+		stateMachine.addTransition(t.from, t.condition, t.to);
 	});
 
 	// その他読み込み

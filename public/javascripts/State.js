@@ -34,7 +34,8 @@ State.prototype.createSubState = function (name) {
 
 State.prototype.initializeSubState = function () {
 	var initialStateName = 'initial';
-	var initialState = this.createSubState(initialStateName);
+	var initialState = this.initialState =
+		this.createSubState(initialStateName);
 
 	this.subStates = {};
 	this.subStates[initialStateName] = initialState;
