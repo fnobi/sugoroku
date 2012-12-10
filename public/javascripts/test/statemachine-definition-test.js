@@ -25,12 +25,20 @@ buster.testCase('state machine definition', {
 
 	'encode empty definition': function () {
 		var stateMachine = StateMachine.decode({});
-		assert.equals(stateMachine.encode(), {});
+		assert.equals(
+			stateMachine.encode(),
+			{
+				states: { initial: {} },
+				conditions: {},
+				transitions : []
+			}
+		);
 	},
 
 	'encode state machine': function () {
 		var definition = {
 			states: {
+				initial: {},
 				a: { }
 			},
 			conditions: {

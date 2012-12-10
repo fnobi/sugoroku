@@ -134,35 +134,25 @@ StateMachine.decode = function (definition) {
 
 // stateMachineオブジェクトをjson定義書式に直す
 StateMachine.prototype.encode = function () {
-	var definition = {};
-
-	if (this.rootState.subStates.length) {
-		definition.states = this.encodeStates();
-	}
-
-	if (this.conditions.length) {
-		definition.conditions = this.encodeConditions();
-	}
-
-	if (this.transitions.length) {
-		definition.transitions = this.encodeTransitions();
-	}
-
-	return definition;
+	return {
+		states : this.encodeStates(),
+		conditions : this.encodeConditions(),
+		transitions : this.encodeTransitions()
+	};
 };
 
 StateMachine.prototype.encodeStates = function () {
 	var definition = {};
-	$.each(this.rootState.subStates, function (key, value) {
-		definition[key] = {};
+	$.each(this.rootState.subStates, function (name, state) {
+		definition[name] = state.encode();
 	});
 	return definition;
 };
 
 StateMachine.prototype.encodeConditions = function () {
 	var definition = {};
-	$.each(this.conditions, function (key, value) {
-		definition[key] = {};
+	$.each(this.conditions, function (name, condition) {
+		definition[name] = condition.encode();
 	});
 	return definition;
 };
@@ -170,7 +160,7 @@ StateMachine.prototype.encodeConditions = function () {
 StateMachine.prototype.encodeTransitions = function () {
 	var definition = [];
 	$.each(this.transitions, function () {
-		definition.push(this);
+		definition.push(this.encode());
 	});
 	return definition;
 };

@@ -5,4 +5,10 @@ var Transition = function (from, condition, to) {
 	this.to        = to;
 };
 
-
+Transition.prototype.encode = function () {
+	return {
+		from: this.from.path(),
+		condition: this.condition.name,
+		to: this.to.path()
+	};
+};

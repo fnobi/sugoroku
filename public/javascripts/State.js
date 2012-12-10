@@ -92,3 +92,6 @@ State.prototype.path = function () {
 	return this.parentState.path() + '/' +this.name;
 };
 
+State.prototype.encode = function () {
+	return {};
+};
