@@ -50,21 +50,22 @@ a {
 }
 
 .sugoroku.transition {
+    margin: 0px; padding: 0.1em 1em;
+    text-align: left;
+    height: 1.5em;
+    line-height: 1.5em;
+
     color: rgba(0,0,0,0.5);
-    border-top: solid 4px rgba(0,0,0,0.5);
-    text-align:center;
     z-index:2;
-    height: 20px;
 }
-.sugoroku.transition:after {
-    content: "▶";
-    display:block;
-    text-align:left;
-    padding:0em;margin:0em;
-    margin-top: -36px;
-    margin-left: 100%;
-    color: rgba(0,0,0,0.5)
+
+.sugoroku.transition:before {
+    content: '　';
+    display: block;
+    height: 0.2em; width: 100%;
+    background-color: rgba(0,0,0,0.5);
 }
+
 
 #infobar.sugoroku {
     width: 18em;
