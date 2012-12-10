@@ -201,7 +201,7 @@ Transition.prototype.renderArrow = function () {
 		position: 'absolute',
 		left: lm.left + 'px', top: lm.top + 'px',
 		width: lm.length,
-		transform: 'rotate(' + (180 * lm.angle / Math.PI) + 'deg)',
+		transform: lm.transform,
 		'transform-origin': '0% 0%'
 	});
 	$arrow.html(this.condition.name);
@@ -235,6 +235,7 @@ var LineMeter = function (from, to) {
 	) + Math.pow(
 		to_h / 2, 2
 	));
+	trim = 0;
 
 	this.length = allLength - trim;
 
@@ -242,5 +243,9 @@ var LineMeter = function (from, to) {
 		this.bottom - this.top,
 		this.right - this.left
 	);
+
+	this.transform = [
+		'rotate(' + (180 * this.angle / Math.PI) + 'deg)'
+	].join(' ');
 
 };
