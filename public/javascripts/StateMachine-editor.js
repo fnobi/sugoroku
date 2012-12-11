@@ -107,7 +107,7 @@ StateMachine.prototype.save = function (callback) {
 	var codeName = fetchCodeName();
 	var definition = JSON.stringify(this.encode());
 	$.post(
-		'/codes/' + codeName,
+		'/code/' + codeName,
 		{ definition: definition },
 		callback
 	);

@@ -25,6 +25,10 @@ app.configure('development', function(){
 	app.use(express.errorHandler());
 });
 
+// set locals
+app.locals({
+  title: 'sugoroku'
+});
 
 // set routing param
 app.param('code_name', function (req, res, next, codeName) {
@@ -53,10 +57,12 @@ app.param('code_action', function (req, res, next, codeAction) {
 // set routing
 app.get('/', routes.index);
 app.get('/editor/:code_name', routes.editor);
-app.get('/codes/:code_name-:code_action.js', routes.codes);
-app.get('/codes/:code_name.js', routes.codes);
+app.get('/code', routes.codeIndex);
 
-app.post('/codes/:code_name', routes.postCode);
+app.get('/code/:code_name-:code_action.js', routes.code);
+app.get('/code/:code_name.js', routes.code);
+
+app.post('/code/:code_name', routes.postCode);
 
 // listen
 http.createServer(app).listen(app.get('port'), function(){
