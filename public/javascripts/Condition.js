@@ -5,5 +5,13 @@ var Condition = function (name) {
 };
 
 Condition.prototype.encode = function () {
-	return {};
+	var self = this;
+	var properties = ['type', 'ms', 'element'];
+	var definition = {};
+
+	properties.forEach(function (property) {
+		definition[property] = self[property];
+	});
+
+	return definition;
 };

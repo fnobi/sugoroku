@@ -11,6 +11,8 @@ StateMachine.prototype.render = function () {
 	var infoBar = this.renderInfoBar();
 	$(root).append(infoBar);
 
+	this.renderHeader();
+
 	return root;
 };
 
@@ -56,7 +58,6 @@ StateMachine.prototype.renderInfoBar = function () {
 	return $infoBar[0];
 };
 
-
 StateMachine.prototype.selectInfoSource = function (infoSource) {
 	// 現在選択されているinfo sourceの表示をリセット
 	if (this.infoSource) {
@@ -70,6 +71,32 @@ StateMachine.prototype.selectInfoSource = function (infoSource) {
 	// info bar を再描画
 	this.renderInfoBar();
 };
+
+StateMachine.prototype.renderHeader = function () {
+	var self = this;
+	var $header = this.$header || $('#sugoroku-header');
+
+	var $h1 = $('h1', $header);
+	var $button = $('button', $header) || $('<button />');
+
+	if (!$h1[0]) {
+		$h1 = $('<h1 />');
+	}
+	if (!$button[0]) {
+		$button = $('<button />')
+			.html('save')
+			.click(function () {
+				alert(JSON.stringify(self.encode()));
+			});
+	}
+
+	$header.append($h1);
+	$header.append($button);
+
+	this.$header = $header;
+	return $header[0];
+};
+
 
 State.prototype.render = function () {
 	var node = this.renderNode();
