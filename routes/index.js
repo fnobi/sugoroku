@@ -35,3 +35,5 @@ exports.codes = function (req, res) {
 		res.end(codeText);
 	});
 };
+
+exports.postCode = require(__dirname + '/postCode');

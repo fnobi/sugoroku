@@ -86,7 +86,13 @@ StateMachine.prototype.renderHeader = function () {
 		$button = $('<button />')
 			.html('save')
 			.click(function () {
-				alert(JSON.stringify(self.encode()));
+				self.save(function (result) {
+					if (result.error) {
+						return alert(result.error);
+					}
+
+					alert('保存しました。');
+				});
 			});
 	}
 
@@ -95,6 +101,23 @@ StateMachine.prototype.renderHeader = function () {
 
 	this.$header = $header;
 	return $header[0];
+};
+
+StateMachine.prototype.save = function (callback) {
+	var codeName = fetchCodeName();
+	var definition = JSON.stringify(this.encode());
+	$.post(
+		'/codes/' + codeName,
+		{ definition: definition },
+		callback
+	);
+};
+
+var fetchCodeName = function () {
+	var location = window.location + '';
+	var locationMatch = location.match(/editor\/([^\/]+)$/);
+
+	return locationMatch ? locationMatch[1] : null;
 };
 
 

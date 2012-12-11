@@ -56,6 +56,7 @@ app.get('/editor/:code_name', routes.editor);
 app.get('/codes/:code_name-:code_action.js', routes.codes);
 app.get('/codes/:code_name.js', routes.codes);
 
+app.post('/codes/:code_name', routes.postCode);
 
 // listen
 http.createServer(app).listen(app.get('port'), function(){
