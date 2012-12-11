@@ -57,7 +57,7 @@ app.param('code_action', function (req, res, next, codeAction) {
 // set routing
 app.get('/', routes.index);
 app.get('/editor/:code_name', routes.editor);
-app.get('/code', routes.codeIndex);
+app.get('/code', routes.index);
 
 app.get('/code/:code_name-:code_action.js', routes.code);
 app.get('/code/:code_name.js', routes.code);

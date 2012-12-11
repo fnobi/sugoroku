@@ -4,18 +4,24 @@ body {
     line-height: 1.5em;
 }
 
+h1,h2,ul,li {
+    display: block;
+    margin: 0px; padding: 0px;
+}
+
 a {
     color: #00B7FF;
 }
 
 #sugoroku-header {
-    background-color:#550000;
+    background-color:#500;
     padding: 0.2em 0.5em;
     box-shadow: 0px 3px 5px rgba(0,0,0,0.2);
     position: fixed;
     width: 100%;
     overflow: hidden;
     z-index: 200;
+    top: 0px; left: 0px;
 }
 #sugoroku-header h1 {
     padding: 0em; margin:0em;
@@ -24,6 +30,36 @@ a {
     float:left;
 }
 
+.sugoroku-content {
+    margin-top: 2em;
+}
+
+#sugoroku-index {
+    margin: 3em auto 0px auto;
+    max-width: 500px;    
+}
+
+#sugoroku-index .sugoroku-codebox {
+    margin: 1em; padding: 0.5em;
+    border: solid 0.2em #c88;
+}
+#sugoroku-index .sugoroku-codebox:before {
+    content: ' ';
+    display: block;
+    border-left: solid 0.2em #c88;
+    width: 1em; height: 1.2em;
+    margin: -1.8em 0em 0.2em 0em;
+}
+#sugoroku-index .sugoroku-codebox h1 {
+    color: #500;
+}
+#sugoroku-index .sugoroku-codebox ul {
+    overflow: hidden;
+}
+#sugoroku-index .sugoroku-codebox li {
+    float: left; 
+    padding: 0em 0.2em;
+}
 
 .sugoroku.state {
     background-color: rgba(255, 128, 0, 0.3);
@@ -75,7 +111,7 @@ a {
     right: 0em;
     z-index: 100;
     border-left: solid 0.2em rgba(190,255,100,0.8);
-    padding-top: 2em;
+    padding-top: 0em;
     color: #006600;
 }
 

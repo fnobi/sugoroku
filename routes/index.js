@@ -1,10 +1,9 @@
 var codeCollection = require('codeCollection');
 
 exports.index = function(req, res){
-	res.render('index', { });
+	res.render('index', { codeNames: codeCollection.codeNames() });
 };
 
 exports.editor = require(__dirname + '/editor');
-exports.codeIndex = require(__dirname + '/codeIndex');
 exports.code = require(__dirname + '/code');
 exports.postCode = require(__dirname + '/postCode');

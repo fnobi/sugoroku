@@ -1,5 +1,12 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  section#sugoroku-index.sugoroku-content
+    - codeNames.forEach(function (codeName) {
+      article.sugoroku-codebox
+        h1= codeName
+        footer
+          ul
+            li: a(href='/editor/' + codeName) edit
+            li: a(href='/code/' + codeName + '-run.js') run
+    - })

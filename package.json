@@ -9,6 +9,8 @@
     "express": "3.0.0rc3",
     "jade": "*",
     "config": "0.4.18",
-    "async": "0.1.22"
+    "async": "0.1.22",
+    "underscore": "*",
+    "glob-whatev": "*"
   }
 }
