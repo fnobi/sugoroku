@@ -7,7 +7,14 @@ start() {
     return 0
 }
 stop() {
-    killproc sugoroku
+    echo -n "Starting Sugoroku: "
+    cd /var/www/sugoroku
+    npm stop
+    return 0
+}
+restart() {
+    start
+    stop
     return 0
 }
 case "$1" in
@@ -16,5 +23,8 @@ case "$1" in
     ;;
   stop)
     stop
+    ;;
+  restart)
+    restart
     ;;
 esac

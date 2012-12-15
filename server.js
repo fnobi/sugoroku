@@ -1,10 +1,14 @@
 // Module dependencies.
-var express = require('express'),
-    routes  = require('./routes'),
-    http    = require('http'),
-    path    = require('path'),
-    config  = require('config');
+var express  = require('express'),
+    routes   = require('./routes'),
+    http     = require('http'),
+    path     = require('path'),
+    daemonsv = require('daemonsv'),
+    config   = require('config');
 
+if (process.env.NODE_ENV == 'production') {
+	daemonsv();
+}
 
 // configure express server
 var app = express();
@@ -13,6 +17,9 @@ app.configure(function(){
 	app.set('port', process.env.PORT || config.port);
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'jade');
+	app.use(express.logger({
+		format: ':remote-addr - [:date] ":method :url :http-version" :status ":referrer" ":user-agent"'
+	}));
 	app.use(express.favicon());
 	app.use(express.logger('dev'));
 	app.use(express.bodyParser());
@@ -22,6 +29,10 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
+	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
+
+app.configure('production', function(){
 	app.use(express.errorHandler());
 });
 

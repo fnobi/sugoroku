@@ -3,13 +3,15 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "NODE_PATH=lib node server.js"
+    "start": "NODE_ENV=production NODE_PATH=lib node server.js start",
+    "stop": "NODE_ENV=production NODE_PATH=lib node server.js stop"
   },
   "dependencies": {
     "express": "3.0.0rc3",
     "jade": "*",
     "config": "0.4.18",
     "async": "0.1.22",
+    "daemon": "*",
     "underscore": "*",
     "glob-whatev": "*"
   }
