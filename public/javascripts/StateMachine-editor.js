@@ -77,39 +77,50 @@ StateMachine.prototype.renderHeader = function () {
 	var $header = this.$header || $('#sugoroku-header');
 
 	var $h1 = $('h1', $header);
-	var $button = $('button', $header) || $('<button />');
+	var $saveButton = $('#save-button');
+	var $newStateButton = $('#new-state-button');
 
 	if (!$h1[0]) {
 		$h1 = $('<h1 />');
 	}
-	if (!$button[0]) {
-		$button = $('<button />')
-			.html('save')
+	if (!$saveButton[0]) {
+		$saveButton = $('<button id="save-button">save</button>')
 			.click(function () {
-				self.save(function (result) {
-					if (result.error) {
-						return alert(result.error);
-					}
-
-					alert('保存しました。');
-				});
+				self.save();
+			});
+	}
+	if (!$newStateButton[0]) {
+		$newStateButton = $('<button id="new-state-button">new state</button>')
+			.click(function () {
+				self.save();
 			});
 	}
 
 	$header.append($h1);
-	$header.append($button);
+	$header.append($saveButton);
+	$header.append($newStateButton);
 
 	this.$header = $header;
 	return $header[0];
 };
 
 StateMachine.prototype.save = function (callback) {
+	callback = callback || function () {};
+
 	var codeName = fetchCodeName();
 	var definition = JSON.stringify(this.encode());
 	$.post(
 		'/code/' + codeName,
 		{ definition: definition },
-		callback
+		function (result) {
+			if (result.error) {
+				alert(result.error);
+				return callback(result.error);
+			}
+
+			alert('保存しました。');
+			callback();
+		}
 	);
 };
 
@@ -228,8 +239,23 @@ State.prototype.renderSubStates = function () {
 };
 
 State.prototype.renderInfo = function () {
+	var self = this;
 	var $info = this.$info || $('<div />');
 	$info.empty();
+
+	// transitions
+	var $transitions = $('<table />');
+	this.transitions().forEach(function (transition) {
+		$transitions.append(
+			$('<tr />')
+				.append($('<td />').html(
+					transition.condition.name + ' →'
+				))
+				.append($('<td />').append(
+					transition.to.renderLink()
+				))
+		);
+	});
 
 	// element switchの生成
 	var elementSwitch = {};
@@ -257,7 +283,8 @@ State.prototype.renderInfo = function () {
 	$info.append($('<h1 />').html(this.path()));
 	$info.append(
 		$('<section />')
-			.append($('<h1 />').html('type: State'))
+			.append($('<h1 />').html('transitions'))
+			.append($transitions)
 	);
 	$info.append(
 		$('<section />')
@@ -266,6 +293,17 @@ State.prototype.renderInfo = function () {
 	);
 
 	return $info[0];
+};
+
+State.prototype.renderLink = function () {
+	var self = this;
+	return $('<a />')
+		.html(this.path())
+		.attr('href', '#' + this.path())
+		.click(function (e) {
+			e.preventDefault();
+			self.stateMachine.selectInfoSource(self);
+		})[0];
 };
 
 State.prototype.cancelSelect = function () {
