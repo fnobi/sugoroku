@@ -112,7 +112,23 @@ a {
     content: '　';
     display: block;
     height: 0.2em; width: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: #888;
+}
+
+#sugoroku-editor .transition:after {
+    content: '　';
+    display: block;
+    border-top: solid transparent 0.5em;
+    border-bottom: solid transparent 0.5em;
+    border-left: solid #888 1em;
+    height: 0em;
+    width: 0em;
+    margin: 0em 0em 0em -2em;
+    position: relative;
+    left: 100%;
+    top: -2em;
+    
+
 }
 
 
