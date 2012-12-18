@@ -94,7 +94,7 @@ State.prototype.path = function () {
 
 State.prototype.encode = function () {
 	var self = this;
-	var properties = ['x', 'y', 'elementSwitch'];
+	var properties = ['x', 'y', 'elementSwitch', 'expanded'];
 	var definition = {};
 
 	properties.forEach(function (property) {

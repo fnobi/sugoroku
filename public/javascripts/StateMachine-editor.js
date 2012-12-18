@@ -133,17 +133,19 @@ State.prototype.renderNode = function () {
 
 	var memory_x, memory_y;
 
+	this.w = this.w || 300;
+	this.h = this.h || 300;
+
 	$node.empty();
 	$node.off('click');
 
+	var $nameLabel = this.renderNameLabel();
+	var $subStates = this.renderSubStates();
+
 	$node
-		.addClass('sugoroku')
 		.addClass('state')
-		.append(
-			$('<span />')
-				.html(this.name)
-				.addClass('name')
-		)
+		.append($nameLabel)
+		.append($subStates)
 		.css({
 			position : 'absolute',
 			left     : this.x + 'px',
@@ -178,8 +180,51 @@ State.prototype.renderNode = function () {
 		$node.removeClass('selected');
 	}
 
+	if (this.expanded) {
+		$node.addClass('expanded');
+	} else {
+		$node.removeClass('expanded');
+	}
+
 	this.$node = $node;
 	return $node[0];
+};
+
+// stateの名前表示部分をレンダリング
+State.prototype.renderNameLabel = function () {
+	var self = this;
+	var $nameLabel = this.$nameLabel || $('<header />');
+	$nameLabel.empty();
+
+	var toggleMark = this.expanded ? ' - ' : ' + ';
+
+	$nameLabel
+		.addClass('name')
+		.append(
+			$('<a />')
+				.html(toggleMark)
+				.click(function () {
+					self.toggleExpand();
+				})
+		)
+		.append($('<span />').html(this.name));
+
+	return $nameLabel[0];
+};
+
+// 子状態のリストをレンダリング
+State.prototype.renderSubStates = function () {
+	var $subStates = this.$subStates || $('<div />');
+	$subStates.empty();
+
+	$subStates
+		.addClass('sub')
+		.css({
+			width: this.w + 'px',
+			height: this.h + 'px'
+		});
+
+	return $subStates[0];
 };
 
 State.prototype.renderInfo = function () {
@@ -233,6 +278,11 @@ State.prototype.select = function () {
 	this.renderNode();
 };
 
+State.prototype.toggleExpand = function () {
+	this.expanded = !this.expanded;
+	this.stateMachine.render();
+};
+
 
 Transition.prototype.render = function () {
 	var arrow = this.renderArrow();
@@ -243,7 +293,7 @@ Transition.prototype.renderArrow = function () {
 	var $arrow = this.$arrow || $('<div />');
 	$arrow.empty();
 
-	var lm = new LineMeter(this.from, this.to);
+	var lm = lineMeter(this.from, this.to);
 
 	$arrow.addClass('sugoroku');
 	$arrow.addClass('transition');
@@ -254,48 +304,80 @@ Transition.prototype.renderArrow = function () {
 		transform: lm.transform,
 		'transform-origin': '0% 0%'
 	});
-	$arrow.html(this.condition.name);
+	$arrow.append(
+		$('<div />')
+			.html(this.condition.name)
+			.css({
+				paddingLeft: lm.paddingLeft + 'px',
+				paddingRight: lm.paddingRight + 'px'
+			})
+	);
 
 	this.$arrow = $arrow;
 	return $arrow[0];
 };
 
-
-var LineMeter = function (from, to) {
+// from stateとto stateから、2者間にどんな直線を引けばいいか計算
+var lineMeter = function (from, to) {
 	var from_x = from.x || 0; var from_y = from.y || 0;
 	var from_w = from.$node[0].offsetWidth;
 	var from_h = from.$node[0].offsetHeight;
+
+	var left  = from_x + from_w / 2;
+	var top = from_y + from_h / 2;
+
 	var to_x = to.x || 0; var to_y = to.y || 0;
 	var to_w = to.$node[0].offsetWidth;
 	var to_h = to.$node[0].offsetHeight;
 
-	this.left  = from_x + from_w / 2; this.right = to_x + to_w / 2;
-	this.top = from_y + from_h / 2; this.bottom = to_y + to_h / 2;
+	var right = to_x + to_w / 2;
+	var bottom = to_y + to_h / 2;
 
-	var allLength = Math.sqrt(Math.pow(
-		this.right - this.left, 2
-	) + Math.pow(
-		this.bottom - this.top, 2
-	));
-
-	// 長さの短縮 (すこし短くしないと、矢印の先端が見えない)
-	var trim = allLength * 0.2;
-	trim = Math.sqrt(Math.pow(
-		to_w / 2, 2
-	) + Math.pow(
-		to_h / 2, 2
-	));
-	trim = 0;
-
-	this.length = allLength - trim;
-
-	this.angle = Math.atan2(
-		this.bottom - this.top,
-		this.right - this.left
+	var length = Math.sqrt(
+		Math.pow(right - left, 2) + Math.pow(bottom - top, 2)
 	);
+	var angle = Math.atan2(bottom - top, right - left);
 
-	this.transform = [
-		'rotate(' + (180 * this.angle / Math.PI) + 'deg)'
-	].join(' ');
+	return {
+		left: left,
+		right: right,
+		top: top,
+		bottom: bottom,
+		length: length,
+		transform: 'rotate(' + (180 * angle / Math.PI) + 'deg)',
+		paddingLeft: calcPadding(
+			angle,
+			from.$node[0].offsetWidth,
+			from.$node[0].offsetHeight
+		),
+		paddingRight: calcPadding(
+			angle,
+			to.$node[0].offsetWidth,
+			to.$node[0].offsetHeight
+		)
+	};
+};
 
+var calcPadding = function (angle, rectWidth, rectHeight) {
+	var alpha = Math.atan2(rectHeight, rectWidth);
+	while (angle < 0) {
+		angle += Math.PI * 2;
+	}
+	while (Math.PI * 2 < angle) {
+		angle -= Math.PI * 2;
+	}
+
+	if (angle < alpha) {
+		return (rectWidth / 2) / Math.cos(angle);
+	}
+	if (angle < Math.PI - alpha) {
+		return (rectHeight / 2) / Math.sin(angle);
+	}
+	if (angle < Math.PI + alpha) {
+		return -(rectWidth / 2) / Math.cos(angle);
+	}
+	if (angle < Math.PI * 2 - alpha) {
+		return -(rectHeight / 2) / Math.sin(angle);
+	}
+	return (rectWidth / 2) / Math.cos(angle);
 };

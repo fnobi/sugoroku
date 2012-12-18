@@ -61,32 +61,45 @@ a {
     padding: 0em 0.2em;
 }
 
-.sugoroku.state {
+#sugoroku-editor .state {
     background-color: rgba(255, 128, 0, 0.3);
     z-index:10;
     padding:0em;
     border: solid 0.1em #ba0;
     box-shadow: 0em 0em 1em rgba(0,0,0,0.3);
 }
-
-.sugoroku.state.initialstate {
-    border: solid 0.1em #b30;
-}
-
-.sugoroku.state > .name {
+#sugoroku-editor .state .name {
     background-color: #ffcc88;
     padding: 0.2em 0.5em;
-    display: block;
     color: #552200;
 }
+#sugoroku-editor .state .sub {
+    display: none;
+}
+#sugoroku-editor .state a {
+    color: #833;
+    cursor: pointer;
+}
 
-.sugoroku.state.initialstate > .name{
+#sugoroku-editor .initialstate {
+    border: solid 0.1em #b30;
+}
+#sugoroku-editor .initialstate .name {
     background-color: #f70;
     color: white;
 }
+#sugoroku-editor .expanded {
+    z-index:20;
+}
+#sugoroku-editor .expanded .sub {
+    display: block;
+}
+#sugoroku-editor .selected {
+    box-shadow: 0px 0px 1em green, 0px 0px 0.8em green;
+}
 
-.sugoroku.transition {
-    margin: 0px; padding: 0.1em 1em;
+#sugoroku-editor .transition {
+    margin: 0px; padding: 0em;
     text-align: left;
     height: 1.5em;
     line-height: 1.5em;
@@ -95,7 +108,7 @@ a {
     z-index:2;
 }
 
-.sugoroku.transition:before {
+#sugoroku-editor .transition:before {
     content: '　';
     display: block;
     height: 0.2em; width: 100%;
@@ -164,9 +177,4 @@ a {
 }
 #infobar.sugoroku section td {
     border-left: dotted 1px #228822;
-}
-
-
-.sugoroku.state.selected {
-    box-shadow: 0px 0px 1em green, 0px 0px 0.8em green;
 }
