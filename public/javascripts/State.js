@@ -25,6 +25,11 @@ State.prototype.addSubState = function (name) {
 	return this.subStates[name] = this.createSubState(name);
 };
 
+State.prototype.remove = function () {
+	this.clearTransitions();
+	this.parentState.removeSubState(this);
+};
+
 State.prototype.removeSubState = function (target) {
 	var name = target.name;
 
@@ -34,11 +39,26 @@ State.prototype.removeSubState = function (target) {
 		return true;
 	}
 
-	var result = false;
-	$.each(this.subStates, function (name, subState) {
-		result = result || subState.removeSubState(target);
+	return false;
+};
+
+State.prototype.clearTransitions = function () {
+	var self = this;
+	var stateMachine = this.stateMachine;
+
+	var transitions = [];
+	this.stateMachine.transitions.forEach(function (transition) {
+		if (
+			transition.from.hasState(self)
+			|| transition.to.hasState(self)
+		) {
+			return;
+		}
+
+		transitions.push(transition);
 	});
-	return result;
+
+	this.stateMachine.transitions = transitions;
 };
 
 State.prototype.createSubState = function (name) {

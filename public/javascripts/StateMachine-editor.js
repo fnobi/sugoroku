@@ -272,7 +272,11 @@ State.prototype.renderInfo = function () {
 	// delete button
 	var $deleteButton = $('<button>delete</button>')
 		.click(function () {
-			self.stateMachine.removeState(self);
+			self.remove();
+			if (self.stateMachine.infoSource == self) {
+				self.stateMachine.infoSource = null;
+			}
+
 			self.stateMachine.render();
 		});
 
