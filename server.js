@@ -1,14 +1,10 @@
 // Module dependencies.
-var express  = require('express'),
-    routes   = require('./routes'),
-    http     = require('http'),
-    path     = require('path'),
-    daemonsv = require('daemonsv'),
-    config   = require('config');
-
-if (process.env.NODE_ENV == 'production') {
-	daemonsv();
-}
+var express         = require('express'),
+    routes          = require('./routes'),
+    http            = require('http'),
+    path            = require('path'),
+    startStopDaemon = require('start-stop-daemon'),
+    config          = require('config');
 
 // configure express server
 var app = express();
@@ -76,6 +72,10 @@ app.get('/code/:code_name.js', routes.code);
 app.post('/code/:code_name', routes.postCode);
 
 // listen
-http.createServer(app).listen(app.get('port'), function(){
-	console.log("Express server listening on port " + app.get('port'));
+startStopDaemon(function () {
+	http.createServer(app).listen(app.get('port'), function(){
+		console.log(
+			'Express server listening on port ' + app.get('port')
+		);
+	});
 });

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=production NODE_PATH=lib node server.js start",
+    "start": "NODE_ENV=production NODE_PATH=lib node server.js start --out log/access.log --err log/error.log --logAppend",
     "stop": "NODE_ENV=production NODE_PATH=lib node server.js stop"
   },
   "dependencies": {
@@ -11,7 +11,7 @@
     "jade": "*",
     "config": "0.4.18",
     "async": "0.1.22",
-    "daemon": "*",
+    "start-stop-daemon": "*",
     "underscore": "*",
     "glob-whatev": "*"
   }
