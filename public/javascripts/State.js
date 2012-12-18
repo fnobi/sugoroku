@@ -25,6 +25,22 @@ State.prototype.addSubState = function (name) {
 	return this.subStates[name] = this.createSubState(name);
 };
 
+State.prototype.removeSubState = function (target) {
+	var name = target.name;
+
+	// 自分の直下のstateなら、deleteして終了
+	if (this.subStates[name]) {
+		delete this.subStates[name];
+		return true;
+	}
+
+	var result = false;
+	$.each(this.subStates, function (name, subState) {
+		result = result || subState.removeSubState(target);
+	});
+	return result;
+};
+
 State.prototype.createSubState = function (name) {
 	var subState = new State(name);
 	subState.parentState = this;

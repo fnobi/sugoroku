@@ -78,6 +78,11 @@ StateMachine.prototype.addState = function (name) {
 	return this.rootState.addSubState(name);
 };
 
+// 状態を削除
+StateMachine.prototype.removeState = function (state) {
+	return this.rootState.removeSubState(state);
+};
+
 // 環境を新規作成(定義)
 StateMachine.prototype.addCondition = function (name) {
 	var condition = new Condition(name);

@@ -92,7 +92,19 @@ StateMachine.prototype.renderHeader = function () {
 	if (!$newStateButton[0]) {
 		$newStateButton = $('<button id="new-state-button">new state</button>')
 			.click(function () {
-				self.save();
+				var name = window.prompt('Enter the state name.');
+				if (!name) {
+					return;
+				}
+				var state = self.addState(name);
+				if (!state) {
+					alert('Fail to add state.');
+					return;
+				}
+
+				state.x = 100; state.y = 100;
+				self.selectInfoSource(state);
+				self.render();
 			});
 	}
 
@@ -118,7 +130,7 @@ StateMachine.prototype.save = function (callback) {
 				return callback(result.error);
 			}
 
-			alert('保存しました。');
+			alert('Save successfully.');
 			callback();
 		}
 	);
@@ -257,26 +269,28 @@ State.prototype.renderInfo = function () {
 		);
 	});
 
+	// delete button
+	var $deleteButton = $('<button>delete</button>')
+		.click(function () {
+			self.stateMachine.removeState(self);
+			self.stateMachine.render();
+		});
+
 	// element switchの生成
 	var elementSwitch = {};
 	this.stateMachine.elements.forEach(function (selector) {
 		elementSwitch[selector] = '−';
 	});
-	$.each(this.elementSwitch, function (selector, flag) {
+	$.each(this.elementSwitch || {}, function (selector, flag) {
 		elementSwitch[selector] = flag ? 'on' : 'off';
 	});
 
 	var $elementSwitchList = $('<table />');
 
 	$.each(elementSwitch, function (selector, value) {
-		$elementSwitchList.append($([
-			'<tr>',
-			'<th>', selector, '</th>',
-			'<td>',
-			value,
-			'</td>',
-			'</tr>'
-		].join('')));
+		$elementSwitchList.append($('<tr />').append(
+			$('<th>' + selector + '</th><td>' + value + '</td>')
+		));
 	});
 
 	// ぜんぶ$infoに詰めていく
@@ -290,6 +304,9 @@ State.prototype.renderInfo = function () {
 		$('<section />')
 			.append($('<h1 />').html('element switch'))
 			.append($elementSwitchList)
+	);
+	$info.append(
+		$('<section />').append($deleteButton)
 	);
 
 	return $info[0];
