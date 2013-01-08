@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=production NODE_PATH=lib node server.js start --out log/access.log --err log/error.log --logAppend",
-    "stop": "NODE_ENV=production NODE_PATH=lib node server.js stop"
+    "start": "NODE_ENV=production node server.js start",
+    "stop": "NODE_ENV=production node server.js stop"
   },
   "dependencies": {
     "express": "3.0.0rc3",

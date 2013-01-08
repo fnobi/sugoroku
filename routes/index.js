@@ -1,4 +1,4 @@
-var codeCollection = require('codeCollection');
+var codeCollection = require(__dirname + '/../lib/codeCollection');
 
 exports.index = function(req, res){
 	res.render('index', { codeNames: codeCollection.codeNames() });

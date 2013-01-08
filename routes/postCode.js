@@ -1,4 +1,4 @@
-var codeCollection = require('codeCollection');
+var codeCollection = require(__dirname + '/../lib/codeCollection');
 
 module.exports = function (req, res, next) {
 	var codeName = req.params.code_name;
