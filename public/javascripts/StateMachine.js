@@ -128,6 +128,7 @@ StateMachine.decode = function (json) {
 
 	// その他読み込み
 	stateMachine.elements = json.elements || [];
+	stateMachine.src = json.src || [];
 
 	return stateMachine;
 };
@@ -137,7 +138,9 @@ StateMachine.prototype.encode = function () {
 	return {
 		states : this.encodeStates(),
 		conditions : this.encodeConditions(),
-		transitions : this.encodeTransitions()
+		transitions : this.encodeTransitions(),
+		elements: this.elements || [],
+		src: this.src || []
 	};
 };
 
