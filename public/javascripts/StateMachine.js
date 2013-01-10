@@ -6,6 +6,7 @@ var StateMachine = function (name) {
 	this.name = name;
 	this.transitions = [];
 	this.conditions  = {};
+	this.actions     = {};
 
 	this.initializeRootState();
 };
@@ -29,8 +30,8 @@ StateMachine.prototype.transit = function (condition) {
 	// state書き換え
 	this.state = state;
 
-	if (state.action) {
-		state.action();
+	if (state.run) {
+		state.run();
 	}
 
 	return state;
@@ -65,13 +66,24 @@ StateMachine.prototype.findState = function (pathToState) {
 	return this.rootState.findSubState(pathToState);
 };
 
-StateMachine.prototype.findCondition = function (name) {
-	// conditionが渡されることもあるので、その時はそのまま返す
-	if (name.name) {
-		return name;
+StateMachine.prototype.findCondition = function (condition) {
+	// conditionが渡された場合は、そのまま返す
+	if (condition.name) {
+		return condition;
 	}
 
-	return this.conditions[name] || null;
+	// condition.nameが渡された場合は、そのnameの持ち主のconditionを返す
+	return this.conditions[condition] || null;
+};
+
+StateMachine.prototype.findAction = function (action) {
+	// actionが渡された場合は、そのまま返す
+	if (action.name) {
+		return action;
+	}
+
+	// action.nameが渡された場合は、そのnameの持ち主のactionを返す
+	return this.actions[action] || null;
 };
 
 // 状態を新規作成
@@ -107,6 +119,17 @@ StateMachine.prototype.addTransition = function (from, condName, to) {
 	return transition;
 };
 
+// アクションを新規作成(定義)
+StateMachine.prototype.addAction = function (name, fn) {
+	var action = this.findAction(name) || new Action(name, fn);
+
+	// 親と子お互いに、相手へのリファレンスを持つ
+	action.stateMachine = this;
+	this.actions[name] = action;
+
+	return action;
+};
+
 // jsonの定義書式からオブジェクト生成
 StateMachine.decode = function (json) {
 	var stateMachine = new StateMachine();
@@ -119,20 +142,21 @@ StateMachine.decode = function (json) {
 	}
 
 	// condition読み込み
-	for (name in json.conditions || {}) {
-		var cond = stateMachine.addCondition(
-			name,
-			json.conditions[name]
-		);
-	}
+	(json.conditions || []).forEach(function (condName) {
+		stateMachine.addCondition(condName);
+	});
 
 	// transition読み込み
 	(json.transitions || []).forEach(function (t) {
 		stateMachine.addTransition(t.from, t.condition, t.to);
 	});
 
+	// action読み込み
+	(json.actions || []).forEach(function (actionName) {
+		stateMachine.addAction(actionName);
+	});
+
 	// その他読み込み
-	stateMachine.elements = json.elements || [];
 	stateMachine.src = json.src || [];
 
 	return stateMachine;
@@ -144,7 +168,7 @@ StateMachine.prototype.encode = function () {
 		states : this.encodeStates(),
 		conditions : this.encodeConditions(),
 		transitions : this.encodeTransitions(),
-		elements: this.elements || [],
+		actions: this.encodeActions(),
 		src: this.src || []
 	};
 };
@@ -158,9 +182,17 @@ StateMachine.prototype.encodeStates = function () {
 };
 
 StateMachine.prototype.encodeConditions = function () {
-	var json = {};
-	$.each(this.conditions, function (name, condition) {
-		json[name] = condition.encode();
+	var json = [];
+	$.each(this.conditions, function () {
+		json.push(this.encode());
+	});
+	return json;
+};
+
+StateMachine.prototype.encodeActions = function () {
+	var json = [];
+	$.each(this.actions, function () {
+		json.push(this.encode());
 	});
 	return json;
 };

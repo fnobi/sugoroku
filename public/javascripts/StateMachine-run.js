@@ -1,16 +1,22 @@
 StateMachine.prototype.run = function () {
-	this.state.action();
+	this.state.run();
 };
 
-State.prototype.action = function () {
-	// switchElementを反映
-	for (var selector in this.elementSwitch) {
-		if (this.elementSwitch[selector]) {
-			$(selector).show();
-		} else {
-			$(selector).hide();
-		}
+StateMachine.prototype.action = function (actionName) {
+	var action = this.findAction(actionName);
+	if (!action) {
+		return;
 	}
+	action.exec();
+};
+
+State.prototype.run = function () {
+	var stateMachine = this.stateMachine;
+
+	// actionsを実行
+	(this.actions || []).forEach(function (actionName) {
+		stateMachine.action(actionName);
+	});
 
 	// 次のconditionを待つ
 	this.listenConditions();

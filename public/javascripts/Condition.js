@@ -1,23 +1,32 @@
 // 環境を表すクラス
 
-// Conditionにはtypeとnameがある
-// typeはあくまで「どのように待つか」で、実際に何秒待つかなどは、
-// nameにひもづけられたパラメーターで記述される
-// conditionを直接のjsで書くとしたら、conditionはlistenとunlistenさえ
-// 持っていれば何でもいい。
-
 var Condition = function (name) {
 	this.name = name;
 };
 
 Condition.prototype.encode = function () {
-	var self = this;
-	var properties = ['type', 'ms', 'element'];
-	var definition = {};
+	return this.name;
+};
 
-	properties.forEach(function (property) {
-		definition[property] = self[property];
+// Conditionのoptionを記述する際の、ヘルパークラス
+Condition.Timeout = function (ms) {
+	this.listen = function (transit) {
+		this.timer = setTimeout(transit, ms || 0);
+	};
+	this.unlisten = function () {
+		clearInterval(this.timer);
+	};
+};
+
+Condition.Click = function (selector) {
+	var $element;
+	this.listen = function (transit) {
+		$element.on('click', transit);
+	};
+	this.unlisten = function () {
+		$element.off('click');
+	};
+	$(function () {
+		$element = $(selector);
 	});
-
-	return definition;
 };
