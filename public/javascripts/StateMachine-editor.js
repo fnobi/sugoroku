@@ -252,19 +252,36 @@ State.prototype.renderSubStates = function () {
 
 State.prototype.renderInfo = function () {
 	var self = this;
+	var stateMachine = this.stateMachine;
 	var $info = this.$info || $('<div />');
 	$info.empty();
 
 	// transitions
 	var $transitions = $('<table />');
 	this.transitions().forEach(function (transition) {
+		var conditionName = transition.condition.name;
+
 		$transitions.append(
 			$('<tr />')
 				.append($('<td />').html(
-					transition.condition.name + ' →'
+					'—' + conditionName + '—▶'
 				))
 				.append($('<td />').append(
 					transition.to.renderLink()
+				))
+		);
+	});
+
+	// action list
+	var actions = this.actions;
+	var $actionList = $('<table />');
+	actions.forEach(function (actionName) {
+		var fn = stateMachine.findAction(actionName).fn;
+		$actionList.append(
+			$('<tr />')
+				.append('<td>' + actionName + '</td>')
+				.append($('<td />').append($('<textarea />')
+					.text(fn + '')
 				))
 		);
 	});
@@ -280,34 +297,16 @@ State.prototype.renderInfo = function () {
 			self.stateMachine.render();
 		});
 
-	// element switchの生成
-	var elementSwitch = {};
-	this.stateMachine.elements.forEach(function (selector) {
-		elementSwitch[selector] = '−';
-	});
-	$.each(this.elementSwitch || {}, function (selector, flag) {
-		elementSwitch[selector] = flag ? 'on' : 'off';
-	});
-
-	var $elementSwitchList = $('<table />');
-
-	$.each(elementSwitch, function (selector, value) {
-		$elementSwitchList.append($('<tr />').append(
-			$('<th>' + selector + '</th><td>' + value + '</td>')
-		));
-	});
-
 	// ぜんぶ$infoに詰めていく
-	$info.append($('<h1 />').html(this.path()));
 	$info.append(
 		$('<section />')
-			.append($('<h1 />').html('transitions'))
+			.append($('<h1 />').html(this.path()))
 			.append($transitions)
 	);
 	$info.append(
 		$('<section />')
-			.append($('<h1 />').html('element switch'))
-			.append($elementSwitchList)
+			.append($('<h1 />').html('actions'))
+			.append($actionList)
 	);
 	$info.append(
 		$('<section />').append($deleteButton)
