@@ -105,29 +105,29 @@ StateMachine.prototype.addTransition = function (from, cond, to) {
 };
 
 // jsonの定義書式からオブジェクト生成
-StateMachine.decode = function (definition) {
+StateMachine.decode = function (json) {
 	var stateMachine = new StateMachine();
 	var name;
 
 	// state読み込み
-	for (name in definition.states || {}) {
+	for (name in json.states || {}) {
 		var state = stateMachine.addState(name);
-		state = $.extend(true, state, definition.states[name]);
+		state = $.extend(true, state, json.states[name]);
 	}
 
 	// condition読み込み
-	for (name in definition.conditions || {}) {
+	for (name in json.conditions || {}) {
 		var cond = stateMachine.addCondition(name);
-		cond = $.extend(true, cond, definition.conditions[name]);
+		cond = $.extend(true, cond, json.conditions[name]);
 	}
 
 	// transition読み込み
-	(definition.transitions || []).forEach(function (t) {
+	(json.transitions || []).forEach(function (t) {
 		stateMachine.addTransition(t.from, t.condition, t.to);
 	});
 
 	// その他読み込み
-	stateMachine.elements = definition.elements || [];
+	stateMachine.elements = json.elements || [];
 
 	return stateMachine;
 };
@@ -142,26 +142,26 @@ StateMachine.prototype.encode = function () {
 };
 
 StateMachine.prototype.encodeStates = function () {
-	var definition = {};
+	var json = {};
 	$.each(this.rootState.subStates, function (name, state) {
-		definition[name] = state.encode();
+		json[name] = state.encode();
 	});
-	return definition;
+	return json;
 };
 
 StateMachine.prototype.encodeConditions = function () {
-	var definition = {};
+	var json = {};
 	$.each(this.conditions, function (name, condition) {
-		definition[name] = condition.encode();
+		json[name] = condition.encode();
 	});
-	return definition;
+	return json;
 };
 
 StateMachine.prototype.encodeTransitions = function () {
-	var definition = [];
+	var json = [];
 	$.each(this.transitions, function () {
-		definition.push(this.encode());
+		json.push(this.encode());
 	});
-	return definition;
+	return json;
 };
 

@@ -1,5 +1,5 @@
 node_modules
 config/runtime.json
 npm-debug.log
-logs
+log
 pids

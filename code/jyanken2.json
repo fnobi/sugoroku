@@ -1,0 +1,124 @@
+{
+	"states": {
+		"initial": {
+	"x": 199, "y": 43,
+	"elementSwitch": {}
+		},
+	"g_g": {
+	"x": 380, "y": 74,
+	"elementSwitch": {
+				"#user_g": true,   "#com_g": true,
+				"#user_c": false,  "#com_c": false,
+				"#user_p": false,  "#com_p": false
+			}
+		},
+	"g_c": {
+	"x": 681, "y": 273,
+	"elementSwitch": {
+				"#user_g": true,   "#com_g": false,
+				"#user_c": false,  "#com_c": true,
+				"#user_p": false,  "#com_p": false
+			}
+		},
+	"g_p": {
+	"x": 570, "y": 127,
+	"elementSwitch": {
+				"#user_g": true,   "#com_g": false,
+				"#user_c": false,  "#com_c": false,
+				"#user_p": false,  "#com_p": true
+			}
+		},
+	"c_g": {
+	"x": 98, "y": 245,
+	"elementSwitch": {
+				"#user_g": false,  "#com_g": true,
+				"#user_c": true,   "#com_c": false,
+				"#user_p": false,  "#com_p": false
+			}
+		},
+	"c_c": {
+	"x": 119, "y": 432,
+	"elementSwitch": {
+				"#user_g": false,  "#com_g": false,
+				"#user_c": true,   "#com_c": true,
+				"#user_p": false,  "#com_p": false
+			}
+		},
+	"c_p": {
+	"x": 211, "y": 112,
+	"elementSwitch": {
+				"#user_g": false,  "#com_g": false,
+				"#user_c": true,   "#com_c": false,
+				"#user_p": false,  "#com_p": true
+			}
+		},
+	"p_g": {
+	"x": 258, "y": 541,
+	"elementSwitch": {
+				"#user_g": false,  "#com_g": true,
+				"#user_c": false,  "#com_c": false,
+				"#user_p": true,   "#com_p": false
+			}
+		},
+	"p_c": {
+	"x": 465, "y": 554,
+	"elementSwitch": {
+				"#user_g": false,  "#com_g": false,
+				"#user_c": false,  "#com_c": true,
+				"#user_p": true,   "#com_p": false
+			}
+		},
+	"p_p": {
+	"x": 633, "y": 463,
+	"elementSwitch": {
+				"#user_g": false,  "#com_g": false,
+				"#user_c": false,  "#com_c": false,
+				"#user_p": true,   "#com_p": true
+			}
+		}
+	},
+	"conditions": {
+	"direct":  { "type": "timeout", "ms": 0 },
+	"wait_2s": { "type": "timeout", "ms": 2000 },
+	"push_g":  { "type": "click", "element": "#g_button" },
+	"push_c":  { "type": "click", "element": "#c_button" },
+	"push_p":  { "type": "click", "element": "#p_button" }
+	},
+	"transitions": [
+		{ "from": "/initial", "to": "/g_g", "condition": "direct"},
+
+		{ "from": "/g_g", "to": "/g_p", "condition": "wait_2s" },
+		{ "from": "/c_c", "to": "/c_g", "condition": "wait_2s" },
+		{ "from": "/p_p", "to": "/p_c", "condition": "wait_2s" },
+		{ "from": "/g_c", "to": "/g_p", "condition": "wait_2s" },
+		{ "from": "/c_p", "to": "/c_g", "condition": "wait_2s" },
+		{ "from": "/p_g", "to": "/p_c", "condition": "wait_2s" },
+
+		{ "from": "/g_g", "to": "/p_g", "condition": "push_p" },
+		{ "from": "/c_g", "to": "/p_g", "condition": "push_p" },
+		{ "from": "/g_c", "to": "/p_c", "condition": "push_p" },
+		{ "from": "/c_c", "to": "/p_c", "condition": "push_p" },
+		{ "from": "/g_p", "to": "/p_p", "condition": "push_p" },
+		{ "from": "/c_p", "to": "/p_p", "condition": "push_p" },
+
+		{ "from": "/g_g", "to": "/c_g", "condition": "push_c" },
+		{ "from": "/p_g", "to": "/c_g", "condition": "push_c" },
+		{ "from": "/g_c", "to": "/c_c", "condition": "push_c" },
+		{ "from": "/p_c", "to": "/c_c", "condition": "push_c" },
+		{ "from": "/g_p", "to": "/c_p", "condition": "push_c" },
+		{ "from": "/p_p", "to": "/c_p", "condition": "push_c" },
+
+		{ "from": "/p_g", "to": "/g_g", "condition": "push_g" },
+		{ "from": "/c_g", "to": "/g_g", "condition": "push_g" },
+		{ "from": "/p_c", "to": "/g_c", "condition": "push_g" },
+		{ "from": "/c_c", "to": "/g_c", "condition": "push_g" },
+		{ "from": "/p_p", "to": "/g_p", "condition": "push_g" },
+		{ "from": "/c_p", "to": "/g_p", "condition": "push_g" }
+	],
+	"src": [
+		"http://localhost:2569/src/jyanken_condition.js"
+	],
+	"elements": [
+		"#user_g", "#user_c", "#user_p","#com_g",  "#com_c",  "#com_p"
+	]
+}
