@@ -10,7 +10,7 @@ h1,h2,ul,li {
 }
 
 a {
-    color: #00B7FF;
+    color: #FFB700;
 }
 
 #sugoroku-header {
@@ -22,6 +22,12 @@ a {
     overflow: hidden;
     z-index: 200;
     top: 0px; left: 0px;
+}
+#sugoroku-header a {
+    color: white;
+}
+#sugoroku-header a:hover {
+    color: #ffB700;
 }
 #sugoroku-header h1 {
     padding: 0.2em 0.5em;
