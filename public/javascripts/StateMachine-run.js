@@ -19,32 +19,21 @@ State.prototype.action = function () {
 State.prototype.listenConditions = function () {
 	var self = this;
 	var stateMachine = this.stateMachine;
+	var transitions = this.transitions();
 
 	var callTransit = function (condition) {
 		// 状態遷移の下準備
 		// 今まで待っていたconditionを、取り消す
 		self.clearListeners();
-
 		stateMachine.transit(condition.name);
 	};
 
-	this.listeners = {};
-
-	this.transitions().forEach(function (transition) {
+	transitions.forEach(function (transition) {
 		var condition = transition.condition;
-		if (condition.type == 'timeout') {
-			// timeout: 数ミリ秒待ったらtransit
-			var timeout = setTimeout(function () {
-				self.listeners[condition.name] = false;
-				callTransit(condition);
-			}, condition.ms);
+		var name = condition.name;
 
-			self.listeners[condition.name] = timeout;
-
-		} else if (condition.type == 'click') {
-			// click: あるelementがクリックされたらtransit
-
-			$(condition.element).on('click', function () {
+		if (condition.listen) {
+			condition.listen(function () {
 				callTransit(condition);
 			});
 		}
@@ -53,14 +42,13 @@ State.prototype.listenConditions = function () {
 
 State.prototype.clearListeners = function () {
 	var self = this;
+	var stateMachine = this.stateMachine;
 
 	this.transitions().forEach(function (transition) {
 		var condition = transition.condition;
-		if (condition.type == 'timeout') {
-			clearTimeout(self.listeners[condition.name]);
 
-		} else if (condition.type == 'click') {
-			$(condition.element).off('click');
+		if (condition.unlisten) {
+			condition.unlisten();
 		}
 	});
 };

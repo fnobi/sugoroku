@@ -38,6 +38,7 @@ StateMachine.prototype.transit = function (condition) {
 
 // この状態遷移機械が、conditionを与えたらどのstateに進むかを計算
 StateMachine.prototype.stateToTransit = function (condition) {
+	var self = this;
 	var state = null;
 	var condName = condition.name || condition;
 
@@ -79,8 +80,10 @@ StateMachine.prototype.addState = function (name) {
 };
 
 // 環境を新規作成(定義)
-StateMachine.prototype.addCondition = function (name) {
-	var condition = new Condition(name);
+StateMachine.prototype.addCondition = function (name, option) {
+	var condition = this.findCondition(name) || new Condition(name);
+
+	condition = $.extend(true, condition, option || {});
 
 	// 親と子お互いに、相手へのリファレンスを持つ
 	condition.stateMachine = this;
@@ -90,11 +93,11 @@ StateMachine.prototype.addCondition = function (name) {
 };
 
 // 遷移を新規作成(定義)
-StateMachine.prototype.addTransition = function (from, cond, to) {
+StateMachine.prototype.addTransition = function (from, condName, to) {
 	from = this.findState(from);
-	cond = this.findCondition(cond);
 	to   = this.findState(to);
 
+	var cond = this.findCondition(condName) || this.addCondition(condName);
 	var transition = new Transition(from, cond, to);
 
 	// 親と子お互いに、相手へのリファレンスを持つ
@@ -117,8 +120,10 @@ StateMachine.decode = function (json) {
 
 	// condition読み込み
 	for (name in json.conditions || {}) {
-		var cond = stateMachine.addCondition(name);
-		cond = $.extend(true, cond, json.conditions[name]);
+		var cond = stateMachine.addCondition(
+			name,
+			json.conditions[name]
+		);
 	}
 
 	// transition読み込み

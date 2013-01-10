@@ -77,13 +77,6 @@
 			}
 		}
 	},
-	"conditions": {
-	"direct":  { "type": "timeout", "ms": 0 },
-	"wait_2s": { "type": "timeout", "ms": 2000 },
-	"push_g":  { "type": "click", "element": "#g_button" },
-	"push_c":  { "type": "click", "element": "#c_button" },
-	"push_p":  { "type": "click", "element": "#p_button" }
-	},
 	"transitions": [
 		{ "from": "/initial", "to": "/g_g", "condition": "direct"},
 
