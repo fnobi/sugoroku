@@ -20,6 +20,7 @@ StateMachine.prototype.renderRoot = function () {
 	var self = this;
 	var $root = this.$root || $('<section />');
 	$root.empty();
+	$root.off('click');
 
 	$root
 		.addClass('sugoroku')
@@ -29,7 +30,13 @@ StateMachine.prototype.renderRoot = function () {
 		$root.append(state.render());
 	});
 
+	$root.on('click', function () {
+		self.clearSelect();
+		self.renderInfoBar();
+	});
+
 	// statesが画面上にレンダリングされてから計算等行いたいので、timeout
+	// TODO: ちゃんと、「レンダリングを待つ」っていうイベントもあるよね?
 	setTimeout(function () {
 		self.transitions.forEach(function (transition) {
 			$root.append(transition.render());
@@ -45,7 +52,7 @@ StateMachine.prototype.renderInfoBar = function () {
 	$infoBar.empty();
 
 	$infoBar
-		.attr({id: 'infobar'})
+		.attr({ id: 'infobar' })
 		.addClass('sugoroku');
 
 	if (this.infoSource) {
@@ -58,15 +65,27 @@ StateMachine.prototype.renderInfoBar = function () {
 	return $infoBar[0];
 };
 
-StateMachine.prototype.selectInfoSource = function (infoSource) {
-	// 現在選択されているinfo sourceの表示をリセット
+StateMachine.prototype.clearSelect = function () {
+	// infoSourceにstateが入っているなら、そのstateにキャンセルさせる。
 	if (this.infoSource) {
 		this.infoSource.cancelSelect();
 	}
+	this.infoSource = null;
+};
+
+StateMachine.prototype.selectInfoSource = function (infoSource) {
+	// 現在選択されているinfo sourceの表示をリセット
+	this.clearSelect();
 
 	// infoSource切り換え
+	if (!infoSource) {
+		alert('fail to select.');
+		return;
+	}
+
+	// 選択
+	infoSource.select();
 	this.infoSource = infoSource;
-	this.infoSource.select();
 
 	// info bar を再描画
 	this.renderInfoBar();
@@ -92,19 +111,7 @@ StateMachine.prototype.renderHeader = function () {
 	if (!$newStateButton[0]) {
 		$newStateButton = $('<button id="new-state-button">new state</button>')
 			.click(function () {
-				var name = window.prompt('Enter the state name.');
-				if (!name) {
-					return;
-				}
-				var state = self.addState(name);
-				if (!state) {
-					alert('Fail to add state.');
-					return;
-				}
-
-				state.x = 100; state.y = 100;
-				self.selectInfoSource(state);
-				self.render();
+				self.promptToAddState();
 			});
 	}
 
@@ -115,6 +122,23 @@ StateMachine.prototype.renderHeader = function () {
 	this.$header = $header;
 	return $header[0];
 };
+
+StateMachine.prototype.promptToAddState = function () {
+	var name = window.prompt('Enter the state name.');
+	if (!name) {
+		return;
+	}
+	var state = this.addState(name);
+	if (!state) {
+		alert('Fail to add state.');
+		return;
+	}
+
+	state.x = 100; state.y = 100;
+	this.selectInfoSource(state);
+	this.render();
+};
+
 
 StateMachine.prototype.save = function (callback) {
 	callback = callback || function () {};
@@ -174,8 +198,9 @@ State.prototype.renderNode = function () {
 			left     : this.x + 'px',
 			top      : this.y + 'px'
 		})
-		.on('click', function () {
+		.on('click', function (e) {
 			self.stateMachine.selectInfoSource(self);
+			e.stopPropagation();
 		})
 		.draggable({
 			cursor  : 'all-scroll',
@@ -290,8 +315,8 @@ State.prototype.renderInfo = function () {
 	var $deleteButton = $('<button>delete</button>')
 		.click(function () {
 			self.remove();
-			if (self.stateMachine.infoSource == self) {
-				self.stateMachine.infoSource = null;
+			if (self.isSelected) {
+				self.stateMachine.clearSelect();
 			}
 
 			self.stateMachine.render();
@@ -315,6 +340,8 @@ State.prototype.renderInfo = function () {
 	return $info[0];
 };
 
+
+
 State.prototype.renderLink = function () {
 	var self = this;
 	return $('<a />')
@@ -324,6 +351,10 @@ State.prototype.renderLink = function () {
 			e.preventDefault();
 			self.stateMachine.selectInfoSource(self);
 		})[0];
+};
+
+State.prototype.isSelected = function () {
+	return this.stateMachine.infoSource == this;
 };
 
 State.prototype.cancelSelect = function () {
