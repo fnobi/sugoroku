@@ -195,7 +195,7 @@ State.prototype.renderNode = function () {
 		.append($subStates)
 		.css({
 			position : 'absolute',
-			left     : this.x + 'px',
+		left     : this.x + 'px',
 			top      : this.y + 'px'
 		})
 		.on('click', function (e) {
@@ -228,11 +228,12 @@ State.prototype.renderNode = function () {
 		$node.removeClass('selected');
 	}
 
-	if (this.expanded) {
-		$node.addClass('expanded');
-	} else {
-		$node.removeClass('expanded');
-	}
+	// expand機能はいまブロック中
+	// if (this.expanded) {
+	// 	$node.addClass('expanded');
+	// } else {
+	// 	$node.removeClass('expanded');
+	// }
 
 	this.$node = $node;
 	return $node[0];
@@ -248,13 +249,14 @@ State.prototype.renderNameLabel = function () {
 
 	$nameLabel
 		.addClass('name')
-		.append(
-			$('<a />')
-				.html(toggleMark)
-				.click(function () {
-					self.toggleExpand();
-				})
-		)
+		// expand機能はいまブロック中
+		// .append(
+		// 	$('<a />')
+		// 		.html(toggleMark)
+		// 		.click(function () {
+		// 			self.toggleExpand();
+		// 		})
+		// )
 		.append($('<span />').html(this.name));
 
 	return $nameLabel[0];
