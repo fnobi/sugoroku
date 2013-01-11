@@ -44,8 +44,8 @@ StateMachine.prototype.renderRoot = function () {
 			return;
 		}
 		self.connectionMode.trace({
-			x: e.clientX,
-			y: e.clientY
+			x: e.pageX - $root[0].offsetLeft,
+			y: e.pageY - $root[0].offsetTop
 		});
 	});
 
@@ -480,10 +480,15 @@ State.prototype.select = function () {
 State.prototype.switchConnection = function () {
 	var stateMachine = this.stateMachine;
 	if (stateMachine.connectionMode) {
-		alert([
-			stateMachine.connectionMode.name,
-			this.name
-		].join('\n'));
+		var from = stateMachine.connectionMode;
+		if (stateMachine.findTransition(from, this)) {
+			alert('the transition has already existed.');
+		} else {
+			var t = stateMachine.addTransition(from, 'direct', this);
+			stateMachine.selectInfoSource(t);
+			stateMachine.render();
+		}
+
 		stateMachine.connectionModeOff();
 		return;
 	}

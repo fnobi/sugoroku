@@ -76,6 +76,22 @@ StateMachine.prototype.findCondition = function (condition) {
 	return this.conditions[condition] || null;
 };
 
+StateMachine.prototype.findTransition = function (from, to) {
+	// condition.nameが渡された場合は、そのnameの持ち主のconditionを返す
+	var result = null;
+	this.transitions.forEach(function (transition) {
+		if (result) {
+			return;
+		}
+		if (transition.from === from && transition.to === to) {
+			// console.log('[found]');
+			// console.log(transition);
+			result = transition;
+		}
+	});
+	return result;
+};
+
 StateMachine.prototype.findAction = function (action) {
 	// actionが渡された場合は、そのまま返す
 	if (action.name) {
