@@ -73,19 +73,19 @@ StateMachine.prototype.clearSelect = function () {
 	this.infoSource = null;
 };
 
-StateMachine.prototype.selectInfoSource = function (infoSource) {
+StateMachine.prototype.selectInfoSource = function (graph) {
 	// 現在選択されているinfo sourceの表示をリセット
 	this.clearSelect();
 
 	// infoSource切り換え
-	if (!infoSource) {
+	if (!graph) {
 		alert('fail to select.');
 		return;
 	}
 
 	// 選択
-	infoSource.select();
-	this.infoSource = infoSource;
+	graph.select();
+	this.infoSource = graph;
 
 	// info bar を再描画
 	this.renderInfoBar();
@@ -314,28 +314,30 @@ State.prototype.renderInfo = function () {
 	// delete button
 	var $deleteButton = $('<button>delete</button>')
 		.click(function () {
-			self.remove();
-			if (self.isSelected) {
+			if (self.selected) {
 				self.stateMachine.clearSelect();
 			}
+			self.remove();
 
 			self.stateMachine.render();
 		});
 
 	// ぜんぶ$infoに詰めていく
-	$info.append(
-		$('<section />')
-			.append($('<h1 />').html(this.path()))
-			.append($transitions)
-	);
-	$info.append(
-		$('<section />')
-			.append($('<h1 />').html('actions'))
-			.append($actionList)
-	);
-	$info.append(
-		$('<section />').append($deleteButton)
-	);
+	$info
+		.append($('<h1 />').html(this.path()))
+		.append(
+			$('<section />')
+				.append($('<h1>transitions</h1>'))
+				.append($transitions)
+		)
+		.append(
+			$('<section />')
+				.append($('<h1 />').html('actions'))
+				.append($actionList)
+		)
+		.append(
+			$('<section />').append($deleteButton)
+		);
 
 	return $info[0];
 };
@@ -351,10 +353,6 @@ State.prototype.renderLink = function () {
 			e.preventDefault();
 			self.stateMachine.selectInfoSource(self);
 		})[0];
-};
-
-State.prototype.isSelected = function () {
-	return this.stateMachine.infoSource == this;
 };
 
 State.prototype.cancelSelect = function () {
@@ -379,32 +377,149 @@ Transition.prototype.render = function () {
 };
 
 Transition.prototype.renderArrow = function () {
+	var self = this;
 	var $arrow = this.$arrow || $('<div />');
 	$arrow.empty();
+	$arrow.off('click');
 
 	var lm = lineMeter(this.from, this.to);
 
-	$arrow.addClass('sugoroku');
-	$arrow.addClass('transition');
-	$arrow.css({
-		position: 'absolute',
-		left: lm.left + 'px', top: lm.top + 'px',
-		width: lm.length,
-		transform: lm.transform,
-		'transform-origin': '0% 0%'
-	});
-	$arrow.append(
-		$('<div />')
-			.html(this.condition.name)
-			.css({
-				paddingLeft: lm.paddingLeft + 'px',
-				paddingRight: lm.paddingRight + 'px'
-			})
-	);
+	$arrow
+		.addClass('sugoroku')
+		.addClass('transition')
+		.css({
+			position: 'absolute',
+			left: lm.left + 'px', top: lm.top + 'px',
+			width: lm.length,
+			transform: lm.transform,
+			'transform-origin': '0% 0%'
+		})
+		.append(
+			$('<div />')
+				.html(this.condition.name)
+				.css({
+					paddingLeft: lm.paddingLeft + 'px',
+					paddingRight: lm.paddingRight + 'px'
+				})
+		)
+		.on('click', function (e) {
+			self.stateMachine.selectInfoSource(self);
+			e.stopPropagation();
+		});
+
+	if (this.selected) {
+		$arrow.addClass('selected');
+	} else {
+		$arrow.removeClass('selected');
+	}
 
 	this.$arrow = $arrow;
 	return $arrow[0];
 };
+
+Transition.prototype.select = function () {
+	this.selected = true;
+	this.renderArrow();
+};
+
+Transition.prototype.cancelSelect = function () {
+	this.selected = false;
+	this.renderArrow();
+};
+
+Transition.prototype.renderInfo = function () {
+	var self = this;
+	var stateMachine = this.stateMachine;
+	var $info = this.$info || $('<div />');
+	$info.empty();
+
+	// // transitions
+	// var $transitions = $('<table />');
+	// this.transitions().forEach(function (transition) {
+	// 	var conditionName = transition.condition.name;
+
+	// 	$transitions.append(
+	// 		$('<tr />')
+	// 			.append($('<td />').html(
+	// 				'—' + conditionName + '—▶'
+	// 			))
+	// 			.append($('<td />').append(
+	// 				transition.to.renderLink()
+	// 			))
+	// 	);
+	// });
+
+	// // action list
+	// var actions = this.actions;
+	// var $actionList = $('<table />');
+	// actions.forEach(function (actionName) {
+	// 	var fn = stateMachine.findAction(actionName).fn;
+	// 	$actionList.append(
+	// 		$('<tr />')
+	// 			.append('<td>' + actionName + '</td>')
+	// 			.append($('<td />').append($('<textarea />')
+	// 				.text(fn + '')
+	// 			))
+	// 	);
+	// });
+
+	// // ぜんぶ$infoに詰めていく
+	// $info.append(
+	// 	$('<section />')
+	// 		.append($('<h1 />').html(this.path()))
+	// 		.append($transitions)
+	// );
+	// $info.append(
+	// 	$('<section />')
+	// 		.append($('<h1 />').html('actions'))
+	// 		.append($actionList)
+	// );
+	// $info.append(
+	// 	$('<section />').append($deleteButton)
+	// );
+
+	var $parameters = $('<table />');
+	$parameters
+		.append(
+			$('<tr />')
+				.append($('<th />').html('from'))
+				.append($('<td />').html(this.from.name))
+		)
+		.append(
+			$('<tr />')
+				.append($('<th />').html('condition'))
+				.append($('<td />').html(this.condition.name))
+		)
+		.append(
+			$('<tr />')
+				.append($('<th />').html('to'))
+				.append($('<td />').html(this.to.name))
+		);
+
+	// delete button
+	var $deleteButton = $('<button>delete</button>')
+		.click(function () {
+			if (self.selected) {
+				self.stateMachine.clearSelect();
+			}
+			self.remove();
+
+			self.stateMachine.render();
+		});
+
+	$info
+		.append(
+			$('<section />')
+				.append('<h1>parameters</h1>')
+				.append($parameters)
+		)
+		.append(
+			$('<section />').append($deleteButton)
+		);
+
+	return $info[0];
+};
+
 
 // from stateとto stateから、2者間にどんな直線を引けばいいか計算
 var lineMeter = function (from, to) {

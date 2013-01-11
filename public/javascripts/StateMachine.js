@@ -119,6 +119,19 @@ StateMachine.prototype.addTransition = function (from, condName, to) {
 	return transition;
 };
 
+StateMachine.prototype.removeTransition = function (transition) {
+	var removed = [];
+
+	this.transitions.forEach(function (t) {
+		if (t === transition) {
+			return;
+		}
+		removed.push(t);
+	});
+
+	this.transitions = removed;
+};
+
 // アクションを新規作成(定義)
 StateMachine.prototype.addAction = function (name, fn) {
 	var action = this.findAction(name) || new Action(name, fn);

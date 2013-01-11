@@ -12,3 +12,7 @@ Transition.prototype.encode = function () {
 		to: this.to.path()
 	};
 };
+
+Transition.prototype.remove = function () {
+	this.stateMachine.removeTransition(this);
+};
