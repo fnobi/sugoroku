@@ -21,6 +21,7 @@ StateMachine.prototype.renderRoot = function () {
 	var $root = this.$root || $('<section />');
 	$root.empty();
 	$root.off('click');
+	$root.off('mousemove');
 
 	$root
 		.addClass('sugoroku')
@@ -31,8 +32,21 @@ StateMachine.prototype.renderRoot = function () {
 	});
 
 	$root.on('click', function () {
+		if (self.connectionMode) {
+			self.connectionModeOff();
+		}
 		self.clearSelect();
 		self.renderInfoBar();
+	});
+
+	$root.on('mousemove', function (e) {
+		if (!self.connectionMode) {
+			return;
+		}
+		self.connectionMode.trace({
+			x: e.clientX,
+			y: e.clientY
+		});
 	});
 
 	// statesが画面上にレンダリングされてから計算等行いたいので、timeout
@@ -50,6 +64,7 @@ StateMachine.prototype.renderRoot = function () {
 StateMachine.prototype.renderInfoBar = function () {
 	var $infoBar = this.$infoBar || $('<aside />');
 	$infoBar.empty();
+	$infoBar.off('click');
 
 	$infoBar
 		.attr({ id: 'infobar' })
@@ -61,8 +76,26 @@ StateMachine.prototype.renderInfoBar = function () {
 		$infoBar.append('<p>nothing selected.</p>');
 	}
 
+	$infoBar.on('click', function (e) {
+		e.stopPropagation();
+	});
+
 	this.$infoBar = $infoBar;
 	return $infoBar[0];
+};
+
+StateMachine.prototype.renderConditionSelector = function () {
+	var $selector = $('<select />');
+	var innerHTML = [];
+
+	$.each(this.conditions, function (name, condition) {
+		innerHTML.push(
+			'<option name="' + name + '">' + name + '</option>'
+		);
+	});
+	$selector.html(innerHTML.join(''));
+
+	return $selector[0];
 };
 
 StateMachine.prototype.clearSelect = function () {
@@ -104,13 +137,13 @@ StateMachine.prototype.renderHeader = function () {
 	}
 	if (!$saveButton[0]) {
 		$saveButton = $('<button id="save-button">save</button>')
-			.click(function () {
+			.on('click', function () {
 				self.save();
 			});
 	}
 	if (!$newStateButton[0]) {
 		$newStateButton = $('<button id="new-state-button">new state</button>')
-			.click(function () {
+			.on('click', function () {
 				self.promptToAddState();
 			});
 	}
@@ -139,6 +172,30 @@ StateMachine.prototype.promptToAddState = function () {
 	this.render();
 };
 
+StateMachine.prototype.connectionModeOn = function (state) {
+	if (this.connectionMode) {
+		this.connectionModeOff();
+	}
+	state.connecting = true;
+	this.connectionMode = state;
+
+	state.renderNode();
+	this.$root.append(state.renderTraceArrow());
+};
+
+StateMachine.prototype.connectionModeOff = function () {
+	if (!this.connectionMode) {
+		return;
+	}
+
+	var state = this.connectionMode;
+
+	state.connecting = false;
+	this.connectionMode = null;
+
+	state.renderNode();
+	state.$traceArrow.remove();
+};
 
 StateMachine.prototype.save = function (callback) {
 	callback = callback || function () {};
@@ -195,7 +252,7 @@ State.prototype.renderNode = function () {
 		.append($subStates)
 		.css({
 			position : 'absolute',
-		left     : this.x + 'px',
+			left     : this.x + 'px',
 			top      : this.y + 'px'
 		})
 		.on('click', function (e) {
@@ -218,22 +275,12 @@ State.prototype.renderNode = function () {
 		});
 
 
-	if (this.name == 'initial') {
-		$node.addClass('initialstate');
-	}
-
-	if (this.selected) {
-		$node.addClass('selected');
-	} else {
-		$node.removeClass('selected');
-	}
+	$node.toggleClass('initialstate', this.name == 'initial');
+	$node.toggleClass('selected', this.selected || false);
+	$node.toggleClass('connecting', this.connecting || false);
 
 	// expand機能はいまブロック中
-	// if (this.expanded) {
-	// 	$node.addClass('expanded');
-	// } else {
-	// 	$node.removeClass('expanded');
-	// }
+	// $node.toggleClass('expanded', this.expanded || false);
 
 	this.$node = $node;
 	return $node[0];
@@ -247,17 +294,37 @@ State.prototype.renderNameLabel = function () {
 
 	var toggleMark = this.expanded ? ' - ' : ' + ';
 
+	var $arrowMark = $('<span class="arrowmark" />');
+	if (this.connecting) {
+		$arrowMark.text('▶');
+	} else {
+		$arrowMark
+			.mouseover(function () {
+				$(this).text('▶');
+			})
+			.mouseout(function () {
+				$(this).text('●');
+			})
+			.on('click', function (e) {
+				self.switchConnection();
+				e.stopPropagation();
+			})
+			.text('●');
+	}
+
 	$nameLabel
 		.addClass('name')
 		// expand機能はいまブロック中
 		// .append(
 		// 	$('<a />')
 		// 		.html(toggleMark)
-		// 		.click(function () {
+		// 		.on('click', function () {
 		// 			self.toggleExpand();
 		// 		})
 		// )
-		.append($('<span />').html(this.name));
+		.append($('<span />').html(this.name))
+		.append($arrowMark
+		);
 
 	return $nameLabel[0];
 };
@@ -315,7 +382,7 @@ State.prototype.renderInfo = function () {
 
 	// delete button
 	var $deleteButton = $('<button>delete</button>')
-		.click(function () {
+		.on('click', function () {
 			if (self.selected) {
 				self.stateMachine.clearSelect();
 			}
@@ -344,17 +411,60 @@ State.prototype.renderInfo = function () {
 	return $info[0];
 };
 
-
-
 State.prototype.renderLink = function () {
 	var self = this;
 	return $('<a />')
 		.html(this.path())
 		.attr('href', '#' + this.path())
-		.click(function (e) {
+		.on('click', function (e) {
 			e.preventDefault();
 			self.stateMachine.selectInfoSource(self);
 		})[0];
+};
+
+State.prototype.renderTraceArrow = function (coordinates) {
+	var $traceArrow = this.$traceArrow || $('<div />');
+	$traceArrow.empty();
+
+	var lm = lineMeter(this, coordinates || this);
+
+	$traceArrow
+		.addClass('sugoroku')
+		.addClass('arrow')
+		.addClass('connecting')
+		.css({
+			position: 'absolute',
+			left: lm.left + 'px', top: lm.top + 'px',
+			width: lm.length,
+			transform: lm.transform,
+			'transform-origin': '0% 0%'
+		})
+		.append(
+			$('<div />')
+			// .html(this.condition.name)
+				.css({
+					paddingLeft: lm.paddingLeft + 'px',
+					paddingRight: lm.paddingRight + 'px'
+				})
+		);
+
+	this.$traceArrow = $traceArrow;
+	return $traceArrow[0];
+};
+
+State.prototype.trace = function (coordinates) {
+	var self = this;
+
+	if (this.limitTrace) {
+		return;
+	}
+
+	this.renderTraceArrow(coordinates);
+
+	this.limitTrace = true;
+	setTimeout(function () {
+		self.limitTrace = false;
+	}, 100);
 };
 
 State.prototype.cancelSelect = function () {
@@ -365,6 +475,19 @@ State.prototype.cancelSelect = function () {
 State.prototype.select = function () {
 	this.selected = true;
 	this.renderNode();
+};
+
+State.prototype.switchConnection = function () {
+	var stateMachine = this.stateMachine;
+	if (stateMachine.connectionMode) {
+		alert([
+			stateMachine.connectionMode.name,
+			this.name
+		].join('\n'));
+		stateMachine.connectionModeOff();
+		return;
+	}
+	stateMachine.connectionModeOn(this);
 };
 
 State.prototype.toggleExpand = function () {
@@ -388,7 +511,7 @@ Transition.prototype.renderArrow = function () {
 
 	$arrow
 		.addClass('sugoroku')
-		.addClass('transition')
+		.addClass('arrow')
 		.css({
 			position: 'absolute',
 			left: lm.left + 'px', top: lm.top + 'px',
@@ -409,11 +532,7 @@ Transition.prototype.renderArrow = function () {
 			e.stopPropagation();
 		});
 
-	if (this.selected) {
-		$arrow.addClass('selected');
-	} else {
-		$arrow.removeClass('selected');
-	}
+	$arrow.toggleClass('selected', this.selected || false);
 
 	this.$arrow = $arrow;
 	return $arrow[0];
@@ -435,72 +554,33 @@ Transition.prototype.renderInfo = function () {
 	var $info = this.$info || $('<div />');
 	$info.empty();
 
-	// // transitions
-	// var $transitions = $('<table />');
-	// this.transitions().forEach(function (transition) {
-	// 	var conditionName = transition.condition.name;
-
-	// 	$transitions.append(
-	// 		$('<tr />')
-	// 			.append($('<td />').html(
-	// 				'—' + conditionName + '—▶'
-	// 			))
-	// 			.append($('<td />').append(
-	// 				transition.to.renderLink()
-	// 			))
-	// 	);
-	// });
-
-	// // action list
-	// var actions = this.actions;
-	// var $actionList = $('<table />');
-	// actions.forEach(function (actionName) {
-	// 	var fn = stateMachine.findAction(actionName).fn;
-	// 	$actionList.append(
-	// 		$('<tr />')
-	// 			.append('<td>' + actionName + '</td>')
-	// 			.append($('<td />').append($('<textarea />')
-	// 				.text(fn + '')
-	// 			))
-	// 	);
-	// });
-
-	// // ぜんぶ$infoに詰めていく
-	// $info.append(
-	// 	$('<section />')
-	// 		.append($('<h1 />').html(this.path()))
-	// 		.append($transitions)
-	// );
-	// $info.append(
-	// 	$('<section />')
-	// 		.append($('<h1 />').html('actions'))
-	// 		.append($actionList)
-	// );
-	// $info.append(
-	// 	$('<section />').append($deleteButton)
-	// );
-
 	var $parameters = $('<table />');
 	$parameters
 		.append(
 			$('<tr />')
 				.append($('<th />').html('from'))
-				.append($('<td />').html(this.from.name))
+				.append($('<td />').append(
+					this.from.renderLink()
+				))
 		)
 		.append(
 			$('<tr />')
 				.append($('<th />').html('condition'))
-				.append($('<td />').html(this.condition.name))
+				.append($('<td />').append($(
+					stateMachine.renderConditionSelector()
+				).val(this.condition.name)))
 		)
 		.append(
 			$('<tr />')
 				.append($('<th />').html('to'))
-				.append($('<td />').html(this.to.name))
+				.append($('<td />').append(
+					this.to.renderLink()
+				))
 		);
 
 	// delete button
 	var $deleteButton = $('<button>delete</button>')
-		.click(function () {
+		.on('click', function () {
 			if (self.selected) {
 				self.stateMachine.clearSelect();
 			}
@@ -526,15 +606,15 @@ Transition.prototype.renderInfo = function () {
 // from stateとto stateから、2者間にどんな直線を引けばいいか計算
 var lineMeter = function (from, to) {
 	var from_x = from.x || 0; var from_y = from.y || 0;
-	var from_w = from.$node[0].offsetWidth;
-	var from_h = from.$node[0].offsetHeight;
+	var from_w = from.$node ? from.$node[0].offsetWidth : 0;
+	var from_h = from.$node ? from.$node[0].offsetHeight : 0;
+
+	var to_x = to.x || 0; var to_y = to.y || 0;
+	var to_w = to.$node ? to.$node[0].offsetWidth : 0;
+	var to_h = to.$node ? to.$node[0].offsetHeight : 0;
 
 	var left  = from_x + from_w / 2;
 	var top = from_y + from_h / 2;
-
-	var to_x = to.x || 0; var to_y = to.y || 0;
-	var to_w = to.$node[0].offsetWidth;
-	var to_h = to.$node[0].offsetHeight;
 
 	var right = to_x + to_w / 2;
 	var bottom = to_y + to_h / 2;
@@ -551,16 +631,8 @@ var lineMeter = function (from, to) {
 		bottom: bottom,
 		length: length,
 		transform: 'rotate(' + (180 * angle / Math.PI) + 'deg)',
-		paddingLeft: calcPadding(
-			angle,
-			from.$node[0].offsetWidth,
-			from.$node[0].offsetHeight
-		),
-		paddingRight: calcPadding(
-			angle,
-			to.$node[0].offsetWidth,
-			to.$node[0].offsetHeight
-		)
+		paddingLeft: calcPadding(angle, from_w, from_h),
+		paddingRight: calcPadding(angle, to_w, to_h)
 	};
 };
 
