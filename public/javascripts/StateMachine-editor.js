@@ -571,7 +571,7 @@ State.prototype.renderTraceArrow = function (coordinates) {
 		})
 		.append(
 			$('<div />')
-			// .html(this.condition.name)
+				.html('　')
 				.css({
 					paddingLeft: lm.paddingLeft + 'px',
 					paddingRight: lm.paddingRight + 'px'
