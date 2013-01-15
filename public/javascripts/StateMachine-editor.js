@@ -6,6 +6,37 @@
 --------------------------------------------------------------------------------
 */
 
+// 超簡易なテンプレートエンジン
+var tpl = function (template, locals) {
+	template = template || '';
+	locals = locals || {};
+
+	if (!locals.length) {
+		locals = [locals];
+	}
+
+	var texts = [];
+	locals.forEach(function (local) {
+		var text = template;
+		for (var key in local) {
+			text = text.replace(
+				new RegExp('\{\{' + key + '\}\}', 'g'),
+				local[key]
+			);
+		}
+		texts.push(text);
+	});
+	return texts.join('');
+};
+
+var toArray = function (obj) {
+	var array = [];
+	for (var i in obj) {
+		array.push(obj[i]);
+	}
+	return array;
+};
+
 StateMachine.prototype.render = function () {
 	var root = this.renderRoot();
 	var infoBar = this.renderInfoBar();
@@ -17,7 +48,7 @@ StateMachine.prototype.render = function () {
 };
 
 StateMachine.prototype.renderRoot = function () {
-	var self = this;
+	var stateMachine = this;
 	var $root = this.$root || $('<section />');
 	$root.empty();
 	$root.off('click');
@@ -32,30 +63,29 @@ StateMachine.prototype.renderRoot = function () {
 	});
 
 	$root.on('click', function () {
-		if (self.connectionMode) {
-			self.connectionModeOff();
+		if (stateMachine.connectionMode) {
+			stateMachine.connectionModeOff();
 		}
-		self.clearSelect();
-		self.renderInfoBar();
+		stateMachine.clearSelect();
+		stateMachine.renderInfoBar();
 	});
 
 	$root.on('mousemove', function (e) {
-		if (!self.connectionMode) {
+		if (!stateMachine.connectionMode) {
 			return;
 		}
-		self.connectionMode.trace({
+		stateMachine.connectionMode.trace({
 			x: e.pageX - $root[0].offsetLeft,
 			y: e.pageY - $root[0].offsetTop
 		});
 	});
 
-	// statesが画面上にレンダリングされてから計算等行いたいので、timeout
-	// TODO: ちゃんと、「レンダリングを待つ」っていうイベントもあるよね?
-	setTimeout(function () {
-		self.transitions.forEach(function (transition) {
+	// statesが画面上にレンダリングされてから計算等行いたいので、readyで待つ
+	$root.ready(function () {
+		stateMachine.transitions.forEach(function (transition) {
 			$root.append(transition.render());
 		});
-	}, 100);
+	});
 
 	this.$root = $root;
 	return $root[0];
@@ -84,18 +114,98 @@ StateMachine.prototype.renderInfoBar = function () {
 	return $infoBar[0];
 };
 
-StateMachine.prototype.renderConditionSelector = function () {
-	var $selector = $('<select />');
-	var innerHTML = [];
+StateMachine.prototype.renderConditionSelector = function (condName, callback) {
+	callback = callback || function () {};
 
-	$.each(this.conditions, function (name, condition) {
-		innerHTML.push(
-			'<option name="' + name + '">' + name + '</option>'
-		);
+	var $wrap = $([
+		'<div>',
+		'  <header>',
+		'    ' + condName,
+		'    <input type="button" value="edit" name="edit" />',
+		'  </header>',
+		'  <form>',
+		'    <select name="condition">',
+		tpl(
+			'<option value="{{name}}">{{name}}</option>',
+			toArray(this.conditions)
+		),
+		'    </select><br />',
+		'    <input name="cancel" type="button" value="cancel" />',
+		'    <input type="submit" value="ok" />',
+		'  </form>',
+		'</div>'
+	].join('\n'));
+
+	var $header = $('header', $wrap);
+	var $edit = $('input[name="edit"]', $wrap);
+	var $form = $('form', $wrap);
+	var $selector = $('select[name="condition"]', $form);
+	var $cancel = $('input[name="cancel"]', $form);
+
+	$edit.on('click', function () {
+		$header.hide();
+		$form.show();
+		$selector.val(condName);
 	});
-	$selector.html(innerHTML.join(''));
 
-	return $selector[0];
+	$cancel.on('click', function () {
+		$form.hide();
+		$header.show();
+	});
+
+	$form.on('submit', function (e) {
+		e.preventDefault();
+		callback($selector.val());
+	});
+
+	$form.hide();
+	return $wrap[0];
+};
+
+StateMachine.prototype.renderActionSelector = function (callback) {
+	var actions = this.actions;
+	callback = callback || function () {};
+
+	var $wrap = $([
+		'<div>',
+		'  <input name="add" type="button" value="add" />',
+		'  <form>',
+		'    <select name="action">',
+		tpl(
+			'<option value="{{name}}">{{name}}</option>',
+			toArray(actions)
+		),
+		'    </select>',
+		'    <input name="cancel" type="button" value="cancel">',
+		'    <input type="submit" value="ok">',
+		'  </form>',
+		'</div>'
+	].join('\n'));
+
+	var $add = $('input[name="add"]', $wrap);
+	var $form = $('form', $wrap);
+	var $cancel = $('input[name="cancel"]', $form);
+	var $selector = $('select[name="action"]', $form);
+
+	$add.on('click', function () {
+		$add.hide();
+		$form.show();
+	});
+
+	$cancel.on('click', function () {
+		$form.hide();
+		$add.show();
+	});
+
+	$form.on('submit', function (e) {
+		var value = $selector.val();
+		callback(value);
+		e.preventDefault();
+	});
+
+	$form.hide();
+
+	return $wrap[0];
 };
 
 StateMachine.prototype.clearSelect = function () {
@@ -125,7 +235,7 @@ StateMachine.prototype.selectInfoSource = function (graph) {
 };
 
 StateMachine.prototype.renderHeader = function () {
-	var self = this;
+	var stateMachine = this;
 	var $header = this.$header || $('#sugoroku-header');
 
 	var $h1 = $('h1', $header);
@@ -138,14 +248,15 @@ StateMachine.prototype.renderHeader = function () {
 	if (!$saveButton[0]) {
 		$saveButton = $('<button id="save-button">save</button>')
 			.on('click', function () {
-				self.save();
+				stateMachine.save();
 			});
 	}
 	if (!$newStateButton[0]) {
-		$newStateButton = $('<button id="new-state-button">new state</button>')
-			.on('click', function () {
-				self.promptToAddState();
-			});
+		$newStateButton = $(
+			'<button id="new-state-button">new state</button>'
+		).on('click', function () {
+			stateMachine.promptToAddState();
+		});
 	}
 
 	$header.append($h1);
@@ -212,7 +323,7 @@ StateMachine.prototype.save = function (callback) {
 			}
 
 			alert('Save successfully.');
-			callback();
+			return callback();
 		}
 	);
 };
@@ -227,12 +338,11 @@ var fetchCodeName = function () {
 
 State.prototype.render = function () {
 	var node = this.renderNode();
-	var info = this.renderInfo();
 	return node;
 };
 
 State.prototype.renderNode = function () {
-	var self = this;
+	var state = this;
 	var $node = this.$node || $('<div />');
 
 	var memory_x, memory_y;
@@ -256,7 +366,7 @@ State.prototype.renderNode = function () {
 			top      : this.y + 'px'
 		})
 		.on('click', function (e) {
-			self.stateMachine.selectInfoSource(self);
+			state.stateMachine.selectInfoSource(state);
 			e.stopPropagation();
 		})
 		.draggable({
@@ -268,9 +378,9 @@ State.prototype.renderNode = function () {
 				memory_y = $node[0].offsetTop;
 			},
 			stop    : function () {
-				self.x += $node[0].offsetLeft - memory_x;
-				self.y += $node[0].offsetTop - memory_y;
-				self.stateMachine.render();
+				state.x += $node[0].offsetLeft - memory_x;
+				state.y += $node[0].offsetTop - memory_y;
+				state.stateMachine.render();
 			}
 		});
 
@@ -279,20 +389,15 @@ State.prototype.renderNode = function () {
 	$node.toggleClass('selected', this.selected || false);
 	$node.toggleClass('connecting', this.connecting || false);
 
-	// expand機能はいまブロック中
-	// $node.toggleClass('expanded', this.expanded || false);
-
 	this.$node = $node;
 	return $node[0];
 };
 
 // stateの名前表示部分をレンダリング
 State.prototype.renderNameLabel = function () {
-	var self = this;
+	var state = this;
 	var $nameLabel = this.$nameLabel || $('<header />');
 	$nameLabel.empty();
-
-	var toggleMark = this.expanded ? ' - ' : ' + ';
 
 	var $arrowMark = $('<span class="arrowmark" />');
 	if (this.connecting) {
@@ -306,7 +411,7 @@ State.prototype.renderNameLabel = function () {
 				$(this).text('●');
 			})
 			.on('click', function (e) {
-				self.switchConnection();
+				state.switchConnection();
 				e.stopPropagation();
 			})
 			.text('●');
@@ -314,14 +419,6 @@ State.prototype.renderNameLabel = function () {
 
 	$nameLabel
 		.addClass('name')
-		// expand機能はいまブロック中
-		// .append(
-		// 	$('<a />')
-		// 		.html(toggleMark)
-		// 		.on('click', function () {
-		// 			self.toggleExpand();
-		// 		})
-		// )
 		.append($('<span />').html(this.name))
 		.append($arrowMark
 		);
@@ -345,50 +442,19 @@ State.prototype.renderSubStates = function () {
 };
 
 State.prototype.renderInfo = function () {
-	var self = this;
+	var state = this;
 	var stateMachine = this.stateMachine;
 	var $info = this.$info || $('<div />');
 	$info.empty();
 
-	// transitions
-	var $transitions = $('<table />');
-	this.transitions().forEach(function (transition) {
-		var conditionName = transition.condition.name;
-
-		$transitions.append(
-			$('<tr />')
-				.append($('<td />').html(
-					'—' + conditionName + '—▶'
-				))
-				.append($('<td />').append(
-					transition.to.renderLink()
-				))
-		);
-	});
-
-	// action list
-	var actions = this.actions;
-	var $actionList = $('<table />');
-	actions.forEach(function (actionName) {
-		var fn = stateMachine.findAction(actionName).fn;
-		$actionList.append(
-			$('<tr />')
-				.append('<td>' + actionName + '</td>')
-				.append($('<td />').append($('<textarea />')
-					.text(fn + '')
-				))
-		);
-	});
-
-	// delete button
-	var $deleteButton = $('<button>delete</button>')
+	// destroy button
+	var $destroyButton = $('<button>destroy</button>')
 		.on('click', function () {
-			if (self.selected) {
-				self.stateMachine.clearSelect();
+			if (state.selected) {
+				state.stateMachine.clearSelect();
 			}
-			self.remove();
-
-			self.stateMachine.render();
+			state.remove();
+			state.renderInfo();
 		});
 
 	// ぜんぶ$infoに詰めていく
@@ -396,30 +462,89 @@ State.prototype.renderInfo = function () {
 		.append($('<h1 />').html(this.path()))
 		.append(
 			$('<section />')
-				.append($('<h1>transitions</h1>'))
-				.append($transitions)
-		)
-		.append(
-			$('<section />')
 				.append($('<h1 />').html('actions'))
-				.append($actionList)
+				.append(state.renderActionList())
 		)
 		.append(
-			$('<section />').append($deleteButton)
+			$('<section />').append($destroyButton)
 		);
 
+
+	this.$info = $info;
 	return $info[0];
 };
 
+State.prototype.renderActionList = function () {
+	var state = this;
+	var stateMachine = this.stateMachine;
+	var actions = this.actions;
+
+	var $actionList = this.$actionList || $('<table />');
+	$actionList.empty();
+
+	var index = 0;
+	actions.forEach(function (actionName) {
+		var action = stateMachine.findAction(actionName);
+		if (!action) {
+			return;
+		}
+
+		var $row = $('<tr />');
+
+		var $destroyLink = $('<a>×</a>');
+		$destroyLink
+			.attr('href', [
+				'#/state' + state.path(), actionName , 'destroy'
+			].join('/'))
+			.attr('data-index', index)
+			.on('click', function () {
+				state.removeAction($(this).attr('data-index'));
+				stateMachine.renderInfoBar();
+			});
+
+		$row
+			.append($('<td />').append(action.renderCodeViewer()))
+			.append($('<td />').append($destroyLink));
+
+		$actionList.append($row);
+		index++;
+	});
+
+	var $lastRow = $([
+		'<tr><td colspan="2"></td></tr>'
+	].join('\n'));
+
+	$('td', $lastRow).append(
+		stateMachine.renderActionSelector(function (action) {
+			if (!action) {
+				state.renderInfo();
+				return;
+			}
+			state.addAction(action);
+			state.renderInfo();
+		})
+	);
+
+	$actionList.append($lastRow);
+
+	this.$actionList = $actionList;
+
+	return $actionList[0];
+};
+
 State.prototype.renderLink = function () {
-	var self = this;
-	return $('<a />')
-		.html(this.path())
-		.attr('href', '#' + this.path())
+	var state = this;
+	var stateMachine = this.stateMachine;
+
+	var $link = $('<a>' + this.path()+ '</a>');
+	$link
+		.attr('href', '#/state' + this.path())
 		.on('click', function (e) {
 			e.preventDefault();
-			self.stateMachine.selectInfoSource(self);
-		})[0];
+			stateMachine.selectInfoSource(state);
+		});
+
+	return $link[0];
 };
 
 State.prototype.renderTraceArrow = function (coordinates) {
@@ -453,7 +578,7 @@ State.prototype.renderTraceArrow = function (coordinates) {
 };
 
 State.prototype.trace = function (coordinates) {
-	var self = this;
+	var state = this;
 
 	if (this.limitTrace) {
 		return;
@@ -463,7 +588,7 @@ State.prototype.trace = function (coordinates) {
 
 	this.limitTrace = true;
 	setTimeout(function () {
-		self.limitTrace = false;
+		state.limitTrace = false;
 	}, 100);
 };
 
@@ -495,19 +620,50 @@ State.prototype.switchConnection = function () {
 	stateMachine.connectionModeOn(this);
 };
 
-State.prototype.toggleExpand = function () {
-	this.expanded = !this.expanded;
-	this.stateMachine.render();
-};
+Action.prototype.renderCodeViewer = function ($viewer) {
+	var action = this;
+	var fn = this.fn || '';
+	$viewer = $viewer || $('<div />');
+	var expanded = $viewer.attr('data-expanded')|0;
 
+	$viewer.empty();
+	$viewer.addClass('action-code-viewer');
+
+	var $header;
+	$header = $('<header/>')
+		.append(
+			$('<a />')
+				.attr('href', '#/action/' + this.name)
+				.text(this.name)
+				.click(function () {
+					$viewer.attr(
+						'data-expanded',
+						(expanded ? 0 : 1)
+					);
+					action.renderCodeViewer($viewer);
+				})
+		)
+		.append(' ');
+
+	$viewer.append($header);
+
+	if (expanded) {
+		$viewer.append($('<p />').append(
+			$('<textarea />').text(fn + '')
+		));
+	}
+
+	return $viewer[0];
+};
 
 Transition.prototype.render = function () {
 	var arrow = this.renderArrow();
+	var info = this.renderInfo();
 	return arrow;
 };
 
 Transition.prototype.renderArrow = function () {
-	var self = this;
+	var transition = this;
 	var $arrow = this.$arrow || $('<div />');
 	$arrow.empty();
 	$arrow.off('click');
@@ -533,7 +689,7 @@ Transition.prototype.renderArrow = function () {
 				})
 		)
 		.on('click', function (e) {
-			self.stateMachine.selectInfoSource(self);
+			transition.stateMachine.selectInfoSource(transition);
 			e.stopPropagation();
 		});
 
@@ -554,56 +710,70 @@ Transition.prototype.cancelSelect = function () {
 };
 
 Transition.prototype.renderInfo = function () {
-	var self = this;
+	var transition = this;
 	var stateMachine = this.stateMachine;
 	var $info = this.$info || $('<div />');
 	$info.empty();
+
+	var selector = stateMachine.renderConditionSelector(
+		this.condition.name,
+		function (condName) {
+			var cond = stateMachine.findCondition(condName);
+
+			if (!cond) {
+				alert('"' + condName + '" is not found.');
+				return;
+			}
+
+			transition.condition = cond;
+			transition.render();
+		}
+	);
 
 	var $parameters = $('<table />');
 	$parameters
 		.append(
 			$('<tr />')
-				.append($('<th />').html('from'))
+				.append('<th>from</th>')
 				.append($('<td />').append(
 					this.from.renderLink()
 				))
 		)
 		.append(
 			$('<tr />')
-				.append($('<th />').html('condition'))
-				.append($('<td />').append($(
-					stateMachine.renderConditionSelector()
-				).val(this.condition.name)))
+				.append('<th>condition</th>')
+				.append($('<td />').append(selector))
 		)
 		.append(
 			$('<tr />')
-				.append($('<th />').html('to'))
+				.append('<th>to</th>')
 				.append($('<td />').append(
 					this.to.renderLink()
 				))
 		);
 
-	// delete button
-	var $deleteButton = $('<button>delete</button>')
+	// destroy button
+	var $destroyButton = $('<button>destroy</button>')
 		.on('click', function () {
-			if (self.selected) {
-				self.stateMachine.clearSelect();
+			if (transition.selected) {
+				transition.stateMachine.clearSelect();
 			}
-			self.remove();
+			transition.remove();
 
-			self.stateMachine.render();
+			transition.stateMachine.render();
 		});
 
 	$info
 		.append(
 			$('<section />')
-				.append('<h1>parameters</h1>')
+				.append('<h1>detail</h1>')
 				.append($parameters)
 		)
 		.append(
-			$('<section />').append($deleteButton)
+			$('<section />').append($destroyButton)
 		);
 
+	this.$info = $info;
 	return $info[0];
 };
 

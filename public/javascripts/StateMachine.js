@@ -195,9 +195,9 @@ StateMachine.decode = function (json) {
 StateMachine.prototype.encode = function () {
 	return {
 		states : this.encodeStates(),
-		conditions : this.encodeConditions(),
 		transitions : this.encodeTransitions(),
-		actions: this.encodeActions(),
+		// conditions : this.encodeConditions(),
+		// actions: this.encodeActions(),
 		src: this.src || []
 	};
 };

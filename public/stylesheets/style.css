@@ -10,7 +10,11 @@ h1,h2,ul,li {
 }
 
 a {
-    color: #FFB700;
+    color: inherit;
+    text-decoration: underline;
+}
+a:hover {
+    color: #f80;
 }
 
 #sugoroku-header {
@@ -22,12 +26,6 @@ a {
     overflow: hidden;
     z-index: 200;
     top: 0px; left: 0px;
-}
-#sugoroku-header a {
-    color: white;
-}
-#sugoroku-header a:hover {
-    color: #ffB700;
 }
 #sugoroku-header h1 {
     padding: 0.2em 0.5em;
@@ -108,10 +106,6 @@ a {
 }
 #sugoroku-editor .state .sub {
     display: none;
-}
-#sugoroku-editor .state a {
-    color: #833;
-    cursor: pointer;
 }
 #sugoroku-editor .state .arrowmark {
     padding-left: 0.5em;
@@ -230,6 +224,13 @@ a {
 }
 #infobar.sugoroku section td {
     border-left: dotted 1px #228822;
+}
+#sugoroku-editor .action-code-viewer p {
+    margin: 0px;
+}
+#sugoroku-editor .action-code-viewer textarea {
+    width: 18em;
+    height: 4em;
 }
 
 #infobar.sugoroku section button {

@@ -1,1 +1,47 @@
 
+Express server listening on port 2569
+127.0.0.1 - [Tue, 18 Dec 2012 16:29:02 GMT] "GET /editor/sample 1.1" 200 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"
+[90mGET /editor/sample [32m200 [90m141ms - 296[0m
+127.0.0.1 - [Tue, 18 Dec 2012 16:29:02 GMT] "GET /stylesheets/style.css 1.1" 304 "http://localhost:2569/editor/sample" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"
+[90mGET /stylesheets/style.css [36m304 [90m3ms[0m
+127.0.0.1 - [Tue, 18 Dec 2012 16:29:03 GMT] "GET /code/sample-editor.js 1.1" 200 "http://localhost:2569/editor/sample" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"
+[90mGET /code/sample-editor.js [32m200 [90m274ms[0m
+127.0.0.1 - [Tue, 18 Dec 2012 16:29:08 GMT] "GET / 1.1" 200 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"
+[90mGET / [32m200 [90m46ms - 774[0m
+127.0.0.1 - [Tue, 18 Dec 2012 16:29:08 GMT] "GET /stylesheets/style.css 1.1" 304 "http://localhost:2569/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"
+[90mGET /stylesheets/style.css [36m304 [90m2ms[0m
+127.0.0.1 - [Tue, 18 Dec 2012 16:29:12 GMT] "GET /editor/sample 1.1" 200 "http://localhost:2569/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"
+[90mGET /editor/sample [32m200 [90m5ms - 296[0m
+127.0.0.1 - [Tue, 18 Dec 2012 16:29:12 GMT] "GET /stylesheets/style.css 1.1" 304 "http://localhost:2569/editor/sample" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"
+[90mGET /stylesheets/style.css [36m304 [90m1ms[0m
+127.0.0.1 - [Tue, 18 Dec 2012 16:29:12 GMT] "GET /code/sample-editor.js 1.1" 200 "http://localhost:2569/editor/sample" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"
+[90mGET /code/sample-editor.js [32m200 [90m27ms[0m
+127.0.0.1 - [Tue, 18 Dec 2012 16:29:20 GMT] "GET / 1.1" 200 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"
+[90mGET / [32m200 [90m20ms - 774[0m
+127.0.0.1 - [Tue, 18 Dec 2012 16:29:20 GMT] "GET /stylesheets/style.css 1.1" 304 "http://localhost:2569/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"
+[90mGET /stylesheets/style.css [36m304 [90m1ms[0m
+127.0.0.1 - [Tue, 18 Dec 2012 16:29:22 GMT] "GET /editor/jyanken 1.1" 200 "http://localhost:2569/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"
+[90mGET /editor/jyanken [32m200 [90m1ms - 297[0m
+127.0.0.1 - [Tue, 18 Dec 2012 16:29:22 GMT] "GET /stylesheets/style.css 1.1" 304 "http://localhost:2569/editor/jyanken" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"
+[90mGET /stylesheets/style.css [36m304 [90m1ms[0m
+127.0.0.1 - [Tue, 18 Dec 2012 16:29:22 GMT] "GET /code/jyanken-editor.js 1.1" 200 "http://localhost:2569/editor/jyanken" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"
+[90mGET /code/jyanken-editor.js [32m200 [90m65ms[0m
+Express server listening on port 2569
+127.0.0.1 - [Tue, 08 Jan 2013 16:42:55 GMT] "GET / 1.1" 200 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.101 Safari/537.11"
+[90mGET / [32m200 [90m240ms - 774[0m
+127.0.0.1 - [Tue, 08 Jan 2013 16:42:55 GMT] "GET /stylesheets/style.css 1.1" 200 "http://localhost:2569/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.101 Safari/537.11"
+[90mGET /stylesheets/style.css [32m200 [90m105ms - 4.56kb[0m
+127.0.0.1 - [Tue, 08 Jan 2013 16:42:56 GMT] "GET /favicon.ico 1.1" 200 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.101 Safari/537.11"
+127.0.0.1 - [Tue, 08 Jan 2013 16:42:58 GMT] "GET /editor/jyanken 1.1" 200 "http://localhost:2569/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.101 Safari/537.11"
+[90mGET /editor/jyanken [32m200 [90m28ms - 297[0m
+127.0.0.1 - [Tue, 08 Jan 2013 16:42:58 GMT] "GET /stylesheets/style.css 1.1" 304 "http://localhost:2569/editor/jyanken" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.101 Safari/537.11"
+[90mGET /stylesheets/style.css [36m304 [90m2ms[0m
+127.0.0.1 - [Tue, 08 Jan 2013 16:42:59 GMT] "GET /code/jyanken-editor.js 1.1" 200 "http://localhost:2569/editor/jyanken" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.101 Safari/537.11"
+[90mGET /code/jyanken-editor.js [32m200 [90m291ms[0m
+Express server listening on port 2569
+127.0.0.1 - [Tue, 08 Jan 2013 17:10:01 GMT] "GET /editor/jyanken 1.1" 200 "http://localhost:2569/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.101 Safari/537.11"
+[90mGET /editor/jyanken [32m200 [90m198ms - 297[0m
+127.0.0.1 - [Tue, 08 Jan 2013 17:10:01 GMT] "GET /stylesheets/style.css 1.1" 304 "http://localhost:2569/editor/jyanken" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.101 Safari/537.11"
+[90mGET /stylesheets/style.css [36m304 [90m52ms[0m
+127.0.0.1 - [Tue, 08 Jan 2013 17:10:02 GMT] "GET /code/jyanken-editor.js 1.1" 200 "http://localhost:2569/editor/jyanken" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.101 Safari/537.11"
+[90mGET /code/jyanken-editor.js [32m200 [90m422ms[0m

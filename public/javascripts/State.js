@@ -3,6 +3,8 @@ var State = function (name) {
 	this.name = name;
 	this.subStates = null;
 	this.cursor = null;
+
+	this.actions = [];
 };
 
 State.prototype.addSubState = function (name) {
@@ -25,6 +27,10 @@ State.prototype.addSubState = function (name) {
 	return this.subStates[name] = this.createSubState(name);
 };
 
+State.prototype.addAction = function (actionName) {
+	this.actions.push(actionName);
+};
+
 State.prototype.remove = function () {
 	this.clearTransitions();
 	this.parentState.removeSubState(this);
@@ -40,6 +46,21 @@ State.prototype.removeSubState = function (target) {
 	}
 
 	return false;
+};
+
+State.prototype.removeAction = function (removeIndex) {
+	var newActions = [];
+	var index = 0;
+	this.actions.forEach(function (actionName) {
+		if (removeIndex == index) {
+			index++;
+			return;
+		}
+		newActions.push(actionName);
+		index++;
+	});
+	this.actions = newActions;
+	return newActions;
 };
 
 State.prototype.clearTransitions = function () {
@@ -130,7 +151,7 @@ State.prototype.path = function () {
 
 State.prototype.encode = function () {
 	var self = this;
-	var properties = ['x', 'y', 'elementSwitch', 'expanded'];
+	var properties = ['x', 'y', 'actions', 'expanded'];
 	var definition = {};
 
 	properties.forEach(function (property) {
