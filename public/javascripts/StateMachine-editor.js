@@ -313,6 +313,11 @@ StateMachine.prototype.save = function (callback) {
 
 	var codeName = fetchCodeName();
 	var definition = JSON.stringify(this.encode());
+
+	if (!codeName) {
+		alert('sorry, fail to fetch code name.');
+		return;
+	}
 	$.post(
 		'/code/' + codeName,
 		{ definition: definition },
@@ -330,7 +335,7 @@ StateMachine.prototype.save = function (callback) {
 
 var fetchCodeName = function () {
 	var location = window.location + '';
-	var locationMatch = location.match(/editor\/([^\/]+)$/);
+	var locationMatch = location.match(/editor\/([\w]+)/);
 
 	return locationMatch ? locationMatch[1] : null;
 };
