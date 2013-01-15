@@ -272,6 +272,11 @@ StateMachine.prototype.promptToAddState = function () {
 	if (!name) {
 		return;
 	}
+	if (name.match(/<|>|"|'|\$/)) {
+		alert('Fail to add state. There is forbidden char in name.');
+		return;
+	}
+
 	var state = this.addState(name);
 	if (!state) {
 		alert('Fail to add state.');
@@ -459,7 +464,7 @@ State.prototype.renderInfo = function () {
 				state.stateMachine.clearSelect();
 			}
 			state.remove();
-			state.renderInfo();
+			stateMachine.render();
 		});
 
 	// ぜんぶ$infoに詰めていく
