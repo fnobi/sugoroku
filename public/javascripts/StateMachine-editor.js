@@ -12,7 +12,7 @@ var tpl = function (template, locals) {
 	locals = locals || {};
 
 	if (!locals.length) {
-		locals = [locals];
+		return '';
 	}
 
 	var texts = [];
@@ -125,6 +125,7 @@ StateMachine.prototype.renderConditionSelector = function (condName, callback) {
 		'  </header>',
 		'  <form>',
 		'    <select name="condition">',
+		'      <option value="">(select condition)</option>',
 		tpl(
 			'<option value="{{name}}">{{name}}</option>',
 			toArray(this.conditions)
@@ -171,6 +172,7 @@ StateMachine.prototype.renderActionSelector = function (callback) {
 		'  <input name="add" type="button" value="add" />',
 		'  <form>',
 		'    <select name="action">',
+		'      <option value="">(select action)</option>',
 		tpl(
 			'<option value="{{name}}">{{name}}</option>',
 			toArray(actions)
@@ -198,9 +200,8 @@ StateMachine.prototype.renderActionSelector = function (callback) {
 	});
 
 	$form.on('submit', function (e) {
-		var value = $selector.val();
-		callback(value);
 		e.preventDefault();
+		callback($selector.val());
 	});
 
 	$form.hide();
@@ -472,10 +473,9 @@ State.prototype.renderInfo = function () {
 
 	// ぜんぶ$infoに詰めていく
 	$info
-		.append($('<h1 />').html(this.path()))
 		.append(
 			$('<section />')
-				.append($('<h1 />').html('actions'))
+				.append($('<h1 />').text(this.path()))
 				.append(state.renderActionList())
 		)
 		.append(
@@ -524,15 +524,16 @@ State.prototype.renderActionList = function () {
 	});
 
 	var $lastRow = $([
-		'<tr><td colspan="2"></td></tr>'
+		'<tr><th colspan="2"></th></tr>'
 	].join('\n'));
 
-	$('td', $lastRow).append(
+	$('th', $lastRow).append(
 		stateMachine.renderActionSelector(function (action) {
 			if (!action) {
-				state.renderInfo();
+				alert('Action name is invalid.');
 				return;
 			}
+
 			state.addAction(action);
 			state.renderInfo();
 		})
@@ -622,7 +623,7 @@ State.prototype.switchConnection = function () {
 		if (stateMachine.findTransition(from, this)) {
 			alert('the transition has already existed.');
 		} else {
-			var t = stateMachine.addTransition(from, 'direct', this);
+			var t = stateMachine.addTransition(from, null, this);
 			stateMachine.selectInfoSource(t);
 			stateMachine.render();
 		}
@@ -677,6 +678,7 @@ Transition.prototype.render = function () {
 
 Transition.prototype.renderArrow = function () {
 	var transition = this;
+	var condition = this.condition;
 	var $arrow = this.$arrow || $('<div />');
 	$arrow.empty();
 	$arrow.off('click');
@@ -695,7 +697,7 @@ Transition.prototype.renderArrow = function () {
 		})
 		.append(
 			$('<div />')
-				.html(this.condition.name)
+				.text(condition ? condition.name : '　')
 				.css({
 					paddingLeft: lm.paddingLeft + 'px',
 					paddingRight: lm.paddingRight + 'px'
@@ -729,10 +731,14 @@ Transition.prototype.renderInfo = function () {
 	$info.empty();
 
 	var selector = stateMachine.renderConditionSelector(
-		this.condition.name,
+		this.condition ? this.condition.name : null,
 		function (condName) {
-			var cond = stateMachine.findCondition(condName);
+			if (!condName) {
+				alert('Condition name is invalid.');
+				return;
+			}
 
+			var cond = stateMachine.findCondition(condName);
 			if (!cond) {
 				alert('"' + condName + '" is not found.');
 				return;

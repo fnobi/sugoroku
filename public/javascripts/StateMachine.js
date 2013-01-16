@@ -67,6 +67,10 @@ StateMachine.prototype.findState = function (pathToState) {
 };
 
 StateMachine.prototype.findCondition = function (condition) {
+	if (!condition) {
+		return null;
+	}
+
 	// conditionが渡された場合は、そのまま返す
 	if (condition.name) {
 		return condition;
@@ -125,7 +129,7 @@ StateMachine.prototype.addTransition = function (from, condName, to) {
 	from = this.findState(from);
 	to   = this.findState(to);
 
-	var cond = this.findCondition(condName) || this.addCondition(condName);
+	var cond = this.findCondition(condName) || null;
 	var transition = new Transition(from, cond, to);
 
 	// 親と子お互いに、相手へのリファレンスを持つ

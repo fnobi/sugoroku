@@ -8,7 +8,7 @@ var Transition = function (from, condition, to) {
 Transition.prototype.encode = function () {
 	return {
 		from: this.from.path(),
-		condition: this.condition.name,
+		condition: this.condition ? this.condition.name : null,
 		to: this.to.path()
 	};
 };
