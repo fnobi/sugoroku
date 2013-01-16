@@ -133,7 +133,7 @@ StateMachine.prototype.addTransition = function (from, condName, to) {
 	if (!condName) {
 		cond = null;
 	} else {
-		cond = this.findCondition(condName) || new Condition(condName);
+		cond = this.findCondition(condName) || this.addCondition(condName);
 	}
 
 	var transition = new Transition(from, cond, to);

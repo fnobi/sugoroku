@@ -36,7 +36,10 @@ State.prototype.listenConditions = function () {
 
 	transitions.forEach(function (transition) {
 		var condition = transition.condition;
-		var name = condition.name;
+
+		if (!condition) {
+			return;
+		}
 
 		if (condition.listen) {
 			condition.listen(function () {
@@ -49,9 +52,14 @@ State.prototype.listenConditions = function () {
 State.prototype.clearListeners = function () {
 	var self = this;
 	var stateMachine = this.stateMachine;
+	var transitions = this.transitions();
 
-	this.transitions().forEach(function (transition) {
+	transitions.forEach(function (transition) {
 		var condition = transition.condition;
+
+		if (!condition) {
+			return;
+		}
 
 		if (condition.unlisten) {
 			condition.unlisten();
