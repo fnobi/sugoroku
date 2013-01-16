@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+codename = ARGV.shift
+
+if !codename
+  puts "Enter code name."
+  exit 1
+end
+
+filepath = "code/#{codename}.json"
+scriptpath = "src/#{codename}_script.js"
+
+begin
+  File::open(filepath, 'w') {|f|
+    f.print "{\"states\":{},\"transitions\":[],\"src\":[\"http://localhost:2569/#{scriptpath}\"]}"
+  }
+
+  File::open('public/' + scriptpath, 'w') {|f|
+    f.print ""
+  }
+rescue => exc
+  puts exc
+end
