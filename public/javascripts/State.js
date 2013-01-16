@@ -6,6 +6,7 @@ var State = function (name) {
 
 	this.actions = [];
 };
+State.INITIAL_STATE_NAME = 'initial';
 
 State.prototype.addSubState = function (name) {
 	if (!name) {
@@ -16,8 +17,8 @@ State.prototype.addSubState = function (name) {
 		this.initializeSubState();
 	}
 
-	if (name == 'initial') {
-		return this.subStates['initial'];
+	if (name == State.INITIAL_STATE_NAME) {
+		return this.subStates[State.INITIAL_STATE_NAME];
 	}
 
 	if (this.subStates[name]) {
@@ -32,8 +33,13 @@ State.prototype.addAction = function (actionName) {
 };
 
 State.prototype.remove = function () {
+	if (this.name == State.INITIAL_STATE_NAME) {
+		throw new Error('can\'t destroy initial state.');
+	}
+
 	this.clearTransitions();
 	this.parentState.removeSubState(this);
+	return true;
 };
 
 State.prototype.removeSubState = function (target) {
@@ -90,7 +96,7 @@ State.prototype.createSubState = function (name) {
 };
 
 State.prototype.initializeSubState = function () {
-	var initialStateName = 'initial';
+	var initialStateName = State.INITIAL_STATE_NAME;
 	var initialState = this.initialState =
 		this.createSubState(initialStateName);
 

@@ -462,7 +462,11 @@ State.prototype.renderInfo = function () {
 			if (state.selected) {
 				state.stateMachine.clearSelect();
 			}
-			state.remove();
+			try {
+				state.remove();
+			} catch (e) {
+				alert(e);
+			}
 			stateMachine.render();
 		});
 

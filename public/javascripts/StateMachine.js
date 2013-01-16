@@ -233,4 +233,3 @@ StateMachine.prototype.encodeTransitions = function () {
 	});
 	return json;
 };
-
