@@ -6,8 +6,8 @@ var Action = function (name, fn) {
 };
 
 Action.prototype.exec = function () {
-	this.fn();
-}
+	this.fn.apply(this.stateMachine, []);
+};
 
 Action.prototype.encode = function () {
 	return this.name;

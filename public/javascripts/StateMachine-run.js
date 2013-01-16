@@ -11,15 +11,16 @@ StateMachine.prototype.action = function (actionName) {
 };
 
 State.prototype.run = function () {
+	var self = this;
 	var stateMachine = this.stateMachine;
+
+	// 次のconditionを待つ
+	this.listenConditions();
 
 	// actionsを実行
 	(this.actions || []).forEach(function (actionName) {
 		stateMachine.action(actionName);
 	});
-
-	// 次のconditionを待つ
-	this.listenConditions();
 };
 
 State.prototype.listenConditions = function () {
@@ -42,7 +43,7 @@ State.prototype.listenConditions = function () {
 		}
 
 		if (condition.listen) {
-			condition.listen(function () {
+			condition.listen.call(stateMachine, function () {
 				callTransit(condition);
 			});
 		}
@@ -63,6 +64,7 @@ State.prototype.clearListeners = function () {
 
 		if (condition.unlisten) {
 			condition.unlisten();
+			condition.unlisten.call(stateMachine);
 		}
 	});
 };
