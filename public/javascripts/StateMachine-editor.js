@@ -429,9 +429,8 @@ State.prototype.renderNameLabel = function () {
 
 	$nameLabel
 		.addClass('name')
-		.append($('<span />').html(this.name))
-		.append($arrowMark
-		);
+		.append($('<span />').text(this.name))
+		.append($arrowMark);
 
 	return $nameLabel[0];
 };
