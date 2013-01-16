@@ -271,6 +271,7 @@ StateMachine.prototype.renderHeader = function () {
 StateMachine.prototype.promptToAddState = function () {
 	var name = window.prompt('Enter the state name.');
 	if (!name) {
+		alert('Fail to add state. There is no name.');
 		return;
 	}
 	if (name.match(/<|>|"|'|\$/)) {
@@ -473,9 +474,10 @@ State.prototype.renderInfo = function () {
 
 	// ぜんぶ$infoに詰めていく
 	$info
+		.append($('<h1 />').text('state: ' + this.path()))
 		.append(
 			$('<section />')
-				.append($('<h1 />').text(this.path()))
+				.append('<h1>actions</h1>')
 				.append(state.renderActionList())
 		)
 		.append(
@@ -783,9 +785,10 @@ Transition.prototype.renderInfo = function () {
 		});
 
 	$info
+		.append('<h1>transition</h1>')
 		.append(
 			$('<section />')
-				.append('<h1>detail</h1>')
+				.append('<h1>transition</h1>')
 				.append($parameters)
 		)
 		.append(

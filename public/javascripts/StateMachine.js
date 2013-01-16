@@ -129,7 +129,13 @@ StateMachine.prototype.addTransition = function (from, condName, to) {
 	from = this.findState(from);
 	to   = this.findState(to);
 
-	var cond = this.findCondition(condName) || null;
+	var cond;
+	if (!condName) {
+		cond = null;
+	} else {
+		cond = this.findCondition(condName) || new Condition(condName);
+	}
+
 	var transition = new Transition(from, cond, to);
 
 	// 親と子お互いに、相手へのリファレンスを持つ
