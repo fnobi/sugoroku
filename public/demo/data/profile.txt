@@ -1,0 +1,12 @@
+<h1>Fujisawa Shin</h1>
+<h2>@fnobi</h2>
+<p>HTMLファイ部でjs部で作曲部でアイドル部な予定。ソフトなものならなんでもつくるよ！ http://tom.sfc.keio.ac.jp  : http://sfcclip.net  : http://in.kayac.com </p>
+<footer>横浜山 ⇄ 藤沢・大船 · blog.fnobi.com</footer>
+<dl>
+<dt>TWEETS</dt>
+<dd>9,587</dd>
+<dt>FOLLOWING</dt>
+<dd>285</dd>
+<dt>FOLLOWERS</dt>
+<dd>229</dd>
+</dl>

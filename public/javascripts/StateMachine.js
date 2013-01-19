@@ -3,7 +3,7 @@
 ============================================================================= */
 
 var StateMachine = function (name) {
-	this.name = name;
+	this.name        = name;
 	this.transitions = [];
 	this.conditions  = {};
 	this.actions     = {};

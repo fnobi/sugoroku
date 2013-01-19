@@ -14,6 +14,8 @@
     "async": "0.1.22",
     "start-stop-daemon": "*",
     "underscore": "*",
-    "glob-whatev": "*"
+    "glob-whatev": "*",
+    "escape-html": "*",
+    "node-random": "*"
   }
 }

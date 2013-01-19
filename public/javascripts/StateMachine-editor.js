@@ -640,34 +640,25 @@ Action.prototype.renderCodeViewer = function ($viewer) {
 	var action = this;
 	var fn = this.fn || '';
 	$viewer = $viewer || $('<div />');
-	var expanded = $viewer.attr('data-expanded')|0;
 
 	$viewer.empty();
 	$viewer.addClass('action-code-viewer');
 
-	var $header;
-	$header = $('<header/>')
-		.append(
-			$('<a />')
-				.attr('href', '#/action/' + this.name)
-				.text(this.name)
-				.click(function () {
-					$viewer.attr(
-						'data-expanded',
-						(expanded ? 0 : 1)
-					);
-					action.renderCodeViewer($viewer);
-				})
-		)
-		.append(' ');
+	var $content = $([
+		'<header>',
+		'  <a href="#/action/' + this.name +'">' + this.name + '</a>',
+		'</header>',
+		'<p><textarea>' + (fn + '') + '</textarea></p>'
+	].join('\n'));
 
-	$viewer.append($header);
+	var $link = $('a', $content);
+	var $textarea = $('textarea', $content);
+	$link.click(function () {
+		$textarea.slideToggle();
+	});
 
-	if (expanded) {
-		$viewer.append($('<p />').append(
-			$('<textarea />').text(fn + '')
-		));
-	}
+	$viewer.append($content);
+	$textarea.hide();
 
 	return $viewer[0];
 };

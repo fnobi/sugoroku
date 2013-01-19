@@ -20,6 +20,7 @@ body,h1,h2,ul,li,header,button {
     height: 1.5em;
     top: 0em;
     left: 0em;
+    z-index: 10;
 }
 
 #header h1 {
@@ -43,15 +44,39 @@ body,h1,h2,ul,li,header,button {
 }
 
 #main {
-    margin-top: 1.5em;
-    position: relative;
+    margin: 1.5em auto 0em auto;
+    max-width: 500px;
+    box-shadow: 0em 0em 1.5em #ccc;
 }
 
 #home {
     background-color: #fee;
+    padding: 0.5em 0em;
 }
+#home article {
+    margin: 0.5em;
+    padding: 0.5em;
+    background-color: white;    
+}
+#home article header {
+    border-bottom: solid 1px gray;
+}
+#home article p {
+    margin: 0em;
+    padding: 0em;
+}
+
 #friend {
     background-color: #efe;
+    padding: 0.5em 0em;
+}
+#friend li {
+    background-color: white;
+    margin: 0.5em;
+    padding: 0.5em;
+}
+#friend li header {
+    font-weight: bold;
 }
 #profile {
     background-color: #eef;

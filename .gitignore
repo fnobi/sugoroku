@@ -3,4 +3,6 @@ config/runtime.json
 *.log
 pids
 code
+ex
 public/src
+.DS_Store

@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  section#sugoroku-ex
+    h1 実験登録
+    p ご協力ありがとうございます。下のフォームから登録をお願いします。
+
+    form(action="/ex/register", method="POST")
+      table
+        tr
+          td: label(name="name") お名前(表示にしか使いません): 
+          td: input(type="text", name="name")
+      input(type="submit")
