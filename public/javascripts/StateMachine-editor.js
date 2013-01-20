@@ -575,7 +575,8 @@ State.prototype.renderTraceArrow = function (coordinates) {
 		.addClass('connecting')
 		.css({
 			position: 'absolute',
-			left: lm.left + 'px', top: lm.top + 'px',
+			left: lm.left + 'px',
+			top: lm.top + 'px',
 			width: lm.length,
 			transform: lm.transform,
 			'transform-origin': '0% 0%'
@@ -623,15 +624,21 @@ State.prototype.switchConnection = function () {
 	if (stateMachine.connectionMode) {
 		var from = stateMachine.connectionMode;
 		if (stateMachine.findTransition(from, this)) {
-			alert('the transition has already existed.');
-		} else {
-			var t = stateMachine.addTransition(from, null, this);
-			stateMachine.selectInfoSource(t);
-			stateMachine.render();
+			alert('The transition has already existed.');
+			stateMachine.connectionModeOff();
+			return;
+		}
+		if (from == this) {
+			alert('You can\'t connect state to same state.');
+			stateMachine.connectionModeOff();
+			return;
 		}
 
+		var t = stateMachine.addTransition(from, null, this);
+		stateMachine.selectInfoSource(t);
+		stateMachine.render();
+
 		stateMachine.connectionModeOff();
-		return;
 	}
 	stateMachine.connectionModeOn(this);
 };

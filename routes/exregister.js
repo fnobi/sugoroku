@@ -1,5 +1,6 @@
-var ex = require(__dirname + '/../lib/ex');
-var escape = require('escape-html');
+var ex             = require(__dirname + '/../lib/ex'),
+    codeCollection = require(__dirname + '/../lib/codeCollection'),
+    escape         = require('escape-html');
 
 module.exports = function (req, res) {
 	var name = req.body.name;
@@ -11,6 +12,8 @@ module.exports = function (req, res) {
 			res.statusCode = 500;
 			res.end();
 		}
+
+		codeCollection.copy('ex', exid);
 
 		res.redirect('/ex/' + exid + '/1');
 	});

@@ -88,6 +88,7 @@ app.post('/code/:code_name', routes.postCode);
 app.get('/ex/:exid/:exnum', routes.ex);
 app.get('/ex', routes.exinit);
 app.post('/ex/register', routes.exregister);
+app.post('/ex/:exid/next', routes.exnext);
 
 // listen
 startStopDaemon(function () {
