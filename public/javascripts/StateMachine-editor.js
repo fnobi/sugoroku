@@ -639,8 +639,9 @@ State.prototype.switchConnection = function () {
 		stateMachine.render();
 
 		stateMachine.connectionModeOff();
+	} else {
+		stateMachine.connectionModeOn(this);
 	}
-	stateMachine.connectionModeOn(this);
 };
 
 Action.prototype.renderCodeViewer = function ($viewer) {
