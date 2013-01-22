@@ -4,8 +4,7 @@ var express         = require('express'),
     http            = require('http'),
     path            = require('path'),
     startStopDaemon = require('start-stop-daemon'),
-    config          = require('config'),
-    ex              = require(__dirname + '/lib/ex');
+    config          = require('config');
 
 // configure express server
 var app = express();
@@ -61,19 +60,6 @@ app.param('code_action', function (req, res, next, codeAction) {
 	next();
 });
 
-app.param('exid', function (req, res, next, exid) {
-	if (!ex.exists(exid)) {
-		return next(new Error(
-			'"' + exid + '" is invalid ex ID.'
-		));
-	}
-
-	ex.data(exid, function (err, exData) {
-		req.params.exData = exData;
-		next();
-	});
-});
-
 
 // set routing
 // app.get('/', routes.index);
@@ -84,11 +70,6 @@ app.get('/code/:code_name-:code_action.js', routes.code);
 app.get('/code/:code_name.js', routes.code);
 
 app.post('/code/:code_name', routes.postCode);
-
-app.get('/ex/:exid/:exnum', routes.ex);
-app.get('/ex', routes.exinit);
-app.post('/ex/register', routes.exregister);
-app.post('/ex/:exid/next', routes.exnext);
 
 // listen
 startStopDaemon(function () {
