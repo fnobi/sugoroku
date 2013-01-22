@@ -1,4 +1,4 @@
-<h1>Fujisawa Shin</h1>
+<h1>profile: Fujisawa Shin</h1>
 <h2>@fnobi</h2>
 <p>HTMLファイ部でjs部で作曲部でアイドル部な予定。ソフトなものならなんでもつくるよ！ http://tom.sfc.keio.ac.jp  : http://sfcclip.net  : http://in.kayac.com </p>
 <footer>横浜山 ⇄ 藤沢・大船 · blog.fnobi.com</footer>

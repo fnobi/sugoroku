@@ -2,15 +2,19 @@ extends layout
 
 block content
   section#sugoroku-ex
-    strong= name
-    さん、よろしくおねがいします!
+    p
+      strong= name
+      さん、よろしくおねがいします!
+
+    h1 このシステムについて
+
     p sugorokuはstate chart(状態遷移図)を用いて、Webのインタフェース部分の挙動を記述できる、ビジュアルプログラミング環境です。
 
     p いくつかの状態を作り、それぞれ「この状况(condition)が起きたら、この状態に移動する」という形で、Webの挙動を記述できます。
 
     p また、それぞれの状况(condition)や状態遷移時に実行するアクションは、Javascriptで直接編集・追加ができます。(今回は実験のため、この機能は利用できません)
 
-    p sugorokuを使うことで、
+    h2 sugorokuを使うことで、
     ul
       li Webの画面を開いてから、どんな時、ユーザーのどんな動作を待っているのか、それぞれの場合で何が起きるのか、一覧することができる。
       li 一覧することにより、バグや処理の抜け落ちを防ぐことができる。
@@ -20,22 +24,42 @@ block content
       li インタフェース構築を行う人と、Javascriptの機能そのものを書く人を分けることができる。
 
 
-    p 以下で、画面の各部分の説明をします。
+    h2 各部分の説明
 
-    p save...このプログラムを保存します。
-    p new state...状態を追加します。好きな名前を入力して、OKを押してください。
+    img(src="/images/Screen Shot 2013-01-22 at 13.06.30.png", width="400")
 
-    p 状態(state)...ひとつの状態を表しています。色の違うものが初期状態(initial)、Webの画面を開いた時点での状態です。
+    h3 save
+    p このプログラムを保存します。
+
+    h3 new state
+    p 状態を追加します。好きな名前を入力して、OKを押してください。
+
+    h3 状態(state)
+    p ひとつの状態を表しています。色の違うものが初期状態(initial)、Webの画面を開いた時点での状態です。
     ul
-      li →ドラッグ&ドロップ...画面上での位置を動かします。
-      li →クリック...選択。右のバーにその状態の情報が表示されます。
-      li →状態名の左の●をクリック...矢印をひく=その状態から遷移する先を指定します。別の状態の●をクリックすると、繋ぎます。
-
-    p ※そういや、自分自身に矢印向けられたら困る。デバッグ。
+      li
+        →
+        strong ドラッグ&ドロップ
+        ...画面上での位置を動かします。
+      li
+        →
+        strong クリック
+        ...選択。右のバーにその状態の情報が表示されます。
+      li
+        →
+        strong 状態名の左の●をクリック
+        ...矢印をひく=その状態から遷移する先を指定します。別の状態の●をクリックすると、繋ぎます。
 
     form(action="/ex/" + exid + '/next', method="POST")
       h1 問1
-      a(href=editorURL, target="_blank") こちらのsugoroku editor
-      を使ってみて下さい。
+      p
+        a(href=editorURL, target="_blank") こちらのsugoroku editor
+        を、なんとなく触ってみて、動きを確認してみて下さい。
+
+      p
+        動作は、
+        a(href=demoURL, target="_blank") こちら
+        で確認できます。
+
       input(type="hidden", name="exnum", value=exnum)
       input(type="submit")

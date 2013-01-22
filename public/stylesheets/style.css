@@ -59,7 +59,7 @@ a:hover {
 
 #sugoroku-index {
     margin: 0em auto;
-    max-width: 500px;    
+    max-width: 500px;
 }
 
 #sugoroku-index .sugoroku-codebox {
@@ -80,7 +80,7 @@ a:hover {
     overflow: hidden;
 }
 #sugoroku-index .sugoroku-codebox li {
-    float: left; 
+    float: left;
     padding: 0em 0.2em;
 }
 
@@ -218,7 +218,7 @@ a:hover {
 }
 
 #infobar.sugoroku section table {
-    width: 100%;    
+    width: 100%;
     margin: 0em; padding: 0em;
     border-collapse: separate;
     border-spacing: 0px;
@@ -260,4 +260,13 @@ a:hover {
 #sugoroku-ex {
     margin: 2.5em auto 0em auto;
     max-width: 400px;
+}
+
+#sugoroku-ex p {
+    text-indent: 1em;
+}
+
+#sugoroku-ex li {
+    margin: 1em;
+    text-indent: 1em;
 }
