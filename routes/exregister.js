@@ -1,5 +1,6 @@
 var ex             = require(__dirname + '/../lib/ex'),
     codeCollection = require(__dirname + '/../lib/codeCollection'),
+    config         = require('config'),
     escape         = require('escape-html');
 
 module.exports = function (req, res) {
@@ -16,7 +17,7 @@ module.exports = function (req, res) {
 
 		codeCollection.copy('ex', exid);
 
-		res.redirect('/ex/' + exid + '/1');
+		res.redirect(config.baseURL + 'ex/' + exid + '/1');
 	});
 
 };

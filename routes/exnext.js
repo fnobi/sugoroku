@@ -1,6 +1,7 @@
 var ex             = require(__dirname + '/../lib/ex'),
     codeCollection = require(__dirname + '/../lib/codeCollection'),
     Code           = require(__dirname + '/../lib/Code'),
+    config         = require('config'),
     escape         = require('escape-html');
 
 module.exports = function (req, res) {
@@ -14,6 +15,6 @@ module.exports = function (req, res) {
 	exData.posts.push(obj);
 
 	ex.save(exid, exData, function (err) {
-		res.redirect('/ex/' + exid + '/' + (exnum + 1));
+		res.redirect(config.baseURL + 'ex/' + exid + '/' + (exnum + 1));
 	});
 };
