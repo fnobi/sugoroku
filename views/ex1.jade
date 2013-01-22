@@ -6,6 +6,28 @@ block content
       strong= name
       さん、よろしくおねがいします!
 
+    form(action="/ex/" + exid + '/next', method="POST")
+      h1 問1
+      p 本システム、「sugoroku」のエディター画面を、とりあえず色々触ってみて下さい。
+
+      p
+        ul
+          li
+            エディター:
+            a(href=editorURL, target="_blank")= editorURL
+          li
+            実行:
+            a(href=demoURL, target="_blank")= demoURL
+
+      p これがどのようなシステムなのかや、だいたいの操作説明は、この下に書いてあります。
+
+      input(type="hidden", name="exnum", value=exnum)
+      input(type="submit", value="OK! (ひととおり触ってみました)")
+
+    br
+    hr
+    br
+
     h1 このシステムについて
 
     p sugorokuはstate chart(状態遷移図)を用いて、Webのインタフェース部分の挙動を記述できる、ビジュアルプログラミング環境です。
@@ -16,12 +38,12 @@ block content
 
     h2 sugorokuを使うことで、
     ul
-      li Webの画面を開いてから、どんな時、ユーザーのどんな動作を待っているのか、それぞれの場合で何が起きるのか、一覧することができる。
-      li 一覧することにより、バグや処理の抜け落ちを防ぐことができる。
+      li (1) Webの画面を開いてから、どんな時、ユーザーのどんな動作を待っているのか、それぞれの場合で何が起きるのか、一覧することができる。
+      li (2) 一覧することにより、バグや処理の抜け落ちを防ぐことができる。
 
-      li フローチャートにも近いスタイルで、プログラムそのものを記述できる。そのため、どのような動作をするプログラムなのか、他の人にも伝えやすくなる。
+      li (3) フローチャートにも近いスタイルで、プログラムそのものを記述できる。そのため、どのような動作をするプログラムなのか、他の人にも伝えやすくなる。
 
-      li インタフェース構築を行う人と、Javascriptの機能そのものを書く人を分けることができる。
+      li (4) インタフェース構築を行う人と、Javascriptの機能そのものを書く人を分けることができる。
 
 
     h2 各部分の説明
@@ -34,8 +56,8 @@ block content
     h3 new state
     p 状態を追加します。好きな名前を入力して、OKを押してください。
 
-    h3 状態(state)
-    p ひとつの状態を表しています。色の違うものが初期状態(initial)、Webの画面を開いた時点での状態です。
+    h3 オレンジ色の四角 => 状態(state)
+    p あるひとつの状態を表しています。色の濃いものは初期状態(initial)、Webの画面を開いた時点での状態です。
     ul
       li
         →
@@ -48,18 +70,14 @@ block content
       li
         →
         strong 状態名の左の●をクリック
-        ...矢印をひく=その状態から遷移する先を指定します。別の状態の●をクリックすると、繋ぎます。
+        ...そのまま、別の状態の●をクリックすると、そこまで矢印をひきます。(=状態遷移する条件を追加)
+        br
+        すぐに右のバーからconditionを指定しましょう。
 
-    form(action="/ex/" + exid + '/next', method="POST")
-      h1 問1
-      p
-        a(href=editorURL, target="_blank") こちらのsugoroku editor
-        を、なんとなく触ってみて、動きを確認してみて下さい。
-
-      p
-        動作は、
-        a(href=demoURL, target="_blank") こちら
-        で確認できます。
-
-      input(type="hidden", name="exnum", value=exnum)
-      input(type="submit")
+    h3 矢印 => 状態遷移(transition)
+    p ある状態からある状態へ、どんな場合に移動するかを指定しています。
+    ul
+      li
+        →
+        strong クリック
+        ...選択。右のバーにその状態の情報が表示されます。

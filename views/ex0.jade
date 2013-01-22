@@ -10,4 +10,11 @@ block content
         tr
           td: label(name="name") お名前(表示にしか使いません): 
           td: input(type="text", name="name")
+        tr
+          td: label(name="programer") プログラミング歴: 
+          td: select(name="programer")
+            option(value="0") なし
+            option(value="1") 1年未満
+            option(value="3") 3年未満
+            option(value="4") 3年以上
       input(type="submit")

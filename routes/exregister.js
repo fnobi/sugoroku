@@ -4,9 +4,10 @@ var ex             = require(__dirname + '/../lib/ex'),
 
 module.exports = function (req, res) {
 	var name = req.body.name;
+	var programer = req.body.programer;
 	name = escape(name);
 
-	ex.create(name, function (err, exid) {
+	ex.create(name, programer, function (err, exid) {
 		if (err) {
 			console.error(err);
 			res.statusCode = 500;
