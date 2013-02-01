@@ -1,272 +1,394 @@
+/* line 17, ../../../../.rvm/gems/ruby-1.9.3-p0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* line 22, ../../../../.rvm/gems/ruby-1.9.3-p0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+html {
+  line-height: 1;
+}
+
+/* line 24, ../../../../.rvm/gems/ruby-1.9.3-p0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+ol, ul {
+  list-style: none;
+}
+
+/* line 26, ../../../../.rvm/gems/ruby-1.9.3-p0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* line 28, ../../../../.rvm/gems/ruby-1.9.3-p0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+/* line 30, ../../../../.rvm/gems/ruby-1.9.3-p0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+q, blockquote {
+  quotes: none;
+}
+/* line 103, ../../../../.rvm/gems/ruby-1.9.3-p0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+/* line 32, ../../../../.rvm/gems/ruby-1.9.3-p0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+a img {
+  border: none;
+}
+
+/* line 116, ../../../../.rvm/gems/ruby-1.9.3-p0/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
+  display: block;
+}
+
+/* line 4, ../sass/style.scss */
 body {
-    padding: 0em; margin: 0em;
-    font-family:"Lucida Grande", Helvetica, Arial, sans-serif;
-    line-height: 1.5em;
+  padding: 0em;
+  margin: 0em;
+  font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+  line-height: 1.5em;
 }
 
-h1,h2,ul,li {
-    display: block;
-    margin: 0px; padding: 0px;
+/* line 10, ../sass/style.scss */
+h1, h2, ul, li {
+  display: block;
+  margin: 0px;
+  padding: 0px;
 }
 
+/* line 15, ../sass/style.scss */
 a {
-    color: inherit;
-    text-decoration: underline;
+  color: inherit;
+  text-decoration: underline;
 }
+/* line 19, ../sass/style.scss */
 a:hover {
-    color: #f80;
+  color: #f80;
 }
 
+/* line 24, ../sass/style.scss */
 #sugoroku-header {
-    background-color:#500;
-    padding: 0em;
-    box-shadow: 0px 3px 5px rgba(0,0,0,0.2);
-    position: fixed;
-    width: 100%;
-    overflow: hidden;
-    z-index: 200;
-    top: 0px; left: 0px;
+  background-color: #500;
+  padding: 0em;
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
+  z-index: 200;
+  top: 0px;
+  left: 0px;
 }
+/* line 34, ../sass/style.scss */
 #sugoroku-header h1 {
-    padding: 0.2em 0.5em;
-    margin:0em 0.2em 0em 0em;
-    font-size: 100%;
-    color: white;
-    float:left;
-    border-right: solid 0.5em #300;
+  padding: 0.2em 0.5em;
+  margin: 0em 0.2em 0em 0em;
+  font-size: 100%;
+  color: white;
+  float: left;
+  border-right: solid 0.5em #330000;
 }
+/* line 43, ../sass/style.scss */
 #sugoroku-header button {
-    display: block;
-    margin: 0.2em; padding: 0.2em;
-    float: left;
-    font-size: 100%;
-    line-height: 100%;
-    height: 1.4em;
-    color: #300;
-    background-color: #a33;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #400 #855 #855 #400;
+  display: block;
+  margin: 0.2em;
+  padding: 0.2em;
+  float: left;
+  font-size: 100%;
+  line-height: 100%;
+  height: 1.4em;
+  color: #300;
+  background-color: #a33;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #440000 #885555 #885555 #440000;
 }
+/* line 56, ../sass/style.scss */
 #sugoroku-header button:hover {
-    background-color: #c33;
-    cursor: pointer;
+  background-color: #c33;
+  cursor: pointer;
 }
 
+/* line 63, ../sass/style.scss */
 .sugoroku-content {
-    padding-top: 2em;
+  padding-top: 2em;
 }
 
+/* line 67, ../sass/style.scss */
 #sugoroku-index {
-    margin: 0em auto;
-    max-width: 500px;
+  margin: 0em auto;
+  max-width: 500px;
 }
-
+/* line 71, ../sass/style.scss */
 #sugoroku-index .sugoroku-codebox {
-    margin: 1em; padding: 0.5em;
-    border: solid 0.2em #c88;
+  margin: 1em;
+  padding: 0.5em;
+  border: solid 0.2em #cc8888;
 }
-#sugoroku-index .sugoroku-codebox:before {
-    content: ' ';
-    display: block;
-    border-left: solid 0.2em #c88;
-    width: 1em; height: 1.2em;
-    margin: -1.8em 0em 0.2em 0em;
-}
+/* line 75, ../sass/style.scss */
 #sugoroku-index .sugoroku-codebox h1 {
-    color: #500;
+  color: #500;
 }
+/* line 79, ../sass/style.scss */
 #sugoroku-index .sugoroku-codebox ul {
-    overflow: hidden;
+  overflow: hidden;
 }
+/* line 83, ../sass/style.scss */
 #sugoroku-index .sugoroku-codebox li {
-    float: left;
-    padding: 0em 0.2em;
+  float: left;
+  padding: 0em 0.2em;
+}
+/* line 88, ../sass/style.scss */
+#sugoroku-index .sugoroku-codebox:before {
+  content: ' ';
+  display: block;
+  border-left: solid 0.2em #cc8888;
+  width: 1em;
+  height: 1.2em;
+  margin: -1.8em 0em 0.2em 0em;
 }
 
+/* line 98, ../sass/style.scss */
 .sugoroku.stateMachine {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0px; left: 0px;
-    margin-top: 2em;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  margin-top: 2em;
 }
 
+/* line 107, ../sass/style.scss */
 #sugoroku-editor .state {
-    background-color: rgba(255, 128, 0, 0.3);
-    z-index:10;
-    padding:0em;
-    border: solid 0.1em #ba0;
-    box-shadow: 0em 0em 1em rgba(0,0,0,0.3);
+  background-color: rgba(255, 128, 0, 0.3);
+  z-index: 10;
+  padding: 0em;
+  border: solid 0.1em #bbaa00;
+  box-shadow: 0em 0em 1em rgba(0, 0, 0, 0.3);
 }
+/* line 114, ../sass/style.scss */
 #sugoroku-editor .state .name {
-    background-color: #ffcc88;
-    padding: 0.2em 0.5em;
-    color: #552200;
+  background-color: #ffcc88;
+  padding: 0.2em 0.5em;
+  color: #552200;
 }
+/* line 119, ../sass/style.scss */
 #sugoroku-editor .state .sub {
-    display: none;
+  display: none;
 }
+/* line 122, ../sass/style.scss */
 #sugoroku-editor .state .arrowmark {
-    padding-left: 0.5em;
+  padding-left: 0.5em;
 }
+/* line 125, ../sass/style.scss */
 #sugoroku-editor .state .arrowmark:hover {
-    color: red;
-    cursor: pointer;
+  color: red;
+  cursor: pointer;
 }
+/* line 129, ../sass/style.scss */
 #sugoroku-editor .state.connecting .arrowmark {
-    color: red;
-    cursor: pointer;
+  color: red;
+  cursor: pointer;
 }
+/* line 134, ../sass/style.scss */
 #sugoroku-editor .initialstate {
-    border: solid 0.1em #b30;
+  border: solid 0.1em #bb3300;
 }
+/* line 137, ../sass/style.scss */
 #sugoroku-editor .initialstate .name {
-    background-color: #f70;
-    color: white;
+  background-color: #f70;
+  color: white;
 }
+/* line 141, ../sass/style.scss */
 #sugoroku-editor .expanded {
-    z-index:20;
+  z-index: 20;
 }
+/* line 144, ../sass/style.scss */
 #sugoroku-editor .expanded .sub {
-    display: block;
+  display: block;
 }
+/* line 147, ../sass/style.scss */
 #sugoroku-editor .state.selected {
-    box-shadow: 0px 0px 1em green, 0px 0px 0.8em green;
+  box-shadow: 0px 0px 1em green, 0px 0px 0.8em green;
 }
-
+/* line 151, ../sass/style.scss */
 #sugoroku-editor .arrow {
-    margin: 0px; padding: 2px 0px 0px 0px;
-    text-align: left;
-    color: #888;
-    z-index:2;
+  margin: 0px;
+  padding: 2px 0px 0px 0px;
+  text-align: left;
+  color: #888;
+  z-index: 2;
 }
+/* line 157, ../sass/style.scss */
 #sugoroku-editor .arrow div:before {
-    content: ' ';
-    display: block;
-    width: 100%;
-    height: 0.2em;
-    background-color: #888;
+  content: ' ';
+  display: block;
+  width: 100%;
+  height: 0.2em;
+  background-color: #888;
 }
+/* line 164, ../sass/style.scss */
 #sugoroku-editor .arrow div:after {
-    content: '▶';
-    display: block;
-    text-align: right;
-    width: 100%;
-    margin-top: -2.25em;
-    position: relative;
-    left: 0.2em;
+  content: '▶';
+  display: block;
+  text-align: right;
+  width: 100%;
+  margin-top: -2.25em;
+  position: relative;
+  left: 0.2em;
 }
+/* line 173, ../sass/style.scss */
 #sugoroku-editor .arrow.selected {
-    color: #4f4;
+  color: #4f4;
 }
+/* line 176, ../sass/style.scss */
 #sugoroku-editor .arrow.selected div:before {
-    background-color: #4f4;
+  background-color: #4f4;
 }
-
+/* line 180, ../sass/style.scss */
 #sugoroku-editor .arrow.connecting {
-    color: red;
+  color: red;
 }
+/* line 183, ../sass/style.scss */
 #sugoroku-editor .arrow.connecting div:before {
-    background-color: red;
+  background-color: red;
 }
-
-#infobar.sugoroku {
-    width: 18em;
-    height: 100%;
-    background-color: rgba(200,255,200,0.8);
-    position:fixed;
-    right: 0em;
-    z-index: 100;
-    border-left: solid 0.2em rgba(190,255,100,0.8);
-    padding-top: 0em;
-    color: #006600;
-}
-
-#infobar.sugoroku > * {
-    margin: 0em; padding: 0.5em;
-}
-
-#infobar.sugoroku h1 {
-    margin: 0em; padding: 0em;
-    font-size:150%;
-    margin-bottom: 0.5em;
-}
-
-#infobar.sugoroku section {
-    border: solid 1px #393;
-    margin: 0.5em 0em;; padding: 0em;
-    background-color: rgba(255, 255, 255, 0.5);
-}
-
-#infobar.sugoroku section h1{
-    font-size: 100%;
-    margin: 0em;padding: 0.1em 0.2em;
-    background-color: #393;
-    color: white;
-}
-
-#infobar.sugoroku section ul{
-    display: block;
-    margin: 0em; padding: 0em;
-}
-#infobar.sugoroku section li{
-    display: block;
-    margin: 0em; padding: 0em 0.5em;
-    border-top: solid 1px #040;
-    border-bottom: solid 1px #8c8;
-}
-
-#infobar.sugoroku section table {
-    width: 100%;
-    margin: 0em; padding: 0em;
-    border-collapse: separate;
-    border-spacing: 0px;
-}
-
-#infobar.sugoroku section td,th {
-    margin: 0em; padding: 0em 0.5em;
-    border-top: solid 1px #040;
-    border-bottom: solid 1px #8c8;
-    text-align: left;
-}
-#infobar.sugoroku section td {
-    border-left: dotted 1px #228822;
-}
+/* line 186, ../sass/style.scss */
 #sugoroku-editor .action-code-viewer p {
-    margin: 0px;
+  margin: 0px;
 }
+/* line 189, ../sass/style.scss */
 #sugoroku-editor .action-code-viewer textarea {
-    width: 18em;
-    height: 4em;
+  width: 18em;
+  height: 4em;
 }
 
+/* line 195, ../sass/style.scss */
+#infobar.sugoroku {
+  width: 18em;
+  height: 100%;
+  background-color: rgba(200, 255, 200, 0.8);
+  position: fixed;
+  right: 0em;
+  z-index: 100;
+  border-left: solid 0.2em rgba(190, 255, 100, 0.8);
+  padding-top: 0em;
+  color: #006600;
+}
+/* line 206, ../sass/style.scss */
+#infobar.sugoroku > * {
+  margin: 0em;
+  padding: 0.5em;
+}
+/* line 210, ../sass/style.scss */
+#infobar.sugoroku h1 {
+  margin: 0em;
+  padding: 0em;
+  font-size: 150%;
+  margin-bottom: 0.5em;
+}
+/* line 216, ../sass/style.scss */
+#infobar.sugoroku section {
+  border: solid 1px #339933;
+  margin: 0.5em 0em;
+  padding: 0em;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+/* line 222, ../sass/style.scss */
+#infobar.sugoroku section h1 {
+  font-size: 100%;
+  margin: 0em;
+  padding: 0.1em 0.2em;
+  background-color: #393;
+  color: white;
+}
+/* line 229, ../sass/style.scss */
+#infobar.sugoroku section ul {
+  display: block;
+  margin: 0em;
+  padding: 0em;
+}
+/* line 233, ../sass/style.scss */
+#infobar.sugoroku section li {
+  display: block;
+  margin: 0em;
+  padding: 0em 0.5em;
+  border-top: solid 1px #004400;
+  border-bottom: solid 1px #88cc88;
+}
+/* line 240, ../sass/style.scss */
+#infobar.sugoroku section table {
+  width: 100%;
+  margin: 0em;
+  padding: 0em;
+  border-collapse: separate;
+  border-spacing: 0px;
+}
+/* line 247, ../sass/style.scss */
+#infobar.sugoroku section td, #infobar.sugoroku th {
+  margin: 0em;
+  padding: 0em 0.5em;
+  border-top: solid 1px #004400;
+  border-bottom: solid 1px #88cc88;
+  text-align: left;
+}
+/* line 253, ../sass/style.scss */
+#infobar.sugoroku section td {
+  border-left: dotted 1px #228822;
+}
+/* line 256, ../sass/style.scss */
 #infobar.sugoroku section button {
-    display: block;
-    font-size: 100%;
-    width: 100%;
-    margin: 0em auto;padding: 0.2em 0.5em;
-    background-color: #393;
-    color: white;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #8c8 #040 #040 #8c8;
+  display: block;
+  font-size: 100%;
+  width: 100%;
+  margin: 0em auto;
+  padding: 0.2em 0.5em;
+  background-color: #393;
+  color: white;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #88cc88 #004400 #004400 #88cc88;
 }
+/* line 267, ../sass/style.scss */
 #infobar.sugoroku section button:hover {
-    background-color: #4a4;
-    cursor: pointer;
+  background-color: #4a4;
+  cursor: pointer;
 }
 
+/* line 273, ../sass/style.scss */
 #sugoroku-ex {
-    margin: 2.5em auto 0em auto;
-    max-width: 500px;
+  margin: 2.5em auto 0em auto;
+  max-width: 500px;
 }
 
+/* line 278, ../sass/style.scss */
 #sugoroku-ex p {
-    text-indent: 1em;
+  text-indent: 1em;
 }
 
+/* line 282, ../sass/style.scss */
 #sugoroku-ex li {
-    margin: 1em;
-    text-indent: 1em;
+  margin: 1em;
+  text-indent: 1em;
 }

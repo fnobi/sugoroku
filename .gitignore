@@ -6,3 +6,4 @@ code
 ex
 public/src
 .DS_Store
+.sass-cache
