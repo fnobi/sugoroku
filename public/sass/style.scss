@@ -144,9 +144,9 @@ a {
     }
     .state .arrowmark:hover {
 	color: red;
-	cursor: pointer;
+	cursor: e-resize;
     }
-    .state.connecting .arrowmark {
+    .state.isPulled .arrowmark {
 	color: red;
 	cursor: pointer;
     }
@@ -184,12 +184,13 @@ a {
 
 	.arrow-top {
 	    display: block;
-	    font-weight: bold;
-	    text-align: right;
-	    width: 100%;
+	    width: 1em;
+	    overflow: hidden;
+	    margin-left: -0.6em;
 	    margin-top: -2.25em;
 	    position: relative;
-	    left: 0.2em;
+	    left: 100%;
+	    cursor: e-resize;
 	}
     }
 
@@ -200,10 +201,10 @@ a {
 	background-color: #4f4;
     }
 
-    .arrow.connecting {
+    .arrow.is-pulling {
 	color: red;
     }
-    .arrow.connecting .arrow-line:before {
+    .arrow.is-pulling .arrow-line:before {
 	background-color: red;
     }
 

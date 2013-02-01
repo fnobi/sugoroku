@@ -229,10 +229,10 @@ a:hover {
 /* line 145, ../sass/style.scss */
 #sugoroku-editor .state .arrowmark:hover {
   color: red;
-  cursor: pointer;
+  cursor: e-resize;
 }
 /* line 149, ../sass/style.scss */
-#sugoroku-editor .state.connecting .arrowmark {
+#sugoroku-editor .state.isPulled .arrowmark {
   color: red;
   cursor: pointer;
 }
@@ -276,40 +276,41 @@ a:hover {
 /* line 185, ../sass/style.scss */
 #sugoroku-editor .arrow .arrow-top {
   display: block;
-  font-weight: bold;
-  text-align: right;
-  width: 100%;
+  width: 1em;
+  overflow: hidden;
+  margin-left: -0.6em;
   margin-top: -2.25em;
   position: relative;
-  left: 0.2em;
+  left: 100%;
+  cursor: e-resize;
 }
-/* line 196, ../sass/style.scss */
+/* line 197, ../sass/style.scss */
 #sugoroku-editor .arrow.selected {
   color: #4f4;
 }
-/* line 199, ../sass/style.scss */
+/* line 200, ../sass/style.scss */
 #sugoroku-editor .arrow.selected .arrow-line:before {
   background-color: #4f4;
 }
-/* line 203, ../sass/style.scss */
-#sugoroku-editor .arrow.connecting {
+/* line 204, ../sass/style.scss */
+#sugoroku-editor .arrow.is-pulling {
   color: red;
 }
-/* line 206, ../sass/style.scss */
-#sugoroku-editor .arrow.connecting .arrow-line:before {
+/* line 207, ../sass/style.scss */
+#sugoroku-editor .arrow.is-pulling .arrow-line:before {
   background-color: red;
 }
-/* line 210, ../sass/style.scss */
+/* line 211, ../sass/style.scss */
 #sugoroku-editor .action-code-viewer p {
   margin: 0px;
 }
-/* line 213, ../sass/style.scss */
+/* line 214, ../sass/style.scss */
 #sugoroku-editor .action-code-viewer textarea {
   width: 18em;
   height: 4em;
 }
 
-/* line 219, ../sass/style.scss */
+/* line 220, ../sass/style.scss */
 #sugoroku-infobar {
   width: 18em;
   height: 100%;
@@ -321,30 +322,30 @@ a:hover {
   padding-top: 0em;
   color: #006600;
 }
-/* line 230, ../sass/style.scss */
+/* line 231, ../sass/style.scss */
 #sugoroku-infobar > * {
   margin: 0em;
   padding: 0.5em;
 }
-/* line 234, ../sass/style.scss */
+/* line 235, ../sass/style.scss */
 #sugoroku-infobar.nothing {
   display: none;
 }
-/* line 238, ../sass/style.scss */
+/* line 239, ../sass/style.scss */
 #sugoroku-infobar h1 {
   margin: 0em;
   padding: 0em;
   font-size: 150%;
   margin-bottom: 0.5em;
 }
-/* line 244, ../sass/style.scss */
+/* line 245, ../sass/style.scss */
 #sugoroku-infobar section {
   border: solid 1px #339933;
   margin: 0.5em 0em;
   padding: 0em;
   background-color: rgba(255, 255, 255, 0.5);
 }
-/* line 250, ../sass/style.scss */
+/* line 251, ../sass/style.scss */
 #sugoroku-infobar section h1 {
   font-size: 100%;
   margin: 0em;
@@ -352,13 +353,13 @@ a:hover {
   background-color: #393;
   color: white;
 }
-/* line 257, ../sass/style.scss */
+/* line 258, ../sass/style.scss */
 #sugoroku-infobar section ul {
   display: block;
   margin: 0em;
   padding: 0em;
 }
-/* line 261, ../sass/style.scss */
+/* line 262, ../sass/style.scss */
 #sugoroku-infobar section li {
   display: block;
   margin: 0em;
@@ -366,7 +367,7 @@ a:hover {
   border-top: solid 1px #004400;
   border-bottom: solid 1px #88cc88;
 }
-/* line 268, ../sass/style.scss */
+/* line 269, ../sass/style.scss */
 #sugoroku-infobar section table {
   width: 100%;
   margin: 0em;
@@ -374,7 +375,7 @@ a:hover {
   border-collapse: separate;
   border-spacing: 0px;
 }
-/* line 275, ../sass/style.scss */
+/* line 276, ../sass/style.scss */
 #sugoroku-infobar section td, #sugoroku-infobar th {
   margin: 0em;
   padding: 0em 0.5em;
@@ -382,11 +383,11 @@ a:hover {
   border-bottom: solid 1px #88cc88;
   text-align: left;
 }
-/* line 281, ../sass/style.scss */
+/* line 282, ../sass/style.scss */
 #sugoroku-infobar section td {
   border-left: dotted 1px #228822;
 }
-/* line 284, ../sass/style.scss */
+/* line 285, ../sass/style.scss */
 #sugoroku-infobar section button {
   display: block;
   font-size: 100%;
@@ -399,24 +400,24 @@ a:hover {
   border-width: 1px;
   border-color: #88cc88 #004400 #004400 #88cc88;
 }
-/* line 295, ../sass/style.scss */
+/* line 296, ../sass/style.scss */
 #sugoroku-infobar section button:hover {
   background-color: #4a4;
   cursor: pointer;
 }
 
-/* line 301, ../sass/style.scss */
+/* line 302, ../sass/style.scss */
 #sugoroku-ex {
   margin: 2.5em auto 0em auto;
   max-width: 500px;
 }
 
-/* line 306, ../sass/style.scss */
+/* line 307, ../sass/style.scss */
 #sugoroku-ex p {
   text-indent: 1em;
 }
 
-/* line 310, ../sass/style.scss */
+/* line 311, ../sass/style.scss */
 #sugoroku-ex li {
   margin: 1em;
   text-indent: 1em;

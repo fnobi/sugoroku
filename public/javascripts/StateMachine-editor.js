@@ -72,22 +72,48 @@ StateMachine.prototype.renderRoot = function () {
 		$root.append(state.render());
 	});
 
-	$root.on('mouseup', function () {
-		if (stateMachine.connectionMode) {
-			stateMachine.connectionModeOff();
+	$root.on('click', function () {
+		if (stateMachine.pullMode) {
+			stateMachine.stopPullMode();
 		}
 		stateMachine.clearSelect();
 		stateMachine.renderInfoBar();
 	});
 
+	$root.on('mouseup', function () {
+		if (stateMachine.pullMode) {
+			stateMachine.stopPullMode();
+		}
+	});
+
 	$root.on('mousemove', function (e) {
-		if (!stateMachine.connectionMode) {
+		if (!stateMachine.pullMode) {
 			return;
 		}
-		stateMachine.connectionMode.trace({
+
+		var pullMode = stateMachine.pullMode;
+		var state = pullMode.from;
+
+		// あまり頻繁にmousemoveを追いすぎないよう、まびく
+		if (pullMode.limitTrace) {
+			return;
+		}
+		pullMode.limitTrace = true;
+		setTimeout(function () {
+			pullMode.limitTrace = false;
+		}, 100);
+
+		// pulling arrowの更新
+		var arrow = state.renderPullingArrow({
 			x: e.pageX - $root[0].offsetLeft,
 			y: e.pageY - $root[0].offsetTop
 		});
+
+		// 初回のみ、$rootにarrowをappend
+		if (!pullMode.arrow) {
+			stateMachine.$root.append(arrow);
+		}
+		pullMode.arrow = arrow;
 	});
 
 	// statesが画面上にレンダリングされてから計算等行いたいので、readyで待つ
@@ -317,29 +343,39 @@ StateMachine.prototype.promptToAddState = function () {
 	this.render();
 };
 
-StateMachine.prototype.connectionModeOn = function (state) {
-	if (this.connectionMode) {
-		this.connectionModeOff();
+StateMachine.prototype.startPullMode = function (state, transition) {
+	if (this.pullMode) {
+		this.stopPullMode();
 	}
-	state.connecting = true;
-	this.connectionMode = state;
+	state.isPulled = true;
+	this.pullMode = {
+		from: state,
+		transition: transition,
+		isStarting: false
+	};
 
 	state.renderNode();
-	this.$root.append(state.renderTraceArrow(state));
 };
 
-StateMachine.prototype.connectionModeOff = function () {
-	if (!this.connectionMode) {
+StateMachine.prototype.stopPullMode = function () {
+	var pullMode = this.pullMode;
+	var state = pullMode.from;
+
+	if (!pullMode) {
 		return;
 	}
 
-	var state = this.connectionMode;
+	if (pullMode.transition) {
+		pullMode.transition.$arrow.show();
+	}
+	if (pullMode.arrow) {
+		$(pullMode.arrow).remove();
+	}
 
-	state.connecting = false;
-	this.connectionMode = null;
+	state.isPulled = false;
+	this.pullMode = null;
 
 	state.renderNode();
-	state.$traceArrow.remove();
 };
 
 StateMachine.prototype.save = function (callback) {
@@ -441,7 +477,7 @@ State.prototype.renderNode = function () {
 
 	$node.toggleClass('initialstate', this.name == 'initial');
 	$node.toggleClass('selected', this.selected || false);
-	$node.toggleClass('connecting', this.connecting || false);
+	$node.toggleClass('is-pulled', this.isPulled || false);
 
 	this.$node = $node;
 	return $node[0];
@@ -454,7 +490,7 @@ State.prototype.renderNameLabel = function () {
 	$nameLabel.empty();
 
 	var $arrowMark = $('<span class="arrowmark" />');
-	if (this.connecting) {
+	if (this.isPulled) {
 		$arrowMark.text('▶');
 	} else {
 		$arrowMark
@@ -465,12 +501,12 @@ State.prototype.renderNameLabel = function () {
 				$(this).text('●');
 			})
 			.on('mousedown', function (e) {
-				state.switchConnection();
+				state.swittchPullMode();
 				e.preventDefault();
 				e.stopPropagation();
 			})
 			.on('mouseup', function (e) {
-				state.switchConnection();
+				state.swittchPullMode();
 				e.stopPropagation();
 			})
 			.text('●');
@@ -610,34 +646,24 @@ State.prototype.renderLink = function () {
 	return $link[0];
 };
 
-State.prototype.renderTraceArrow = function (coordinates) {
-	var $traceArrow = $(arrowHTML(this, coordinates));
+State.prototype.renderPullingArrow = function (coordinates) {
+	var baseT = this.stateMachine.pullMode.transition;
+	var $pullingArrow = $(arrowHTML(
+		this,
+		coordinates,
+		baseT ? baseT.condition : null
+	));
 
-	$traceArrow.addClass('connecting');
+	$pullingArrow.addClass('is-pulling');
 
-	if (this.$traceArrow) {
-		this.$traceArrow.after($traceArrow);
-		this.$traceArrow.remove();
+	if (this.$pullingArrow) {
+		this.$pullingArrow.after($pullingArrow);
+		this.$pullingArrow.remove();
 	}
 
-	this.$traceArrow = $traceArrow;
+	this.$pullingArrow = $pullingArrow;
 
-	return $traceArrow[0];
-};
-
-State.prototype.trace = function (coordinates) {
-	var state = this;
-
-	if (this.limitTrace) {
-		return;
-	}
-
-	this.renderTraceArrow(coordinates);
-
-	this.limitTrace = true;
-	setTimeout(function () {
-		state.limitTrace = false;
-	}, 100);
+	return $pullingArrow[0];
 };
 
 State.prototype.cancelSelect = function () {
@@ -650,28 +676,36 @@ State.prototype.select = function () {
 	this.renderNode();
 };
 
-State.prototype.switchConnection = function () {
+State.prototype.swittchPullMode = function () {
 	var stateMachine = this.stateMachine;
-	if (stateMachine.connectionMode) {
-		var from = stateMachine.connectionMode;
-		if (stateMachine.findTransition(from, this)) {
-			alert('The transition has already existed.');
-			stateMachine.connectionModeOff();
-			return;
-		}
+
+	if (stateMachine.pullMode) {
+		var from = stateMachine.pullMode.from;
+		var t = stateMachine.pullMode.transition;
 		if (from == this) {
-			alert('You can\'t connect state to same state.');
-			stateMachine.connectionModeOff();
+			alert('You can\'t connect state and same state.');
+			stateMachine.stopPullMode();
 			return;
 		}
 
-		var t = stateMachine.addTransition(from, null, this);
-		stateMachine.selectInfoSource(t);
-		stateMachine.render();
+		var transitionExists = stateMachine.findTransition(from, this);
+		if (transitionExists && t != transitionExists) {
+			alert('The transition has already existed.');
+			stateMachine.stopPullMode();
+			return;
+		}
 
-		stateMachine.connectionModeOff();
+		if (!t) {
+			t = stateMachine.addTransition(from, null, this);
+			stateMachine.selectInfoSource(t);
+		} else {
+			t.to = this;
+		}
+
+		stateMachine.render();
+		stateMachine.stopPullMode();
 	} else {
-		stateMachine.connectionModeOn(this);
+		stateMachine.startPullMode(this);
 	}
 };
 
@@ -710,18 +744,28 @@ Transition.prototype.render = function () {
 
 Transition.prototype.renderArrow = function () {
 	var transition = this;
-	var $arrow = $(arrowHTML(this.from, this.to, this.condition));
+	var from = this.from;
+	var to = this.to;
+	var stateMachine = transition.stateMachine;
+
+	var $arrow = $(arrowHTML(from, to, this.condition));
 
 	$arrow.on('click', function (e) {
-		transition.stateMachine.selectInfoSource(transition);
+		stateMachine.selectInfoSource(transition);
 		e.stopPropagation();
+	});
+
+	$('.arrow-top', $arrow).on('mousedown', function (e) {
+		transition.$arrow.hide();
+		stateMachine.startPullMode(from, transition);
+		e.preventDefault();
 	});
 
 	$arrow.toggleClass('selected', this.selected || false);
 
 	if (this.$arrow) {
-		this.$arrow.after($arrow);
 		this.$arrow.remove();
+		this.stateMachine.$root.append($arrow);
 	}
 
 	this.$arrow = $arrow;
@@ -903,10 +947,6 @@ var arrowHTML = function (from, to, condition) {
 	$('.arrow-line', $arrow).css({
 		paddingLeft: lm.paddingLeft + 'px',
 		paddingRight: lm.paddingRight + 'px'
-	});
-
-	$('.arrow-top', $arrow).on('mousedown', function () {
-		alert('hoge');
 	});
 
 	return $arrow[0];
