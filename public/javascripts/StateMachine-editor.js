@@ -106,6 +106,8 @@ StateMachine.prototype.renderInfoBar = function () {
 		$infoBar.append('<p>nothing selected.</p>');
 	}
 
+	$infoBar.toggleClass('nothing', !this.infoSource);
+
 	$infoBar.on('click', function (e) {
 		e.stopPropagation();
 	});

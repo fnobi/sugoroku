@@ -207,6 +207,10 @@ a {
 	margin: 0em; padding: 0.5em;
     }
 
+    &.nothing {
+	display: none;
+    }
+
     h1 {
 	margin: 0em; padding: 0em;
 	font-size:150%;
