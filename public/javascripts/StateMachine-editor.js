@@ -19,6 +19,7 @@ var tpl = function (template, locals) {
 	locals.forEach(function (local) {
 		var text = template;
 		for (var key in local) {
+			local.this = this;
 			text = text.replace(
 				new RegExp('\{\{' + key + '\}\}', 'g'),
 				local[key]
@@ -35,6 +36,14 @@ var toArray = function (obj) {
 		array.push(obj[i]);
 	}
 	return array;
+};
+
+var toNames = function (array) {
+	var names = [];
+	array.forEach(function (item) {
+		names.push({name: item});
+	});
+	return names;
 };
 
 StateMachine.prototype.render = function () {
@@ -63,7 +72,7 @@ StateMachine.prototype.renderRoot = function () {
 		$root.append(state.render());
 	});
 
-	$root.on('click', function () {
+	$root.on('mouseup', function () {
 		if (stateMachine.connectionMode) {
 			stateMachine.connectionModeOff();
 		}
@@ -242,29 +251,45 @@ StateMachine.prototype.renderHeader = function () {
 	var $header = this.$header || $('#sugoroku-header');
 
 	var $h1 = $('h1', $header);
-	var $saveButton = $('#save-button');
-	var $newStateButton = $('#new-state-button');
+	$h1.remove();
 
-	if (!$h1[0]) {
-		$h1 = $('<h1 />');
-	}
-	if (!$saveButton[0]) {
-		$saveButton = $('<button id="save-button">save</button>')
-			.on('click', function () {
-				stateMachine.save();
-			});
-	}
-	if (!$newStateButton[0]) {
-		$newStateButton = $(
-			'<button id="new-state-button">new state</button>'
-		).on('click', function () {
-			stateMachine.promptToAddState();
-		});
-	}
+	$header.empty();
+
+
+	var $menu = $([
+		'<nav id="sugoroku-menu">',
+		'  <ul>',
+		'    <li><button id="save-button">save</button></li>',
+		'    <li><button id="new-state-button">new state</button></li>',
+		'    <li>src: <select id="src-list">',
+		tpl(
+			'<option>{{name}}</option>',
+			toNames(this.src)
+		),
+		'    </select></li>',
+		'  </ul>',
+		'</nav>'
+	].join(''));
+
+	$('#save-button', $menu).on('click', function () {
+		stateMachine.save();
+	});
+
+	$('#new-state-button', $menu).on('click', function () {
+		stateMachine.promptToAddState();
+	});
+
+	var $srcList = $([
+		'<select id="src-list">',
+		tpl(
+			'<option>{{name}}</option>',
+			toNames(this.src)
+		),
+		'</select>'
+	].join(''));
 
 	$header.append($h1);
-	$header.append($saveButton);
-	$header.append($newStateButton);
+	$header.append($menu);
 
 	this.$header = $header;
 	return $header[0];
@@ -300,7 +325,7 @@ StateMachine.prototype.connectionModeOn = function (state) {
 	this.connectionMode = state;
 
 	state.renderNode();
-	this.$root.append(state.renderTraceArrow());
+	this.$root.append(state.renderTraceArrow(state));
 };
 
 StateMachine.prototype.connectionModeOff = function () {
@@ -439,7 +464,12 @@ State.prototype.renderNameLabel = function () {
 			.mouseout(function () {
 				$(this).text('●');
 			})
-			.on('click', function (e) {
+			.on('mousedown', function (e) {
+				state.switchConnection();
+				e.preventDefault();
+				e.stopPropagation();
+			})
+			.on('mouseup', function (e) {
 				state.switchConnection();
 				e.stopPropagation();
 			})
@@ -581,33 +611,17 @@ State.prototype.renderLink = function () {
 };
 
 State.prototype.renderTraceArrow = function (coordinates) {
-	var $traceArrow = this.$traceArrow || $('<div />');
-	$traceArrow.empty();
+	var $traceArrow = $(arrowHTML(this, coordinates));
 
-	var lm = lineMeter(this, coordinates || this);
+	$traceArrow.addClass('connecting');
 
-	$traceArrow
-		.addClass('sugoroku')
-		.addClass('arrow')
-		.addClass('connecting')
-		.css({
-			position: 'absolute',
-			left: lm.left + 'px',
-			top: lm.top + 'px',
-			width: lm.length,
-			transform: lm.transform,
-			'transform-origin': '0% 0%'
-		})
-		.append(
-			$('<div />')
-				.html('　')
-				.css({
-					paddingLeft: lm.paddingLeft + 'px',
-					paddingRight: lm.paddingRight + 'px'
-				})
-		);
+	if (this.$traceArrow) {
+		this.$traceArrow.after($traceArrow);
+		this.$traceArrow.remove();
+	}
 
 	this.$traceArrow = $traceArrow;
+
 	return $traceArrow[0];
 };
 
@@ -696,39 +710,22 @@ Transition.prototype.render = function () {
 
 Transition.prototype.renderArrow = function () {
 	var transition = this;
-	var condition = this.condition;
-	var $arrow = this.$arrow || $('<div />');
-	$arrow.empty();
-	$arrow.off('click');
+	var $arrow = $(arrowHTML(this.from, this.to, this.condition));
 
-	var lm = lineMeter(this.from, this.to);
-
-	$arrow
-		.addClass('sugoroku')
-		.addClass('arrow')
-		.css({
-			position: 'absolute',
-			left: lm.left + 'px', top: lm.top + 'px',
-			width: lm.length,
-			transform: lm.transform,
-			'transform-origin': '0% 0%'
-		})
-		.append(
-			$('<div />')
-				.text(condition ? condition.name : '　')
-				.css({
-					paddingLeft: lm.paddingLeft + 'px',
-					paddingRight: lm.paddingRight + 'px'
-				})
-		)
-		.on('click', function (e) {
-			transition.stateMachine.selectInfoSource(transition);
-			e.stopPropagation();
-		});
+	$arrow.on('click', function (e) {
+		transition.stateMachine.selectInfoSource(transition);
+		e.stopPropagation();
+	});
 
 	$arrow.toggleClass('selected', this.selected || false);
 
+	if (this.$arrow) {
+		this.$arrow.after($arrow);
+		this.$arrow.remove();
+	}
+
 	this.$arrow = $arrow;
+
 	return $arrow[0];
 };
 
@@ -821,6 +818,10 @@ Transition.prototype.renderInfo = function () {
 
 // from stateとto stateから、2者間にどんな直線を引けばいいか計算
 var lineMeter = function (from, to) {
+	if (!to || !from) {
+		return false;
+	}
+
 	var from_x = from.x || 0; var from_y = from.y || 0;
 	var from_w = from.$node ? from.$node[0].offsetWidth : 0;
 	var from_h = from.$node ? from.$node[0].offsetHeight : 0;
@@ -874,4 +875,39 @@ var calcPadding = function (angle, rectWidth, rectHeight) {
 		return -(rectHeight / 2) / Math.sin(angle);
 	}
 	return (rectWidth / 2) / Math.cos(angle);
+};
+
+var arrowHTML = function (from, to, condition) {
+	var lm = lineMeter(from, to);
+
+	var condName = condition ? condition.name : '　';
+
+	var $arrow = $([
+		'<div class="arrow">',
+		'  <div class="arrow-line">',
+		'    ' + condName,
+		'    <span class="arrow-top">▶</span>',
+		'  </div>',
+		'</div>'
+	].join(''));
+
+	$arrow.css({
+		position: 'absolute',
+		left: lm.left + 'px',
+		top: lm.top + 'px',
+		width: lm.length,
+		transform: lm.transform,
+		transformOrigin: '0% 0%'
+	});
+
+	$('.arrow-line', $arrow).css({
+		paddingLeft: lm.paddingLeft + 'px',
+		paddingRight: lm.paddingRight + 'px'
+	});
+
+	$('.arrow-top', $arrow).on('mousedown', function () {
+		alert('hoge');
+	});
+
+	return $arrow[0];
 };

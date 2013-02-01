@@ -22,42 +22,62 @@ a {
 }
 
 #sugoroku-header {
-    background-color: #500;
+    /* background-color: #822; */
+    @include background-image(linear-gradient(top, #822, #611));
     padding: 0em;
-    box-shadow: 0px 3px 5px rgba(0,0,0,0.2);
+    @include box-shadow(0px 3px 5px rgba(0,0,0,0.2));
     position: fixed;
+    top: 0px; left: 0px;
     width: 100%;
+    height: 2em;
     overflow: hidden;
     z-index: 200;
-    top: 0px; left: 0px;
 
     h1 {
-        padding: 0.2em 0.5em;
-        margin:0em 0.2em 0em 0em;
+        padding: 0em 0.5em;
+        margin: 0em;
         font-size: 100%;
+        line-height: 2em;
         color: white;
         float:left;
-        border-right: solid 0.5em #300;
+    }
+    
+    #sugoroku-menu {
+	float: left;
+	overflow: hidden;
+	border-left: solid 1px rgba(0, 0, 0, 0.5);
+	border-right: solid 1px rgba(255, 255, 255, 0.2);
+
+	li {
+	    float: left;
+	    border-right: solid 1px rgba(0, 0, 0, 0.5);
+	    border-left: solid 1px rgba(255, 255, 255, 0.2);
+            color: white;
+	    @include text-shadow(0px 0.1em 0.5em black);
+	    height: 2em;
+            margin: 0em; padding: 0em;
+	    line-height: 2em;
+	}
+
+	button {
+            color: white;
+	    @include text-shadow(0px 0.1em 0.5em black);
+	    padding: 0em 0.5em;
+	    margin: 0em;
+            display: block;
+            float: left;
+            font-size: 100%;
+            line-height: 2em;
+            background-color: transparent;
+	    border: none 0px white;
+
+            &:hover {
+		background-color: #c33;
+		cursor: pointer;
+            }
+	}
     }
 
-    button {
-        display: block;
-        margin: 0.2em; padding: 0.2em;
-        float: left;
-        font-size: 100%;
-        line-height: 100%;
-        height: 1.4em;
-        color: #300;
-        background-color: #a33;
-        border-width: 1px;
-        border-style: solid;
-        border-color: #400 #855 #855 #400;
-
-        &:hover {
-            background-color: #c33;
-            cursor: pointer;
-        }
-    }
 }
 
 .sugoroku-content {
@@ -153,36 +173,40 @@ a {
 	text-align: left;
 	color: #888;
 	z-index:2;
+
+	.arrow-line:before {
+	    content: ' ';
+	    display: block;
+	    width: 100%;
+	    height: 0.2em;
+	    background-color: #888;
+	}
+
+	.arrow-top {
+	    display: block;
+	    font-weight: bold;
+	    text-align: right;
+	    width: 100%;
+	    margin-top: -2.25em;
+	    position: relative;
+	    left: 0.2em;
+	}
     }
-    .arrow div:before {
-	content: ' ';
-	display: block;
-	width: 100%;
-	height: 0.2em;
-	background-color: #888;
-    }
-    .arrow div:after {
-	content: '▶';
-	display: block;
-	text-align: right;
-	width: 100%;
-	margin-top: -2.25em;
-	position: relative;
-	left: 0.2em;
-    }
+
     .arrow.selected {
 	color: #4f4;
     }
-    .arrow.selected div:before {
+    .arrow.selected .arrow-line:before {
 	background-color: #4f4;
     }
 
     .arrow.connecting {
 	color: red;
     }
-    .arrow.connecting div:before {
+    .arrow.connecting .arrow-line:before {
 	background-color: red;
     }
+
     .action-code-viewer p {
 	margin: 0px;
     }
