@@ -38,6 +38,7 @@ var toArray = function (obj) {
 };
 
 StateMachine.prototype.render = function () {
+	var stateMachine = this;
 	var root = this.renderRoot();
 	var infoBar = this.renderInfoBar();
 	$(root).append(infoBar);
@@ -97,8 +98,7 @@ StateMachine.prototype.renderInfoBar = function () {
 	$infoBar.off('click');
 
 	$infoBar
-		.attr({ id: 'infobar' })
-		.addClass('sugoroku');
+		.attr({ id: 'sugoroku-infobar' });
 
 	if (this.infoSource) {
 		$infoBar.append(this.infoSource.renderInfo());
@@ -340,6 +340,21 @@ StateMachine.prototype.save = function (callback) {
 	);
 };
 
+StateMachine.prototype.removeSelected = function () {
+	if (!this.infoSource) {
+		return;
+	}
+
+	try {
+		this.infoSource.remove();
+	} catch (e) {
+		alert(e);
+	}
+
+	this.clearSelect();
+	this.render();
+};
+
 var fetchCodeName = function () {
 	var location = window.location + '';
 	var locationMatch = location.match(/editor\/([\w]+)/);
@@ -461,13 +476,13 @@ State.prototype.renderInfo = function () {
 	// destroy button
 	var $destroyButton = $('<button>destroy</button>')
 		.on('click', function () {
-			if (state.selected) {
-				state.stateMachine.clearSelect();
-			}
 			try {
 				state.remove();
 			} catch (e) {
 				alert(e);
+			}
+			if (state.selected) {
+				state.stateMachine.clearSelect();
 			}
 			stateMachine.render();
 		});
@@ -775,12 +790,15 @@ Transition.prototype.renderInfo = function () {
 	// destroy button
 	var $destroyButton = $('<button>destroy</button>')
 		.on('click', function () {
+			try {
+				transition.remove();
+			} catch (e) {
+				alert(e);
+			}
 			if (transition.selected) {
 				transition.stateMachine.clearSelect();
 			}
-			transition.remove();
-
-			transition.stateMachine.render();
+			stateMachine.render();
 		});
 
 	$info
