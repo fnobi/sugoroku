@@ -1,21 +1,25 @@
 {
-  "name": "sugoroku",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "start": "NODE_ENV=production node server.js start",
-    "stop": "NODE_ENV=production node server.js stop"
-  },
-  "dependencies": {
-    "express": "3.0.0rc3",
-    "jade": "*",
-    "config": "0.4.18",
-    "request": "*",
-    "async": "0.1.22",
-    "start-stop-daemon": "*",
-    "underscore": "*",
-    "glob-whatev": "*",
-    "escape-html": "*",
-    "node-random": "*"
-  }
+        "name": "sugoroku",
+        "version": "0.0.1",
+        "private": true,
+        "scripts": {
+                "start": "NODE_ENV=production node server.js start",
+                "stop": "NODE_ENV=production node server.js stop"
+        },
+        "dependencies": {
+                "express": "3.0.0rc3",
+                "jade": "*",
+                "config": "0.4.18",
+                "request": "*",
+                "async": "0.1.22",
+                "start-stop-daemon": "*",
+                "underscore": "*",
+                "glob-whatev": "*",
+                "escape-html": "*",
+                "node-random": "*",
+                "passport": "*",
+                "passport-local": "*",
+                "mongoose": "*",
+                "connect-mongo": "*"
+        }
 }
