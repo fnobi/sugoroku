@@ -10,6 +10,7 @@ module.exports = function(req, res){
 	}
 
 	res.render('editor', {
+                title: 'sugoroku - ' + codeName,
 		jsurl: codeCollection.url(codeName, 'editor')
 	});
 };

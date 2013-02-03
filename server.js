@@ -52,15 +52,26 @@ app.configure(function(){
         app.use(express.logger('dev'));
         app.use(express.bodyParser());
         app.use(express.methodOverride());
+        app.use(express.cookieParser());
+        app.use(express.session({ secret: config.sessionSecret }));
         app.use(passport.initialize());
         app.use(passport.session());
         app.use(alertConfig);
+        app.use(function (req, res, next) {
+                res.locals({
+                        user: req.user || null
+                });
+                next();
+        });
         app.use(app.router);
         app.use(express.static(path.join(__dirname, 'public')));
 });
 
 app.configure('development', function(){
-        app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+        app.use(express.errorHandler({
+                dumpExceptions: true,
+                showStack: true
+        }));
 });
 
 app.configure('production', function(){
@@ -69,7 +80,7 @@ app.configure('production', function(){
 
 // set locals
 app.locals({
-        title: 'sugoroku',
+        appname: 'sugoroku',
         alert: {}
 });
 

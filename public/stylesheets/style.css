@@ -90,16 +90,15 @@ a:hover {
 
 /* line 24, ../sass/style.scss */
 #sugoroku-header {
-  /* background-color: #822; */
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #882222), color-stop(100%, #661111));
   background-image: -webkit-linear-gradient(top, #882222, #661111);
   background-image: -moz-linear-gradient(top, #882222, #661111);
   background-image: -o-linear-gradient(top, #882222, #661111);
   background-image: linear-gradient(top, #882222, #661111);
-  padding: 0em;
   -webkit-box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+  padding: 0em;
   position: fixed;
   top: 0px;
   left: 0px;
@@ -108,7 +107,7 @@ a:hover {
   overflow: hidden;
   z-index: 200;
 }
-/* line 36, ../sass/style.scss */
+/* line 35, ../sass/style.scss */
 #sugoroku-header h1 {
   padding: 0em 0.5em;
   margin: 0em;
@@ -117,14 +116,14 @@ a:hover {
   color: white;
   float: left;
 }
-/* line 45, ../sass/style.scss */
+/* line 44, ../sass/style.scss */
 #sugoroku-header #sugoroku-menu {
   float: left;
   overflow: hidden;
   border-left: solid 1px rgba(0, 0, 0, 0.5);
   border-right: solid 1px rgba(255, 255, 255, 0.2);
 }
-/* line 51, ../sass/style.scss */
+/* line 50, ../sass/style.scss */
 #sugoroku-header #sugoroku-menu li {
   float: left;
   border-right: solid 1px rgba(0, 0, 0, 0.5);
@@ -136,7 +135,11 @@ a:hover {
   padding: 0em;
   line-height: 2em;
 }
-/* line 62, ../sass/style.scss */
+/* line 60, ../sass/style.scss */
+#sugoroku-header #sugoroku-menu li.input {
+  padding: 0em 0.5em;
+}
+/* line 65, ../sass/style.scss */
 #sugoroku-header #sugoroku-menu button {
   color: white;
   text-shadow: 0px 0.1em 0.5em black;
@@ -149,42 +152,42 @@ a:hover {
   background-color: transparent;
   border: none 0px white;
 }
-/* line 74, ../sass/style.scss */
+/* line 77, ../sass/style.scss */
 #sugoroku-header #sugoroku-menu button:hover {
   background-color: #c33;
   cursor: pointer;
 }
 
-/* line 83, ../sass/style.scss */
+/* line 86, ../sass/style.scss */
 .sugoroku-content {
   padding-top: 2em;
 }
 
-/* line 87, ../sass/style.scss */
+/* line 90, ../sass/style.scss */
 #sugoroku-index {
   margin: 0em auto;
   max-width: 500px;
 }
-/* line 91, ../sass/style.scss */
+/* line 94, ../sass/style.scss */
 #sugoroku-index .sugoroku-codebox {
   margin: 1em;
   padding: 0.5em;
   border: solid 0.2em #cc8888;
 }
-/* line 95, ../sass/style.scss */
+/* line 98, ../sass/style.scss */
 #sugoroku-index .sugoroku-codebox h1 {
   color: #500;
 }
-/* line 99, ../sass/style.scss */
+/* line 102, ../sass/style.scss */
 #sugoroku-index .sugoroku-codebox ul {
   overflow: hidden;
 }
-/* line 103, ../sass/style.scss */
+/* line 106, ../sass/style.scss */
 #sugoroku-index .sugoroku-codebox li {
   float: left;
   padding: 0em 0.2em;
 }
-/* line 108, ../sass/style.scss */
+/* line 111, ../sass/style.scss */
 #sugoroku-index .sugoroku-codebox:before {
   content: ' ';
   display: block;
@@ -194,7 +197,7 @@ a:hover {
   margin: -1.8em 0em 0.2em 0em;
 }
 
-/* line 118, ../sass/style.scss */
+/* line 121, ../sass/style.scss */
 .sugoroku.stateMachine {
   position: fixed;
   width: 100%;
@@ -204,7 +207,7 @@ a:hover {
   margin-top: 2em;
 }
 
-/* line 127, ../sass/style.scss */
+/* line 130, ../sass/style.scss */
 #sugoroku-editor .state {
   background-color: rgba(255, 128, 0, 0.3);
   z-index: 10;
@@ -212,52 +215,52 @@ a:hover {
   border: solid 0.1em #bbaa00;
   box-shadow: 0em 0em 1em rgba(0, 0, 0, 0.3);
 }
-/* line 134, ../sass/style.scss */
+/* line 137, ../sass/style.scss */
 #sugoroku-editor .state .name {
   background-color: #ffcc88;
   padding: 0.2em 0.5em;
   color: #552200;
 }
-/* line 139, ../sass/style.scss */
+/* line 142, ../sass/style.scss */
 #sugoroku-editor .state .sub {
   display: none;
 }
-/* line 142, ../sass/style.scss */
+/* line 145, ../sass/style.scss */
 #sugoroku-editor .state .arrowmark {
   padding-left: 0.5em;
 }
-/* line 145, ../sass/style.scss */
+/* line 148, ../sass/style.scss */
 #sugoroku-editor .state .arrowmark:hover {
   color: red;
   cursor: e-resize;
 }
-/* line 149, ../sass/style.scss */
+/* line 152, ../sass/style.scss */
 #sugoroku-editor .state.isPulled .arrowmark {
   color: red;
   cursor: pointer;
 }
-/* line 154, ../sass/style.scss */
+/* line 157, ../sass/style.scss */
 #sugoroku-editor .initialstate {
   border: solid 0.1em #bb3300;
 }
-/* line 157, ../sass/style.scss */
+/* line 160, ../sass/style.scss */
 #sugoroku-editor .initialstate .name {
   background-color: #f70;
   color: white;
 }
-/* line 161, ../sass/style.scss */
+/* line 164, ../sass/style.scss */
 #sugoroku-editor .expanded {
   z-index: 20;
 }
-/* line 164, ../sass/style.scss */
+/* line 167, ../sass/style.scss */
 #sugoroku-editor .expanded .sub {
   display: block;
 }
-/* line 167, ../sass/style.scss */
+/* line 170, ../sass/style.scss */
 #sugoroku-editor .state.selected {
   box-shadow: 0px 0px 1em green, 0px 0px 0.8em green;
 }
-/* line 171, ../sass/style.scss */
+/* line 174, ../sass/style.scss */
 #sugoroku-editor .arrow {
   margin: 0px;
   padding: 2px 0px 0px 0px;
@@ -265,7 +268,7 @@ a:hover {
   color: #888;
   z-index: 2;
 }
-/* line 177, ../sass/style.scss */
+/* line 180, ../sass/style.scss */
 #sugoroku-editor .arrow .arrow-line:before {
   content: ' ';
   display: block;
@@ -273,7 +276,7 @@ a:hover {
   height: 0.2em;
   background-color: #888;
 }
-/* line 185, ../sass/style.scss */
+/* line 188, ../sass/style.scss */
 #sugoroku-editor .arrow .arrow-top {
   display: block;
   width: 1em;
@@ -284,33 +287,33 @@ a:hover {
   left: 100%;
   cursor: e-resize;
 }
-/* line 197, ../sass/style.scss */
+/* line 200, ../sass/style.scss */
 #sugoroku-editor .arrow.selected {
   color: #4f4;
 }
-/* line 200, ../sass/style.scss */
+/* line 203, ../sass/style.scss */
 #sugoroku-editor .arrow.selected .arrow-line:before {
   background-color: #4f4;
 }
-/* line 204, ../sass/style.scss */
+/* line 207, ../sass/style.scss */
 #sugoroku-editor .arrow.is-pulling {
   color: red;
 }
-/* line 207, ../sass/style.scss */
+/* line 210, ../sass/style.scss */
 #sugoroku-editor .arrow.is-pulling .arrow-line:before {
   background-color: red;
 }
-/* line 211, ../sass/style.scss */
+/* line 214, ../sass/style.scss */
 #sugoroku-editor .action-code-viewer p {
   margin: 0px;
 }
-/* line 214, ../sass/style.scss */
+/* line 217, ../sass/style.scss */
 #sugoroku-editor .action-code-viewer textarea {
   width: 18em;
   height: 4em;
 }
 
-/* line 220, ../sass/style.scss */
+/* line 223, ../sass/style.scss */
 #sugoroku-infobar {
   width: 18em;
   height: 100%;
@@ -322,30 +325,30 @@ a:hover {
   padding-top: 0em;
   color: #006600;
 }
-/* line 231, ../sass/style.scss */
+/* line 234, ../sass/style.scss */
 #sugoroku-infobar > * {
   margin: 0em;
   padding: 0.5em;
 }
-/* line 235, ../sass/style.scss */
+/* line 238, ../sass/style.scss */
 #sugoroku-infobar.nothing {
   display: none;
 }
-/* line 239, ../sass/style.scss */
+/* line 242, ../sass/style.scss */
 #sugoroku-infobar h1 {
   margin: 0em;
   padding: 0em;
   font-size: 150%;
   margin-bottom: 0.5em;
 }
-/* line 245, ../sass/style.scss */
+/* line 248, ../sass/style.scss */
 #sugoroku-infobar section {
   border: solid 1px #339933;
   margin: 0.5em 0em;
   padding: 0em;
   background-color: rgba(255, 255, 255, 0.5);
 }
-/* line 251, ../sass/style.scss */
+/* line 254, ../sass/style.scss */
 #sugoroku-infobar section h1 {
   font-size: 100%;
   margin: 0em;
@@ -353,13 +356,13 @@ a:hover {
   background-color: #393;
   color: white;
 }
-/* line 258, ../sass/style.scss */
+/* line 261, ../sass/style.scss */
 #sugoroku-infobar section ul {
   display: block;
   margin: 0em;
   padding: 0em;
 }
-/* line 262, ../sass/style.scss */
+/* line 265, ../sass/style.scss */
 #sugoroku-infobar section li {
   display: block;
   margin: 0em;
@@ -367,7 +370,7 @@ a:hover {
   border-top: solid 1px #004400;
   border-bottom: solid 1px #88cc88;
 }
-/* line 269, ../sass/style.scss */
+/* line 272, ../sass/style.scss */
 #sugoroku-infobar section table {
   width: 100%;
   margin: 0em;
@@ -375,7 +378,7 @@ a:hover {
   border-collapse: separate;
   border-spacing: 0px;
 }
-/* line 276, ../sass/style.scss */
+/* line 279, ../sass/style.scss */
 #sugoroku-infobar section td, #sugoroku-infobar th {
   margin: 0em;
   padding: 0em 0.5em;
@@ -383,11 +386,11 @@ a:hover {
   border-bottom: solid 1px #88cc88;
   text-align: left;
 }
-/* line 282, ../sass/style.scss */
+/* line 285, ../sass/style.scss */
 #sugoroku-infobar section td {
   border-left: dotted 1px #228822;
 }
-/* line 285, ../sass/style.scss */
+/* line 288, ../sass/style.scss */
 #sugoroku-infobar section button {
   display: block;
   font-size: 100%;
@@ -400,24 +403,24 @@ a:hover {
   border-width: 1px;
   border-color: #88cc88 #004400 #004400 #88cc88;
 }
-/* line 296, ../sass/style.scss */
+/* line 299, ../sass/style.scss */
 #sugoroku-infobar section button:hover {
   background-color: #4a4;
   cursor: pointer;
 }
 
-/* line 302, ../sass/style.scss */
+/* line 305, ../sass/style.scss */
 #sugoroku-ex {
   margin: 2.5em auto 0em auto;
   max-width: 500px;
 }
 
-/* line 307, ../sass/style.scss */
+/* line 310, ../sass/style.scss */
 #sugoroku-ex p {
   text-indent: 1em;
 }
 
-/* line 311, ../sass/style.scss */
+/* line 314, ../sass/style.scss */
 #sugoroku-ex li {
   margin: 1em;
   text-indent: 1em;

@@ -1,0 +1,12 @@
+doctype 5
+html
+  head
+    title= title
+    block css
+      link(rel='stylesheet', href='/stylesheets/style.css')
+    block js
+  body
+    div#wrap
+      include _header
+      include _alert
+      block content
