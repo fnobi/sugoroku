@@ -1,4 +1,5 @@
 var passport       = require('passport'),
+    config         = require('config'),
     models         = require(__dirname + '/../models'),
     User           = models.User,
     codeCollection = require(__dirname + '/../lib/codeCollection');
@@ -15,17 +16,17 @@ exports.index = function(req, res){
 };
 
 exports.login = passport.authenticate('local', {
-        failureRedirect: '/?login_fail=1',
-        successRedirect: '/?login_success=1'
+        failureRedirect: config.baseURL + '/?login_fail=1',
+        successRedirect: config.baseURL + '/?login_success=1'
 });
 
 exports.logout = function(req, res){
         try {
                 req.logout();
         } catch (e) {
-                res.redirect('/?logout_fail=1');
+                res.redirect(config.baseURL + '/?logout_fail=1');
         }
-        res.redirect('/?logout_success=1');
+        res.redirect(config.baseURL + '/?logout_success=1');
 };
 
 exports.signup = function (req, res) {
@@ -37,7 +38,7 @@ exports.signup = function (req, res) {
                         throw err;
                 }
                 if (user) {
-                        res.redirect('/?signup_fail=1');
+                        res.redirect(config.baseURL + '/?signup_fail=1');
                         return;
                 }
 
@@ -50,7 +51,7 @@ exports.signup = function (req, res) {
                         if (err) {
                                 throw err;
                         }
-                        res.redirect('/?signup_success=1');
+                        res.redirect(config.baseURL + '/?signup_success=1');
                 });
         });
 };
