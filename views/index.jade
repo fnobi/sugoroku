@@ -1,22 +1,53 @@
 extends _layout
 
 block content
-  h1#pagename Index
-  - if (user) {
-    section
-      p Welcome, #{user.username} !!
-  - } else {
-    section
-      h1 signup
-      form(method="post", action="/signup")
-        table
-          tr
-            td: label(name="username") username:
-            td: input(name="username", type="text", size="30")
-          tr
-            td: label(name="password") password:
-            td: input(name="password", type="password", size="30")
-          tr
-            td(colspan="2"): input(type="submit")
-  - }
+  section#sugoroku-index
+    - if (user) {
+      section
+        nav#user-menu
+          input(type="hidden", value=user.username, id="username")
+          ul
+            li: a#createcode(href="javascript:void(0)") create new code
+
+      script(type="text/javascript", src="/javascripts/jquery-1.8.2.js")
+      script(type="text/javascript")
+        $('#createcode').click(function () {
+                var codename = prompt('input code name.', 'mycode');
+                if (!codename) {
+                        return;
+                }
+                var username = $('#username').val();
+
+                $.post(
+                        '/code/' + username + '/' + codename,
+                        {},
+                        function (result) {
+                                if (result.error) {
+                                        alert(result.error);
+                                        return;
+                                }
+
+                                location.href = [
+                                        '/editor',
+                                        username,
+                                        codename
+                                ].join('/');
+                        }
+                );
+        });
+
+    - } else {
+      section
+        h1 signup
+        form(method="post", action="/signup")
+          table
+            tr
+              td: label(name="username") username:
+              td: input(name="username", type="text", size="30")
+            tr
+              td: label(name="password") password:
+              td: input(name="password", type="password", size="30")
+            tr
+              td(colspan="2"): input(type="submit")
+    - }
 

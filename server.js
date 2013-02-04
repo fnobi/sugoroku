@@ -85,6 +85,15 @@ app.locals({
 });
 
 // set routing param
+app.param('user_name', function (req, res, next, userName) {
+        if (!userName.match(/^[\w]+$/)) {
+                return next(new Error(
+                        '"' + userName + '" is invalid user name.'
+                ));
+        }
+        next();
+});
+
 app.param('code_name', function (req, res, next, codeName) {
         if (!codeName.match(/^[\w]+$/)) {
                 return next(new Error(
@@ -114,13 +123,13 @@ app.post('/login', routes.login);
 app.post('/signup', routes.signup);
 app.get('/logout', routes.logout);
 
-app.get('/editor/:code_name', routes.editor);
-app.get('/code', routes.index);
+app.get('/editor/:user_name/:code_name', routes.editor);
+// app.get('/code', routes.index);
 
-app.get('/code/:code_name-:code_action.js', routes.code);
-app.get('/code/:code_name.js', routes.code);
+app.get('/code/:user_name-:code_name-:code_action.js', routes.code);
+app.get('/code/:user_name-:code_name.js', routes.code);
 
-app.post('/code/:code_name', routes.postCode);
+app.post('/code/:user_name/:code_name', routes.postCode);
 
 
 // listen

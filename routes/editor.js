@@ -1,16 +1,19 @@
 var codeCollection = require(__dirname + '/../lib/codeCollection');
 
 module.exports = function(req, res){
-	var codeName = req.params.code_name;
+        var userName = req.params.user_name;
+        var codeName = req.params.code_name;
 
-	if (!codeCollection.exists(codeName)) {
-		res.statusCode = 404;
-		res.end();
-		return;
-	}
+        var fileName = userName + '-' + codeName;
 
-	res.render('editor', {
+        if (!codeCollection.exists(fileName)) {
+                res.statusCode = 404;
+                res.end();
+                return;
+        }
+
+        res.render('editor', {
                 title: 'sugoroku - ' + codeName,
-		jsurl: codeCollection.url(codeName, 'editor')
-	});
+                jsurl: codeCollection.url(fileName, 'editor')
+        });
 };
