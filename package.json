@@ -3,7 +3,7 @@
         "version": "0.0.1",
         "private": true,
         "scripts": {
-                "start": "NODE_ENV=production forever start -a -o log/sugoroku.out.log -e log/sugoroku.err.log $PWD/server.js",
+                "start": "NODE_ENV=production NODE_CONFIG_DIR=$PWD/config forever start -a -o log/sugoroku.out.log -e log/sugoroku.err.log $PWD/server.js",
                 "stop": "forever stop $PWD/server.js"
         },
         "dependencies": {
