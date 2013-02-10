@@ -3,8 +3,8 @@
         "version": "0.0.1",
         "private": true,
         "scripts": {
-                "start": "NODE_ENV=production node server.js start",
-                "stop": "NODE_ENV=production node server.js stop"
+                "start": "NODE_ENV=production forever start -a -o log/sugoroku.out.log -e log/sugoroku.err.log $PWD/server.js",
+                "stop": "forever stop $PWD/server.js"
         },
         "dependencies": {
                 "express": "3.0.0rc3",
@@ -12,7 +12,6 @@
                 "config": "0.4.18",
                 "request": "*",
                 "async": "0.1.22",
-                "start-stop-daemon": "*",
                 "underscore": "*",
                 "glob-whatev": "*",
                 "escape-html": "*",

@@ -7,7 +7,6 @@ var express         = require('express'),
     routes          = require(__dirname + '/routes'),
     http            = require('http'),
     path            = require('path'),
-    startStopDaemon = require('start-stop-daemon'),
     config          = require('config'),
     alertConfig     = require(__dirname + '/lib/alertConfig');
 
@@ -132,30 +131,31 @@ app.get('/code/:user_name-:code_name.js', routes.code);
 app.post('/code/:user_name/:code_name', routes.postCode);
 
 
+// daemon processes
+
+// connect to mongoDB
+mongoose.connect(
+        config.mongodb.host,
+        config.mongodb.database
+);
+
+// start session store
+app.use(express.session({
+        secret: config.sessionSecret,
+        store: new MongoStore({
+                db: config.mongodb.database,
+                host: config.mongodb.host,
+                clear_interval: 60 * 60
+        }),
+        cookie: {
+                httpOnly: false,
+                maxAge: new Date(Date.now() + 60 * 60 * 1000)
+                // 60 * 60 * 1000 = 3600000 msec = 1 hour
+        }
+}));
+
 // listen
-startStopDaemon(function () {
-        mongoose.connect(
-                config.mongodb.host,
-                config.mongodb.database
-        );
-
-        app.use(express.session({
-                secret: config.sessionSecret,
-                store: new MongoStore({
-                        db: config.mongodb.database,
-                        host: config.mongodb.host,
-                        clear_interval: 60 * 60
-                }),
-                cookie: {
-                        httpOnly: false,
-                        maxAge: new Date(Date.now() + 60 * 60 * 1000)
-                        // 60 * 60 * 1000 = 3600000 msec = 1 hour
-                }
-        }));
-
-        http.createServer(app).listen(app.get('port'), function(){
-                console.log(
-                        'Express server listening on port ' + app.get('port')
-                );
-        });
+http.createServer(app).listen(app.get('port'), function(){
+        console.log('Express server listening on port ' + app.get('port'));
 });
+
